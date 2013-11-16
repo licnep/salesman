@@ -1,0 +1,10 @@
+PARAMS
+DataFileDir C:/Users/Guido/EclipseWorkspace/OpenTS/Data/TSP
+TSMaxIter 1000
+TSRepetitions 1
+ENDPARAMS
+INSTANCES
+berlin52.tsp
+brazil58.tsp
+ENDINSTANCES
+EOF
