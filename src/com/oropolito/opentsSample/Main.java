@@ -20,6 +20,9 @@ import java.util.Comparator;
 
 import org.coinor.opents.*;
 
+import com.oropolito.opentsSample.GUI.GUI_model;
+import com.oropolito.opentsSample.GUI.GUI_view;
+
 public class Main
 {
 	private enum ParamFile {
@@ -37,7 +40,7 @@ public class Main
 //       	String myFile = new String("C:/Users/Guido/EclipseWorkspace/OpenTS/Data/TSP/pr1002.tsp");
 //    		String myFile = new String("C:/Users/Guido/EclipseWorkspace/OpenTS/Data/TSP/rat195.tsp");
     	String myFile = new String("./Data/TSP/berlin52.tsp");
-    	//String myFile = new String("/home/alox/Programmazione/Optimization/example/Data/TSP/pr1002.tsp");
+    	
     	
        	readParams(args);
         double[][] customers = new double[numCustomers][2];
@@ -116,7 +119,6 @@ public class Main
         // Mostro la soluzione ottimale
         MySolution ottimale = new MySolution(customers);
         ottimale.tour = readTour("./Data/TSP/berlin52.opt.tour");
-        //ottimale.tour = readTour("/home/alox/Programmazione/Optimization/example/Data/TSP/pr1002.opt.tour");
         double[] ottimal = objFunc.evaluate(ottimale, null);
         ottimale.setObjectiveValue(ottimal);
         System.out.println( "Optimal Solution:");
@@ -124,10 +126,11 @@ public class Main
         double miaLunghezza = best.getObjectiveValue()[0];
         System.out.println("Optimality:"+ottimal[0]/miaLunghezza);
         
-        int[] tour = best.tour;
-//        for( int i = 0; i < tour.length; i++ )
-//            System.out.println( 
-//             customers[tour[i]][0] + "\t" + customers[tour[i]][1] );
+        GUI_model model = new GUI_model();
+        GUI_view view = new GUI_view(model);
+        model.setCustomers(customers);
+        model.setTour_optimal(ottimale.tour);
+        model.setTour_current(best.tour);
     }   // end main
     
     public static int[] readTour(String filename)
@@ -165,7 +168,7 @@ public class Main
     		{
     			ParamFile fileStatus = ParamFile.NONE;
     			//String myFileParam = "C:/Users/Guido/EclipseWorkspace/OpenTS/Data/TSP/param.txt";
-    			String myFileParam = "/home/alox/Programmazione/Optimization/example/Data/param.txt";
+    			String myFileParam = "./Data/param.txt";
     			if (args.length > 0)
     			{
     				myFileParam = args[0];
