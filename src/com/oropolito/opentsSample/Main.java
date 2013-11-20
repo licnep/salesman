@@ -40,6 +40,8 @@ public class Main
 //       	String myFile = new String("C:/Users/Guido/EclipseWorkspace/OpenTS/Data/TSP/pr1002.tsp");
 //    		String myFile = new String("C:/Users/Guido/EclipseWorkspace/OpenTS/Data/TSP/rat195.tsp");
     	String myFile = new String("./Data/TSP/berlin52.tsp");
+    	//String myFile = new String("./Data/TSP/eil76.tsp");
+    	//String myFile = new String("./Data/TSP/pr1002.tsp");
     	
     	
        	readParams(args);
@@ -119,6 +121,8 @@ public class Main
         // Mostro la soluzione ottimale
         MySolution ottimale = new MySolution(customers);
         ottimale.tour = readTour("./Data/TSP/berlin52.opt.tour");
+        //ottimale.tour = readTour("./Data/TSP/eil76.opt.tour");
+        //ottimale.tour = readTour("./Data/TSP/pr1002.opt.tour");
         double[] ottimal = objFunc.evaluate(ottimale, null);
         ottimale.setObjectiveValue(ottimal);
         System.out.println( "Optimal Solution:");
@@ -150,7 +154,14 @@ public class Main
 						inTour=false;
 						break;
 					}
-					lista.add(Integer.parseInt(line)-1); //meno 1 perche' nel file parte da 1 invece che da 0
+					String tokens[] = line.split("\\s");
+					for (int i=0;i<tokens.length;i++) {
+						try {
+							lista.add(Integer.parseInt(tokens[i])-1); //meno 1 perche' nel file parte da 1 invece che da 0
+						} catch (Exception e) {
+							//non e' un numero, "" non faccio niente
+						}
+					}
 				}
 			}
     	} catch (Exception e) {
