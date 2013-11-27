@@ -1,5 +1,5 @@
 PARAMS
-DataFileDir C:/Users/Guido/EclipseWorkspace/OpenTS/Data/TSP
+DataFileDir ./Data/TSP
 TSMaxIter 1000
 TSRepetitions 1
 ENDPARAMS
