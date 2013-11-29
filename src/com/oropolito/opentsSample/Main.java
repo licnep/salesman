@@ -19,11 +19,12 @@ public class Main
     {
     	
     	readParams(args);
-    	P_TSMaxIter = 50;
+    	P_TSMaxIter = 400;
     	
     	Tabu myTabu = new Tabu();
-    	myTabu.main(P_TSMaxIter,P_baseDir+"berlin52.tsp",P_baseDir+"berlin52.opt.tour");
-    	//myTabu.main(P_TSMaxIter,P_baseDir+"eil51.tsp",P_baseDir+"eil51.opt.tour");
+    	//myTabu.main(P_TSMaxIter,P_baseDir+"pr1002.tsp",P_baseDir+"pr1002.opt.tour");
+    	//myTabu.main(P_TSMaxIter,P_baseDir+"berlin52.tsp",P_baseDir+"berlin52.opt.tour");
+    	myTabu.main(P_TSMaxIter,P_baseDir+"eil51.tsp",P_baseDir+"eil51.opt.tour");
     	return;
 	}
     

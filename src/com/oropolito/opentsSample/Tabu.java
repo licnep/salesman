@@ -89,9 +89,23 @@ public class Tabu {
         TabuList         tabuList = new SimpleTabuList( 7 ); // In OpenTS package
         TabuList         tabuList2 = new MyTabuList( 7 );
         
+        /*boolean asd= true;
+        while (asd) {
+        	Solution random1 = new MyRandomSolution(numCustomers);
+        	System.out.println(random1);
+        	gui_model.setTour_current( ((MySolution)random1).tour);
+        	try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+        }*/
+        Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
+        
         // Create Tabu Search object
         TabuSearch tabuSearch = new SingleThreadedTabuSearch(
-                initialSolution,
+                //initialSolution,
+        		soluzione_iniziale_random1,
                 moveManager,
                 objFunc,
               tabuList,
@@ -110,7 +124,7 @@ public class Tabu {
             tabuSearch.startSolving();
             MySolution temp = (MySolution)tabuSearch.getBestSolution();
             gui_model.setTour_current(temp.tour);
-            try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
+            //try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
         }
         
         // Show solution
