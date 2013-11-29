@@ -22,7 +22,7 @@ public class MyObjectiveFunction implements ObjectiveFunction
         {
             double dist = 0;
             for( int i = 0; i < len; i++ )
-                dist += matrix[ tour[i] ][ i+1 >= len ? 0 : tour[i+1] ];
+            	dist += matrix[ tour[i] ][ i+1 >= len ?  tour[0] : tour[i+1] ];
                 
             return new double[]{ dist };
         }   // end if: move == null

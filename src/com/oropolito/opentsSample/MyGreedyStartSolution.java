@@ -14,6 +14,7 @@ public class MyGreedyStartSolution extends MySolution
         tour = new int[ customers.length ];
         for( int i = 0; i < avail.length; i++ )
             avail[i] = i;
+        
         for( int i = 1; i < tour.length; i++ )
         {
             int closest = -1;

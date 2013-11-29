@@ -50,7 +50,7 @@ public class GUI_view implements Observer, MouseWheelListener {
 					g2.fill(new Ellipse2D.Double(customers[i][0]*w/zoom-3, customers[i][1]*h/zoom-3, 6, 6));
 				}
 				//disegno il percorso ottimale
-				g2.setPaint(Color.red);
+				g2.setPaint(Color.green);
 				if (m.getTour_optimal()!=null) {
 					for (int i=1;i<GlobalData.numCustomers;i++) {
 						int a = m.getTour_optimal()[i-1];
@@ -64,7 +64,7 @@ public class GUI_view implements Observer, MouseWheelListener {
 					for (int i=1;i<GlobalData.numCustomers;i++) {
 						int a = m.getTour_current()[i-1];
 						int b = m.getTour_current()[i];
-						g2.draw(new Line2D.Double(customers[a][0]*w/zoom, customers[a][1]*h/zoom+20, customers[b][0]*w/zoom, customers[b][1]*h/zoom+20));
+						g2.draw(new Line2D.Double(customers[a][0]*w/zoom, customers[a][1]*h/zoom+10, customers[b][0]*w/zoom, customers[b][1]*h/zoom+10));
 					}
 				}
 			}

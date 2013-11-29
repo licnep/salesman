@@ -28,6 +28,9 @@ public class Tabu {
 
     public static void main (int iterations, String tour_filename, String opt_tour_filename) 
     {
+    	GUI_model gui_model = new GUI_model();
+        GUI_view gui_view = new GUI_view(gui_model);
+    	
     	int numCustomers=0;
     	int[][] customersPoints;
 
@@ -74,6 +77,7 @@ public class Tabu {
 			System.out.println("Error "+e.getMessage());
 	        System.exit(-1);
 		}
+		gui_model.setCustomers(customers);
 		GlobalData.numCustomers = numCustomers;
         // Initialize our objects
         java.util.Random r = new java.util.Random( 12345 );
@@ -100,8 +104,14 @@ public class Tabu {
 
         
         // Start solving
-        tabuSearch.setIterationsToGo( iterations );
-        tabuSearch.startSolving();
+        for (int i=0;i<iterations;i++) 
+        {
+        	tabuSearch.setIterationsToGo( 1 );
+            tabuSearch.startSolving();
+            MySolution temp = (MySolution)tabuSearch.getBestSolution();
+            gui_model.setTour_current(temp.tour);
+            try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
+        }
         
         // Show solution
         MySolution best = (MySolution)tabuSearch.getBestSolution();
@@ -118,11 +128,7 @@ public class Tabu {
         double miaLunghezza = best.getObjectiveValue()[0];
         System.out.println("Optimality:"+ottimal[0]/miaLunghezza);
         
-        GUI_model model = new GUI_model();
-        GUI_view view = new GUI_view(model);
-        model.setCustomers(customers);
-        model.setTour_optimal(ottimale.tour);
-        model.setTour_current(best.tour);
+        gui_model.setTour_optimal(ottimale.tour);
     }   // end main
     
     public static int[] readTour(String filename)
