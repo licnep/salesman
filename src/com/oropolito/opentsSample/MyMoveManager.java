@@ -10,7 +10,7 @@ public class MyMoveManager implements MoveManager
         int[] tour = ((MySolution)solution).tour;
         Move[] buffer = new Move[ tour.length*tour.length ];
         int nextBufferPos = 0;
-        int delta = (int)Math.round(GlobalData.numCustomers*0.75);
+        int delta = (int)Math.round(GlobalData.numCustomers*0.75);      
         
         // Generate moves that move each customer
         // forward and back up to five spaces.

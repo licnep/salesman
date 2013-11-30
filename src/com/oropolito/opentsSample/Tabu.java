@@ -101,11 +101,12 @@ public class Tabu {
 			}
         }*/
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
+        Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
         
         // Create Tabu Search object
         TabuSearch tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
-        		soluzione_iniziale_random1,
+        		soluzione_iniziale_random2,
                 moveManager,
                 objFunc,
               tabuList,
@@ -140,7 +141,7 @@ public class Tabu {
         System.out.println( "Optimal Solution:");
         System.out.println(ottimale);
         double miaLunghezza = best.getObjectiveValue()[0];
-        System.out.println("Optimality:"+ottimal[0]/miaLunghezza);
+        System.out.println("Optimality:"+(miaLunghezza-ottimal[0])/ottimal[0]);
         
         gui_model.setTour_optimal(ottimale.tour);
     }   // end main

@@ -23,7 +23,7 @@ import com.oropolito.opentsSample.GlobalData;
 
 public class GUI_view implements Observer, MouseWheelListener {
 	private GUI_model m;
-	private double zoom = 4000;
+	private double zoom = 2000;
 	private JPanel c;
 
 	//costruttore
@@ -65,7 +65,7 @@ public class GUI_view implements Observer, MouseWheelListener {
 						//int a = m.getTour_current()[i-1];
 						int a = m.getTour_current()[(i==0)? GlobalData.numCustomers-1 : i-1];
 						int b = m.getTour_current()[i];
-						g2.draw(new Line2D.Double(customers[a][0]*w/zoom, customers[a][1]*h/zoom+10, customers[b][0]*w/zoom, customers[b][1]*h/zoom+10));
+						g2.draw(new Line2D.Double(customers[a][0]*w/zoom, customers[a][1]*h/zoom+3, customers[b][0]*w/zoom, customers[b][1]*h/zoom+3));
 					}
 				}
 			}

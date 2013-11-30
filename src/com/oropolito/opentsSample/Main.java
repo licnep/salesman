@@ -19,7 +19,7 @@ public class Main
     {
     	
     	readParams(args);
-    	P_TSMaxIter = 400;
+    	P_TSMaxIter = 1000;
     	
     	Tabu myTabu = new Tabu();
     	//myTabu.main(P_TSMaxIter,P_baseDir+"pr1002.tsp",P_baseDir+"pr1002.opt.tour");
