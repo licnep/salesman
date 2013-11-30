@@ -80,6 +80,12 @@ public class Tabu {
 		}
 		gui_model.setCustomers(customers);
 		GlobalData.numCustomers = numCustomers;
+		//cerco la X massima per dimensionare il grafico:
+		double maxX = 0;
+		for (int i=0;i<numCustomers;i++)
+			if (customers[i][0]>maxX) maxX = customers[i][0];
+		gui_model.area_size = maxX;
+		
         // Initialize our objects
         java.util.Random r = new java.util.Random( 12345 );
         

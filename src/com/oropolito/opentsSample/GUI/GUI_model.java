@@ -9,6 +9,7 @@ import java.util.Observable;
 public class GUI_model extends Observable {
 	private double[][] customers; //lista dei clienti, ogniuno 2 coordinate double X,Y
 	private int[] tour_current,tour_optimal;
+	public double area_size = 1000; //circa la massima x della citta piu' lontana
 	private int current_iteration = 0;
 	public ITrace2D trace; 
 	

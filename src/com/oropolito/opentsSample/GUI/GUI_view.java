@@ -27,7 +27,7 @@ import com.oropolito.opentsSample.GlobalData;
 
 public class GUI_view implements Observer, MouseWheelListener {
 	private GUI_model m;
-	private double zoom = 2000;
+	private double zoom = 1300;
 	private JPanel c;
 
 	//costruttore
@@ -47,6 +47,7 @@ public class GUI_view implements Observer, MouseWheelListener {
 				Graphics2D g2 = (Graphics2D) g;
 				int w=getWidth();
 			    int h=getHeight();
+			    double z = (m.area_size*(zoom/1000));
 			    g2.setPaint(Color.white);
 			    g2.fill(new Rectangle2D.Double(0,0,w,h));
 			    //g2.fill(new RoundRectangle2D.Double(10,10,w-20,h-20,10,10));
@@ -54,7 +55,7 @@ public class GUI_view implements Observer, MouseWheelListener {
 				//disegno i pallini dei customers
 				double customers[][] = m.getCustomers();
 				for (int i=0;i<GlobalData.numCustomers;i++) {
-					g2.fill(new Ellipse2D.Double(customers[i][0]*w/zoom-3, customers[i][1]*h/zoom-3, 6, 6));
+					g2.fill(new Ellipse2D.Double(customers[i][0]*w/z-3, customers[i][1]*h/z-3, 6, 6));
 				}
 				//disegno il percorso ottimale
 				g2.setPaint(Color.green);
@@ -62,7 +63,7 @@ public class GUI_view implements Observer, MouseWheelListener {
 					for (int i=0;i<GlobalData.numCustomers;i++) {
 						int a = m.getTour_optimal()[(i==0)? GlobalData.numCustomers-1 : i-1];
 						int b = m.getTour_optimal()[i];
-						g2.draw(new Line2D.Double(customers[a][0]*w/zoom, customers[a][1]*h/zoom, customers[b][0]*w/zoom, customers[b][1]*h/zoom));
+						g2.draw(new Line2D.Double(customers[a][0]*w/z, customers[a][1]*h/z, customers[b][0]*w/z, customers[b][1]*h/z));
 					}
 				}
 				//disegno il percorso trovato
@@ -72,7 +73,7 @@ public class GUI_view implements Observer, MouseWheelListener {
 						//int a = m.getTour_current()[i-1];
 						int a = m.getTour_current()[(i==0)? GlobalData.numCustomers-1 : i-1];
 						int b = m.getTour_current()[i];
-						g2.draw(new Line2D.Double(customers[a][0]*w/zoom, customers[a][1]*h/zoom+3, customers[b][0]*w/zoom, customers[b][1]*h/zoom+3));
+						g2.draw(new Line2D.Double(customers[a][0]*w/z, customers[a][1]*h/z+3, customers[b][0]*w/z, customers[b][1]*h/z+3));
 					}
 				}
 			}
