@@ -85,7 +85,8 @@ public class GUI_view implements Observer, MouseWheelListener {
 		
 		//grafico:
 		Chart2D chart = new Chart2D();
-		chart.addTrace(m.trace);
+		chart.addTrace(m.trace_current);
+		chart.addTrace(m.trace_best);
 		chart.setPreferredSize(new Dimension(500, 500));
 		chart.getAxisX().setAxisTitle(new AxisTitle("Iteration #"));
 		chart.getAxisY().setAxisTitle(new AxisTitle("% from Optimality"));

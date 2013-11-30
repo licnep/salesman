@@ -135,9 +135,13 @@ public class Tabu {
         {
         	tabuSearch.setIterationsToGo( 1 );
             tabuSearch.startSolving();
-            MySolution temp = (MySolution)tabuSearch.getBestSolution();
+            
+            MySolution temp = (MySolution)tabuSearch.getCurrentSolution();
             gui_model.setTour_current(temp.tour);
-            gui_model.updateOptimality((temp.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
+            gui_model.update_current_optimality((temp.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
+
+            MySolution cur_best = (MySolution)tabuSearch.getBestSolution();
+            gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
             try { Thread.sleep(10); } catch (InterruptedException e) { e.printStackTrace();}
         }
         

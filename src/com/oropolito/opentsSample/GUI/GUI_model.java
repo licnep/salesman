@@ -4,6 +4,7 @@ import info.monitorenter.gui.chart.ITrace2D;
 import info.monitorenter.gui.chart.traces.Trace2DLtd;
 import info.monitorenter.gui.chart.traces.Trace2DSimple;
 
+import java.awt.Color;
 import java.util.Observable;
 
 public class GUI_model extends Observable {
@@ -11,16 +12,22 @@ public class GUI_model extends Observable {
 	private int[] tour_current,tour_optimal;
 	public double area_size = 1000; //circa la massima x della citta piu' lontana
 	private int current_iteration = 0;
-	public ITrace2D trace; 
+	public ITrace2D trace_current,trace_best; 
 	
 	public GUI_model() {
 		//trace = new Trace2DLtd();
-		trace = new Trace2DSimple("% from Optimality");
+		trace_current = new Trace2DSimple("Current solution");
+		trace_best = new Trace2DSimple("Best solution so far");
+		trace_best.setColor(Color.BLUE);
 	}
 	
-	public void updateOptimality(double opt) {
-		trace.addPoint(current_iteration, opt);
+	public void update_current_optimality(double opt) {
+		trace_current.addPoint(current_iteration, opt);
 		current_iteration++;
+	}
+	
+	public void update_best_optimality(double opt) {
+		trace_best.addPoint(current_iteration, opt);
 	}
 	
 	//getters and setters:
