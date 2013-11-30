@@ -15,7 +15,7 @@ public class GUI_model extends Observable {
 	
 	public GUI_model() {
 		//trace = new Trace2DLtd();
-		trace = new Trace2DSimple("Optimality");
+		trace = new Trace2DSimple("% from Optimality");
 	}
 	
 	public void updateOptimality(double opt) {

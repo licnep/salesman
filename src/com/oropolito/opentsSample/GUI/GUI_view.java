@@ -1,6 +1,7 @@
 package com.oropolito.opentsSample.GUI;
 
 import info.monitorenter.gui.chart.Chart2D;
+import info.monitorenter.gui.chart.IAxis.AxisTitle;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -86,6 +87,8 @@ public class GUI_view implements Observer, MouseWheelListener {
 		Chart2D chart = new Chart2D();
 		chart.addTrace(m.trace);
 		chart.setPreferredSize(new Dimension(500, 500));
+		chart.getAxisX().setAxisTitle(new AxisTitle("Iteration #"));
+		chart.getAxisY().setAxisTitle(new AxisTitle("% from Optimality"));
 		main_panel.add(chart);
 		
 		f.setVisible(true);

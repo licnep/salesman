@@ -112,8 +112,8 @@ public class Tabu {
         
         // Create Tabu Search object
         TabuSearch tabuSearch = new SingleThreadedTabuSearch(
-                //initialSolution,
-        		soluzione_iniziale_random2,
+                initialSolution,
+        		//soluzione_iniziale_random2,
                 moveManager,
                 objFunc,
               tabuList,
