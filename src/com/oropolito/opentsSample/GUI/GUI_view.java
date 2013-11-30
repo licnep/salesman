@@ -1,6 +1,10 @@
 package com.oropolito.opentsSample.GUI;
 
+import info.monitorenter.gui.chart.Chart2D;
+
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -32,8 +36,11 @@ public class GUI_view implements Observer, MouseWheelListener {
 		m.addObserver(this);
 		
 		JFrame f = new JFrame();
-	    f.setSize(1000, 1000);
+	    f.setSize(1200, 800);
 	    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    
+	    JPanel main_panel = new JPanel();
+	    f.add(main_panel);
 		
 		c = new JPanel() {
 			public void paint(Graphics g) {
@@ -71,7 +78,15 @@ public class GUI_view implements Observer, MouseWheelListener {
 			}
 		};
 		c.addMouseWheelListener(this);
-		f.add(c);
+		c.setPreferredSize(new Dimension(500,500));
+		main_panel.add(c);
+		
+		//grafico:
+		Chart2D chart = new Chart2D();
+		chart.addTrace(m.trace);
+		chart.setPreferredSize(new Dimension(500, 500));
+		main_panel.add(chart);
+		
 		f.setVisible(true);
 	}
 	

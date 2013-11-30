@@ -19,7 +19,8 @@ public class MyRandomSolution2 extends MySolution {
         Double n_casuale =  Math.floor(Math.random()*customers.length);
 		this.tour[0] =  avail.remove( n_casuale.intValue() );
         
-		int N = 5;
+		//scelgo tra i 3 neighbout piu' vicini, a caso
+		int N = 3;
 		
         for( int i = 1; i < tour.length; i++ )
         {

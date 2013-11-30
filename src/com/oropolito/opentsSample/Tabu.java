@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.coinor.opents.BestEverAspirationCriteria;
@@ -117,6 +118,11 @@ public class Tabu {
         MyTSListener myListener = new MyTSListener();
         tabuSearch.addTabuSearchListener(myListener);
 
+        // Carico la soluzione ottimale
+        MySolution ottimale = new MySolution(customers);
+        ottimale.tour = readTour(opt_tour_filename);
+        double[] ottimal = objFunc.evaluate(ottimale, null);
+        ottimale.setObjectiveValue(ottimal);
         
         // Start solving
         for (int i=0;i<iterations;i++) 
@@ -125,7 +131,8 @@ public class Tabu {
             tabuSearch.startSolving();
             MySolution temp = (MySolution)tabuSearch.getBestSolution();
             gui_model.setTour_current(temp.tour);
-            //try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
+            gui_model.updateOptimality((temp.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
+            try { Thread.sleep(10); } catch (InterruptedException e) { e.printStackTrace();}
         }
         
         // Show solution
@@ -133,11 +140,6 @@ public class Tabu {
         System.out.println( "Best Solution:\n" + best );
 
         // Mostro la soluzione ottimale
-        MySolution ottimale = new MySolution(customers);
-        //ottimale.tour = readTour("./Data/TSP/berlin52.opt.tour");
-        ottimale.tour = readTour(opt_tour_filename);
-        double[] ottimal = objFunc.evaluate(ottimale, null);
-        ottimale.setObjectiveValue(ottimal);
         System.out.println( "Optimal Solution:");
         System.out.println(ottimale);
         double miaLunghezza = best.getObjectiveValue()[0];
