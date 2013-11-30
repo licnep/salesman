@@ -2,6 +2,7 @@ package com.oropolito.opentsSample;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 
 import com.oropolito.opentsSample.GUI.GUI_model;
 
@@ -10,13 +11,15 @@ import com.oropolito.opentsSample.GUI.GUI_model;
 public class MyRandomSolution2 extends MySolution {
 	public MyRandomSolution2(double[][] customers,GUI_model gui_model)
     {
+		Random rand_generator = new Random(GlobalData.random_seed);
+		
         tour = new int[ customers.length ];
         ArrayList<Integer> avail = new ArrayList<>();
 		for( int i = 0; i < customers.length; i++ )
             avail.add(i);
         
         //parto da un nodo a caso
-        Double n_casuale =  Math.floor(Math.random()*customers.length);
+        Double n_casuale =  Math.floor( rand_generator.nextInt(customers.length));
 		this.tour[0] =  avail.remove( n_casuale.intValue() );
         
 		//scelgo tra i 3 neighbout piu' vicini, a caso
@@ -46,7 +49,7 @@ public class MyRandomSolution2 extends MySolution {
         	}
         	
         	//scelgo uno dei piu' vicini a caso e lo aggiungo al percorso
-        	n_casuale =  Math.floor(Math.random()*N); //n casuale fra 0 e N-1
+        	n_casuale =  Math.floor(rand_generator.nextInt(N)); //n casuale fra 0 e N-1
         	System.out.println(closest);
         	Elemento chosen = closest.remove( n_casuale.intValue() );
 			this.tour[i] = chosen.numero;
