@@ -13,9 +13,10 @@ public class My2Opt_MoveManager implements MoveManager
         
         ArrayList<My2Opt_Move> l = new ArrayList<My2Opt_Move>();
         
-        for (int t1=0; t1<tour.length-3; t1++) { //scelta di t1
-        	for (int t3=t1+2; t3<tour.length-1; t3++) { //scelta di t3
-        		l.add(new My2Opt_Move(t1,t3,solution));
+        for (int t1=0; t1<tour.length; t1++) { //scelta di t1
+        	for (int t3=t1+2; t3<t1+tour.length-1; t3++) { //scelta di t3
+        		int t3M = t3%tour.length;
+        		l.add(new My2Opt_Move(t1,t3M,solution));
         	}
         }
         My2Opt_Move[] moves = l.toArray(new My2Opt_Move[l.size()]);
