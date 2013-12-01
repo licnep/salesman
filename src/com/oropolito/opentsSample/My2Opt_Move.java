@@ -27,7 +27,7 @@ public class My2Opt_Move implements ComplexMove
         int[] tour = ((MySolution)soln).tour;
         
         try {
-        	System.out.println("t1="+t1 + "  t2="+t2 + " t3="+t3+" t4="+t4);
+        	//System.out.println("t1="+t1 + "  t2="+t2 + " t3="+t3+" t4="+t4);
 			//inverto la sezione da t2 a t3, il loop e fino a meta' della lunghezza, il resto e' gia' stato swappato
 			for (int i=0;i<=Math.floor((t3-t2)/2);i++) {
 				int tmp = tour[t2+i];

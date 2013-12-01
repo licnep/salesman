@@ -57,8 +57,8 @@ public class MyRandomSolution2 extends MySolution {
 			System.out.println(avail);
 			try {
 				gui_model.setTour_current(tour);
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
+				//Thread.sleep(10);
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
