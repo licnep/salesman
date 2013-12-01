@@ -35,4 +35,6 @@ public class MyTSListener extends TabuSearchAdapter{
     public void newCurrentSolutionFound( TabuSearchEvent evt ){}
     public void tabuSearchStarted( TabuSearchEvent evt ){}
     public void tabuSearchStopped( TabuSearchEvent evt ){}
+    public void noChangeInValueMoveMade( TabuSearchEvent evt ){}
+    public void improvingMoveMade( TabuSearchEvent evt ){}
 }
