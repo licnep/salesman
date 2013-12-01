@@ -93,8 +93,8 @@ public class Tabu {
 //        Solution initialSolution  = new MySolution( customers );
         Solution initialSolution  = new MyGreedyStartSolution( customers );
         MoveManager   moveManager = new MyMoveManager();
-        TabuList         tabuList = new SimpleTabuList( 7 ); // In OpenTS package
-        TabuList         tabuList2 = new MyTabuList( 7 );
+        //TabuList         tabuList = new SimpleTabuList( 7 ); // In OpenTS package
+        TabuList         tabuList = new MyTabuList( 7 );
         
         /*boolean asd= true;
         while (asd) {

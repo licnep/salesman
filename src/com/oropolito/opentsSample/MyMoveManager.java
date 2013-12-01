@@ -19,7 +19,7 @@ public class MyMoveManager implements MoveManager
 //          for( int j = -GlobalData.numCustomers/2; j <= GlobalData.numCustomers/2; j++ )
             for( int j = -delta; j <= delta; j++ )
                 if( (i+j >= 1) && (i+j < tour.length) && (j != 0) )
-                    buffer[nextBufferPos++] = new MySwapMove( tour[i], j );
+                    buffer[nextBufferPos++] = new MySwapMove( tour[i], j, tour[i+j] );
          
         // Trim buffer
         Move[] moves = new Move[ nextBufferPos];
