@@ -89,12 +89,11 @@ public class Tabu {
         // Initialize our objects
         java.util.Random r = new java.util.Random( 12345 );
         
-        ObjectiveFunction objFunc = new MyObjectiveFunction( customers );
-//        Solution initialSolution  = new MySolution( customers );
+        ObjectiveFunction objFunc = new My2Opt_ObjectiveFunction( customers );
         Solution initialSolution  = new MyGreedyStartSolution( customers );
-        MoveManager   moveManager = new MyMoveManager();
-        //TabuList         tabuList = new SimpleTabuList( 7 ); // In OpenTS package
-        TabuList         tabuList = new MyTabuList( 7 );
+        MoveManager   moveManager = new My2Opt_MoveManager();
+        //TabuList         tabuList = new MyTabuList( 7 );
+        TabuList tabuList = new My2Opt_TabuList(7,4);
         
         /*boolean asd= true;
         while (asd) {
@@ -142,7 +141,7 @@ public class Tabu {
 
             MySolution cur_best = (MySolution)tabuSearch.getBestSolution();
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
-            //try { Thread.sleep(10); } catch (InterruptedException e) { e.printStackTrace();}
+            try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
         }
         
         // Show solution
