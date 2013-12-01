@@ -148,6 +148,7 @@ public class Tabu {
         // Show solution
         MySolution best = (MySolution)tabuSearch.getBestSolution();
         System.out.println( "Best Solution:\n" + best );
+        gui_model.setTour_current(best.tour);
 
         // Mostro la soluzione ottimale
         System.out.println( "Optimal Solution:");
