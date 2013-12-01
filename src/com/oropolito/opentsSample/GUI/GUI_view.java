@@ -74,7 +74,7 @@ public class GUI_view implements Observer, MouseWheelListener {
 						//int a = m.getTour_current()[i-1];
 						int a = m.getTour_current()[(i==0)? GlobalData.numCustomers-1 : i-1];
 						int b = m.getTour_current()[i];
-						g2.draw(new Line2D.Double(customers[a][0]*w/z, customers[a][1]*h/z+3, customers[b][0]*w/z, customers[b][1]*h/z+3));
+						g2.draw(new Line2D.Double(customers[a][0]*w/z, customers[a][1]*h/z+2, customers[b][0]*w/z, customers[b][1]*h/z+2));
 					}
 				}
 			}

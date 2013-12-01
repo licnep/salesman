@@ -128,6 +128,7 @@ public class Tabu {
         ottimale.tour = readTour(opt_tour_filename);
         double[] ottimal = objFunc.evaluate(ottimale, null);
         ottimale.setObjectiveValue(ottimal);
+        gui_model.setTour_optimal(ottimale.tour);
         
         // Start solving
         for (int i=0;i<iterations;i++) 
@@ -154,7 +155,6 @@ public class Tabu {
         double miaLunghezza = best.getObjectiveValue()[0];
         System.out.println("Optimality:"+(miaLunghezza-ottimal[0])/ottimal[0]);
         
-        gui_model.setTour_optimal(ottimale.tour);
     }   // end main
     
     public static int[] readTour(String filename)
