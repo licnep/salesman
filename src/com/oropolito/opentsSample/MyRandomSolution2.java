@@ -23,7 +23,7 @@ public class MyRandomSolution2 extends MySolution {
 		this.tour[0] =  avail.remove( n_casuale.intValue() );
         
 		//scelgo tra i 3 neighbout piu' vicini, a caso
-		int N = 3;
+		int N = 1; //1=pure greedy
 		
         for( int i = 1; i < tour.length; i++ )
         {

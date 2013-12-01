@@ -112,8 +112,8 @@ public class Tabu {
         
         // Create Tabu Search object
         TabuSearch tabuSearch = new SingleThreadedTabuSearch(
-                initialSolution,
-        		//soluzione_iniziale_random2,
+                //initialSolution,
+        		soluzione_iniziale_random2,
                 moveManager,
                 objFunc,
               tabuList,
@@ -142,7 +142,7 @@ public class Tabu {
 
             MySolution cur_best = (MySolution)tabuSearch.getBestSolution();
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
-            try { Thread.sleep(10); } catch (InterruptedException e) { e.printStackTrace();}
+            //try { Thread.sleep(10); } catch (InterruptedException e) { e.printStackTrace();}
         }
         
         // Show solution

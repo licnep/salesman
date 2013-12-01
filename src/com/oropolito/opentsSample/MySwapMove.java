@@ -33,7 +33,6 @@ public class MySwapMove implements ComplexMove
         tour[pos1] = cust2;
         tour[pos2] = customer;
         
-        System.out.println("customer:" + customer);
     }   // end operateOn
     
     

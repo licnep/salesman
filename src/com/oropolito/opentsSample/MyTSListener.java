@@ -14,6 +14,7 @@ public class MyTSListener extends TabuSearchAdapter{
 
     	mytl = (ComplexTabuList)theTS.getTabuList();
     	mytl.setTenure( Math.max( 7, (int)( 0.75 * mytl.getTenure() ) ) );
+    	//mytl.setTenure( 7 );
         System.out.println("Decrease tenure to " + mytl.getTenure());
 
         final String msg = "New Best solution found at iteration " + theTS.getIterationsCompleted() + "\n Done. Best solution: " + best;
@@ -24,9 +25,9 @@ public class MyTSListener extends TabuSearchAdapter{
     {   // Increase tenure
     	TabuSearch theTS = (TabuSearch)evt.getSource();
     	ComplexTabuList mytl;
-
     	mytl = (ComplexTabuList)theTS.getTabuList();
 
+    	//mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 2 ));
     	mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 2 ));
         System.out.println("Increase tenure to " + mytl.getTenure());
   }
@@ -35,6 +36,20 @@ public class MyTSListener extends TabuSearchAdapter{
     public void newCurrentSolutionFound( TabuSearchEvent evt ){}
     public void tabuSearchStarted( TabuSearchEvent evt ){}
     public void tabuSearchStopped( TabuSearchEvent evt ){}
-    public void noChangeInValueMoveMade( TabuSearchEvent evt ){}
-    public void improvingMoveMade( TabuSearchEvent evt ){}
+    public void noChangeInValueMoveMade( TabuSearchEvent evt ){
+    	TabuSearch theTS = (TabuSearch)evt.getSource();
+    	ComplexTabuList mytl;
+    	mytl = (ComplexTabuList)theTS.getTabuList();
+
+    	mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 2));
+        System.out.println("Increase tenure to " + mytl.getTenure());
+    }
+    public void improvingMoveMade( TabuSearchEvent evt ){
+    	TabuSearch theTS = (TabuSearch)evt.getSource();
+    	ComplexTabuList mytl;
+    	mytl = (ComplexTabuList)theTS.getTabuList();
+
+    	mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() - 3 ));
+    	System.out.println("Decrease tenure to " + mytl.getTenure());
+    }
 }
