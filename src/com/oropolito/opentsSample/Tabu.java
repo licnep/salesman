@@ -89,23 +89,12 @@ public class Tabu {
         // Initialize our objects
         java.util.Random r = new java.util.Random( 12345 );
         
-        ObjectiveFunction objFunc = new My2Opt_ObjectiveFunction( customers );
+        ObjectiveFunction objFunc = new VertexInsertion_ObjectiveFunction( customers );
         Solution initialSolution  = new MyGreedyStartSolution( customers );
-        MoveManager   moveManager = new My2Opt_MoveManager();
-        //TabuList         tabuList = new MyTabuList( 7 );
-        TabuList tabuList = new My2Opt_TabuList(7,4);
+        MoveManager   moveManager = new VertexInsertion_MoveManager();
+        TabuList         tabuList = new VertexInsertion_TabuList( 7 );
+        //TabuList tabuList = new My2Opt_TabuList(7,4);
         
-        /*boolean asd= true;
-        while (asd) {
-        	Solution random1 = new MyRandomSolution(numCustomers);
-        	System.out.println(random1);
-        	gui_model.setTour_current( ((MySolution)random1).tour);
-        	try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-        }*/
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
         Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
         
