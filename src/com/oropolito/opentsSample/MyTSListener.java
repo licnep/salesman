@@ -10,9 +10,9 @@ public class MyTSListener extends TabuSearchAdapter{
     {   
     	TabuSearch theTS = (TabuSearch)evt.getSource();
     	Solution   best  = theTS.getBestSolution();
-    	VertexInsertion_TabuList mytl;
+    	Composite_TabuList mytl;
 
-    	mytl = (VertexInsertion_TabuList)theTS.getTabuList();
+    	mytl = (Composite_TabuList)theTS.getTabuList();
     	mytl.setTenure( Math.max( 7, (int)( 0.75 * mytl.getTenure() ) ) );
     	//mytl.setTenure( 7 );
         System.out.println("Decrease tenure to " + mytl.getTenure());
@@ -24,8 +24,8 @@ public class MyTSListener extends TabuSearchAdapter{
     public void unimprovingMoveMade( TabuSearchEvent evt )
     {   // Increase tenure
     	TabuSearch theTS = (TabuSearch)evt.getSource();
-    	VertexInsertion_TabuList mytl;
-    	mytl = (VertexInsertion_TabuList)theTS.getTabuList();
+    	Composite_TabuList mytl;
+    	mytl = (Composite_TabuList)theTS.getTabuList();
 
     	//mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 2 ));
     	mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 2 ));
@@ -39,16 +39,16 @@ public class MyTSListener extends TabuSearchAdapter{
     public void noChangeInValueMoveMade( TabuSearchEvent evt ){
     	// Increase tenure
     	TabuSearch theTS = (TabuSearch)evt.getSource();
-    	VertexInsertion_TabuList mytl;
-    	mytl = (VertexInsertion_TabuList)theTS.getTabuList();
+    	Composite_TabuList mytl;
+    	mytl = (Composite_TabuList)theTS.getTabuList();
 
     	mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 1 ));
         System.out.println("Increase tenure to " + mytl.getTenure());
     }
     public void improvingMoveMade( TabuSearchEvent evt ){
     	TabuSearch theTS = (TabuSearch)evt.getSource();
-    	VertexInsertion_TabuList mytl;
-    	mytl = (VertexInsertion_TabuList)theTS.getTabuList();
+    	Composite_TabuList mytl;
+    	mytl = (Composite_TabuList)theTS.getTabuList();
 
     	mytl.setTenure( Math.max( 7, mytl.getTenure() - 1 ));
     	System.out.println("Decrease tenure to " + mytl.getTenure());
