@@ -93,7 +93,7 @@ public class Tabu {
         ObjectiveFunction objFunc = new Composite_ObjectiveFunction( customers );
         Solution initialSolution  = new MyGreedyStartSolution( customers );
         MoveManager   moveManager = new Composite_MoveManager();
-        TabuList         tabuList = new Composite_TabuList( 20 );
+        TabuList         tabuList = new Composite_TabuList( 10 );
         //TabuList         tabuList = new VertexInsertion_TabuList( 7 );
         //TabuList tabuList = new My2Opt_TabuList(7,4);
         
