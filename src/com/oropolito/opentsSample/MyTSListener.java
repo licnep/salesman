@@ -4,7 +4,7 @@ import org.coinor.opents.*;
 
 public class MyTSListener extends TabuSearchAdapter{
 
-	public int MAX_TENURE = GlobalData.numCustomers/2;//*3;// /2;
+	public int MAX_TENURE = GlobalData.numCustomers;//*3;// /2;
 
     public void newBestSolutionFound( TabuSearchEvent evt )
     {   
@@ -50,7 +50,7 @@ public class MyTSListener extends TabuSearchAdapter{
     	Composite_TabuList mytl;
     	mytl = (Composite_TabuList)theTS.getTabuList();
 
-    	mytl.setTenure( Math.max( 20, mytl.getTenure() - 2 ));
+    	mytl.setTenure( Math.max( 20, mytl.getTenure() - 4 ));
     	System.out.println("Decrease tenure to " + mytl.getTenure());
     }
 }
