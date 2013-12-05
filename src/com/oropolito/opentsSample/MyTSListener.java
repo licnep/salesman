@@ -50,7 +50,7 @@ public class MyTSListener extends TabuSearchAdapter{
     	Composite_TabuList mytl;
     	mytl = (Composite_TabuList)theTS.getTabuList();
 
-    	mytl.setTenure( Math.max( 20, mytl.getTenure() - 4 ));
+    	mytl.setTenure( Math.max( 20, mytl.getTenure() - 5 ));
     	System.out.println("Decrease tenure to " + mytl.getTenure());
     }
 }
