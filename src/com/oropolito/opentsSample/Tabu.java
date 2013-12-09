@@ -133,7 +133,7 @@ public class Tabu {
 
             MySolution cur_best = (MySolution)tabuSearch.getBestSolution();
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
-            //try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
+            try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
         }
         
         // Show solution

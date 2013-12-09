@@ -169,6 +169,11 @@ public class My2Opt_TabuList implements TabuList
             	if (isSameEdge(c1, c3, old_c3, old_c4)) return true;
             	if (isSameEdge(c2, c4, old_c1, old_c2)) return true;
             	if (isSameEdge(c2, c4, old_c3, old_c4)) return true;
+            	
+            	if (isSameEdge(c1, c2, old_c1, old_c3)) return true;
+            	if (isSameEdge(c1, c2, old_c2, old_c4)) return true;
+            	if (isSameEdge(c3, c4, old_c1, old_c3)) return true;
+            	if (isSameEdge(c3, c4, old_c2, old_c4)) return true;
             }
                 /*for( int j = 0; j < this.numAttr; j++ )
                     if ( attrs[j] == tabuList[ (currentPos-i) % listLength ][j] )
