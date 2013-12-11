@@ -120,6 +120,8 @@ public class Tabu {
                 new BestEverAspirationCriteria(), // In OpenTS package
                 false ); // maximizing = yes/no; false means minimizing
         
+        tabuSearch.setChooseFirstImprovingMove(true);
+        
         MyTSListener myListener = new MyTSListener();
         tabuSearch.addTabuSearchListener(myListener);
 
