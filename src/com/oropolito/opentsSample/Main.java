@@ -25,11 +25,11 @@ public class Main
     	//myTabu.main(P_TSMaxIter,P_baseDir+"pr1002.tsp",P_baseDir+"pr1002.opt.tour");
     	
     	//myTabu.main(P_TSMaxIter,P_baseDir+"berlin52.tsp",P_baseDir+"berlin52.opt.tour");
-    	//myTabu.main(P_TSMaxIter,P_baseDir+"eil51.tsp",P_baseDir+"eil51.opt.tour");
+    	myTabu.main(P_TSMaxIter,P_baseDir+"eil51.tsp",P_baseDir+"eil51.opt.tour");
     	//myTabu.main(P_TSMaxIter,P_baseDir+"eil76.tsp",P_baseDir+"eil76.opt.tour");
 
     	//myTabu.main(P_TSMaxIter,P_baseDir+"TSPLIB/a280.tsp",P_baseDir+"TSPLIB/a280.opt.tour");
-    	myTabu.main(P_TSMaxIter,P_baseDir+"TSPLIB/ch130.tsp",P_baseDir+"TSPLIB/ch130.opt.tour");
+    	//myTabu.main(P_TSMaxIter,P_baseDir+"TSPLIB/ch130.tsp",P_baseDir+"TSPLIB/ch130.opt.tour");
     	return;
 	}
     

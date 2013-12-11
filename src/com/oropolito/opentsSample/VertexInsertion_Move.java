@@ -3,14 +3,22 @@ import org.coinor.opents.*;
 
 public class VertexInsertion_Move implements ComplexMove 
 {
-	public int c1,new_pos,customerId;
+	public int c1,new_pos,customerId,t1,t2,t3,t4;
+	
+	/**
+	 *  ---t1---c1---t2-----------------t3----new_pos---t4--------
+	 */
     
     
-    public VertexInsertion_Move( int c1, int new_pos,int customerId)
+    public VertexInsertion_Move( int c1, int new_pos,int[] tour)
     {   
     	this.c1 = c1;
+    	this.t1 = tour[(c1-1+tour.length)%tour.length];
+    	this.t2 = tour[(c1+1+tour.length)%tour.length];
+    	this.t3 = tour[(new_pos-1+tour.length)%tour.length];
+    	this.t4 = tour[(new_pos)%tour.length];
     	this.new_pos = new_pos;
-    	this.customerId = customerId;
+    	this.customerId = tour[c1];
     }   // end constructor
     
     
@@ -41,9 +49,10 @@ public class VertexInsertion_Move implements ComplexMove
 		/**
 		 * Mossa e' tabu se prova a muovere vertice gia' mosso prima
 		 */
-		
-		int attr[] = new int[1];
-		attr[0] = customerId;
+		//memorizzo uno dei segmenti rimossi, questo non potra' essere reinserito dopo
+		int attr[] = new int[2];
+		attr[0] = t1;
+		attr[1] = customerId;																				
 		return attr;
 	}
     

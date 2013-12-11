@@ -6,7 +6,7 @@ public class VertexInsertion_TabuList extends ComplexTabuList
 {
     public VertexInsertion_TabuList(int tabuTenure)
     {
-    	super(tabuTenure, 1 /*n attributes*/);
+    	super(tabuTenure, 2 /*n attributes*/);
     }
     
     @Override

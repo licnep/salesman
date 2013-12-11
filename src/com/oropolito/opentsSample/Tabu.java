@@ -89,9 +89,9 @@ public class Tabu {
         // Initialize our objects
         java.util.Random r = new java.util.Random( 12345 );
         
-        ObjectiveFunction objFunc = new VertexInsertion_ObjectiveFunction( customers );
+        VertexInsertion_ObjectiveFunction objFunc = new VertexInsertion_ObjectiveFunction( customers );
         Solution initialSolution  = new MyGreedyStartSolution( customers );
-        MoveManager   moveManager = new VertexInsertion_MoveManager();
+        MoveManager   moveManager = new VertexInsertion_MoveManager(objFunc.matrix);
         TabuList         tabuList = new VertexInsertion_TabuList( 7 );
         //TabuList tabuList = new My2Opt_TabuList(7,4);
         
