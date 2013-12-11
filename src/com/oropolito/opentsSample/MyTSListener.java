@@ -6,6 +6,8 @@ public class MyTSListener extends TabuSearchAdapter{
 
 	public int MAX_TENURE =  GlobalData.numCustomers*3;//*3;// /2;
 	public int MIN_TENURE = Math.max(7,GlobalData.numCustomers/13);
+	public int notImprovingCounter = 0;
+	public int ImprovingCounter = 0;
 
     public void newBestSolutionFound( TabuSearchEvent evt )
     {   
@@ -23,7 +25,10 @@ public class MyTSListener extends TabuSearchAdapter{
     }
 
     public void unimprovingMoveMade( TabuSearchEvent evt )
-    {   // Increase tenure
+    {   
+    	ImprovingCounter=0;
+    	notImprovingCounter++;
+    	// Increase tenure
     	TabuSearch theTS = (TabuSearch)evt.getSource();
     	My2Opt_TabuList mytl;
     	mytl = (My2Opt_TabuList)theTS.getTabuList();
@@ -37,8 +42,15 @@ public class MyTSListener extends TabuSearchAdapter{
     public void newCurrentSolutionFound( TabuSearchEvent evt ){}
     public void tabuSearchStarted( TabuSearchEvent evt ){}
     public void tabuSearchStopped( TabuSearchEvent evt ){}
-    public void noChangeInValueMoveMade( TabuSearchEvent evt ){}
+    public void noChangeInValueMoveMade( TabuSearchEvent evt ){
+    	ImprovingCounter=0;
+    	notImprovingCounter++;
+    }
     public void improvingMoveMade( TabuSearchEvent evt ){
+    	ImprovingCounter++;
+    	if (ImprovingCounter>3) {//TODO: verificare
+    		notImprovingCounter = 0;
+    	}
     	TabuSearch theTS = (TabuSearch)evt.getSource();
     	My2Opt_TabuList mytl;
     	mytl = (My2Opt_TabuList)theTS.getTabuList();

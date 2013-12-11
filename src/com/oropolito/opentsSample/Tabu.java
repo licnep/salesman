@@ -109,7 +109,7 @@ public class Tabu {
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
         Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
         
-        GlobalData.objFunc.setInitialFrequencies((MySolution)soluzione_iniziale_random2);
+        GlobalData.objFunc.setInitialFrequencies((MySolution)soluzione_iniziale_random1);
         
         // Create Tabu Search object
         TabuSearch tabuSearch = new SingleThreadedTabuSearch(
