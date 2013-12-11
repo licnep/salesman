@@ -21,12 +21,18 @@ public class Main
     	readParams(args);
     	P_TSMaxIter = 1000;
     	
+    	long startTime = System.currentTimeMillis();
+    	
     	Tabu myTabu = new Tabu();
-    	myTabu.main(P_TSMaxIter,P_baseDir+"pr1002.tsp",P_baseDir+"pr1002.opt.tour");
-    	//myTabu.main(P_TSMaxIter,P_baseDir+"berlin52.tsp",P_baseDir+"berlin52.opt.tour");
+    	//myTabu.main(P_TSMaxIter,P_baseDir+"pr1002.tsp",P_baseDir+"pr1002.opt.tour");
+    	myTabu.main(P_TSMaxIter,P_baseDir+"berlin52.tsp",P_baseDir+"berlin52.opt.tour");
     	//myTabu.main(P_TSMaxIter,P_baseDir+"eil51.tsp",P_baseDir+"eil51.opt.tour");
     	//myTabu.main(P_TSMaxIter,P_baseDir+"eil76.tsp",P_baseDir+"eil76.opt.tour");
     	//myTabu.main(P_TSMaxIter,P_baseDir+"TSPLIB/a280.tsp",P_baseDir+"TSPLIB/a280.opt.tour");
+    	
+    	long endTime = System.currentTimeMillis();
+    	System.out.println("Tempo impiegato:" + (endTime-startTime)/1000.0 + "s");
+    	
     	return;
 	}
     

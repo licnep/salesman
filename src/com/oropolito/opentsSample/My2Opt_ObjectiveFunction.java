@@ -4,13 +4,28 @@ import org.coinor.opents.*;
 
 public class My2Opt_ObjectiveFunction implements ObjectiveFunction
 {
-    public double[][] matrix;
+	public double[][] matrix;
+	public int[][] frequency_matrix;
     
     
     public My2Opt_ObjectiveFunction( double[][] customers ) 
     {   matrix = createMatrix( customers );
+    	frequency_matrix = createFrequencyMatrix( customers );
     }   // end constructor
 
+    public void incrementFrequency(int customer1, int customer2) {
+    	frequency_matrix[customer1][customer2]++;
+    	frequency_matrix[customer2][customer1]++;
+    }
+    
+    public void setInitialFrequencies(MySolution solution) {
+    	int[] tour = solution.tour;
+    	for (int i=0;i<tour.length;i++) {
+    		System.out.println(tour[i]+" "+tour[(i+1)%(tour.length-1)]);
+    		incrementFrequency(tour[i], tour[(i+1)%(tour.length-1)]);
+    	}
+    	System.out.println("asdas");
+    }
     
     public double[] evaluate( Solution solution, Move proposed_move )
     {
@@ -44,6 +59,12 @@ public class My2Opt_ObjectiveFunction implements ObjectiveFunction
         }
     }   // end evaluate
     
+    private int[][] createFrequencyMatrix(double[][] customers) 
+    {
+    	int len = customers.length;
+    	int[][] matrix = new int[len][len]; //matrice inizializzata tutti zero di default
+    	return matrix;
+    }
     
     /** Create symmetric matrix. */
     private double[][] createMatrix( double[][] customers )

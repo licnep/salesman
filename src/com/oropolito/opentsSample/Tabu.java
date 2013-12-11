@@ -89,7 +89,7 @@ public class Tabu {
         // Initialize our objects
         java.util.Random r = new java.util.Random( 12345 );
         
-        ObjectiveFunction objFunc = new My2Opt_ObjectiveFunction( customers );
+        GlobalData.objFunc = new My2Opt_ObjectiveFunction( customers );
         Solution initialSolution  = new MyGreedyStartSolution( customers );
         MoveManager   moveManager = new My2Opt_MoveManager();
         //TabuList         tabuList = new MyTabuList( 7 );
@@ -109,18 +109,20 @@ public class Tabu {
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
         Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
         
+        GlobalData.objFunc.setInitialFrequencies((MySolution)soluzione_iniziale_random2);
+        
         // Create Tabu Search object
         TabuSearch tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
         		soluzione_iniziale_random2,
                 moveManager,
-                objFunc,
+                GlobalData.objFunc,
               tabuList,
 //              tabuList2,
                 new BestEverAspirationCriteria(), // In OpenTS package
                 false ); // maximizing = yes/no; false means minimizing
         
-        tabuSearch.setChooseFirstImprovingMove(true);
+        tabuSearch.setChooseFirstImprovingMove(false);
         
         MyTSListener myListener = new MyTSListener();
         tabuSearch.addTabuSearchListener(myListener);
@@ -128,7 +130,7 @@ public class Tabu {
         // Carico la soluzione ottimale
         MySolution ottimale = new MySolution(customers);
         ottimale.tour = readTour(opt_tour_filename);
-        double[] ottimal = objFunc.evaluate(ottimale, null);
+        double[] ottimal = GlobalData.objFunc.evaluate(ottimale, null);
         ottimale.setObjectiveValue(ottimal);
         gui_model.setTour_optimal(ottimale.tour);
         

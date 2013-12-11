@@ -45,6 +45,10 @@ public class My2Opt_Move implements ComplexMove
 					tour[(t3-i+ tour.length)%tour.length ] = tmp;
 				}
         	}
+        	
+        	GlobalData.objFunc.incrementFrequency(customer1, customer3);
+        	GlobalData.objFunc.incrementFrequency(customer2, customer4);
+        	
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(0);

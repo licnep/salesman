@@ -2,6 +2,7 @@ package com.oropolito.opentsSample.GUI;
 
 import info.monitorenter.gui.chart.Chart2D;
 import info.monitorenter.gui.chart.IAxis.AxisTitle;
+import info.monitorenter.gui.chart.ZoomableChart;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -84,7 +85,8 @@ public class GUI_view implements Observer, MouseWheelListener {
 		main_panel.add(c);
 		
 		//grafico:
-		Chart2D chart = new Chart2D();
+		//Chart2D chart = new Chart2D();
+		ZoomableChart chart = new ZoomableChart();
 		chart.addTrace(m.trace_current);
 		chart.addTrace(m.trace_best);
 		chart.setPreferredSize(new Dimension(500, 500));
