@@ -6,12 +6,14 @@ import org.coinor.opents.*;
 
 public class Composite_MoveManager implements MoveManager
 {
-    
+	
     public Move[] getAllMoves( Solution solution )
     {   
     	ArrayList<Move> l = new ArrayList<Move>();
-    	add2OptMoves(l,(MySolution)solution);
+    	
     	addVertexInsertionMoves(l,(MySolution)solution);
+    	add2OptMoves(l,(MySolution)solution);
+    	
     	
         Move[] moves = l.toArray(new Move[l.size()]);
         return moves;
