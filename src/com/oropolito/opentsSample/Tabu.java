@@ -27,7 +27,7 @@ public class Tabu {
 	}
 	
 
-    public static void main (int iterations, String tour_filename, String opt_tour_filename) 
+    public void main (int iterations, String tour_filename, String opt_tour_filename) 
     {
     	GUI_model gui_model = new GUI_model();
         GUI_view gui_view = new GUI_view(gui_model);
@@ -112,7 +112,8 @@ public class Tabu {
         // Create Tabu Search object
         TabuSearch tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
-        		soluzione_iniziale_random2,
+        		soluzione_iniziale_random1,
+        		//soluzione_iniziale_random2,
                 moveManager,
                 GlobalData.objFunc,
               tabuList,
@@ -131,6 +132,32 @@ public class Tabu {
         double[] ottimal = GlobalData.objFunc.evaluate(ottimale, null);
         ottimale.setObjectiveValue(ottimal);
         gui_model.setTour_optimal(ottimale.tour);
+        
+        int N = 10;
+        
+        MySolution bestSolution = (MySolution)soluzione_iniziale_random1;
+        
+        //generiamo N soluzioni iniziali "diversificate"
+        for (int i=0;i<N;i++) {
+        	System.out.println("ciclo"+i);
+        	OptFunction(tabuSearch, 500, gui_model, ottimal);
+        	MySolution tmp = (MySolution)tabuSearch.getBestSolution();
+        	System.out.println("ObjValue:"+tmp.getObjectiveValue()[0]);
+        	System.out.println("BEST:"+bestSolution.getObjectiveValue()[0]);
+        	if (tmp.getObjectiveValue()[0] < bestSolution.getObjectiveValue()[0]) {
+        		bestSolution = tmp;
+        	}
+        	
+        	//DiversifiedSolution diver = new DiversifiedSolution(customers, gui_model);
+        	Solution diver = new MyRandomSolution(GlobalData.numCustomers);
+        	//tabuSearch.setCurrentSolution(diver);
+        	tabuSearch = new SingleThreadedTabuSearch(diver,moveManager,GlobalData.objFunc,tabuList,new BestEverAspirationCriteria(),false );
+        	tabuSearch.addTabuSearchListener(myListener);
+        }
+        
+        tabuSearch = new SingleThreadedTabuSearch(bestSolution,moveManager,GlobalData.objFunc,tabuList,new BestEverAspirationCriteria(),false );
+        tabuSearch.addTabuSearchListener(myListener);
+        OptFunction(tabuSearch, 1000, gui_model, ottimal);
         
         // Start solving
         for (int i=0;i<iterations;i++) 
@@ -161,6 +188,25 @@ public class Tabu {
         System.out.println("Optimality:"+100*(miaLunghezza-ottimal[0])/ottimal[0]+"% from optimality");
         
     }   // end main
+    
+    public void OptFunction(TabuSearch tabuSearch,int iterations,GUI_model gui_model, double[] ottimal) {
+    	// Start solving
+        for (int i=0;i<iterations;i++) 
+        {
+        	tabuSearch.setIterationsToGo( 1 );
+            tabuSearch.startSolving();
+            
+            MySolution temp = (MySolution)tabuSearch.getCurrentSolution();
+            GlobalData.objFunc.incrementFrequency((MySolution)temp);
+            
+            gui_model.setTour_current(temp.tour);
+            gui_model.update_current_optimality(100*(temp.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
+
+            MySolution cur_best = (MySolution)tabuSearch.getBestSolution();
+            gui_model.update_best_optimality(100*(cur_best.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
+            //try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
+        }
+    }
     
     public static int[] readTour(String filename)
     {
