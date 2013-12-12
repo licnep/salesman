@@ -46,9 +46,6 @@ public class My2Opt_Move implements ComplexMove
 				}
         	}
         	
-        	GlobalData.objFunc.incrementFrequency(customer1, customer3);
-        	GlobalData.objFunc.incrementFrequency(customer2, customer4);
-        	
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(0);

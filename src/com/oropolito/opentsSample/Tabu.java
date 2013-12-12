@@ -109,8 +109,6 @@ public class Tabu {
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
         Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
         
-        GlobalData.objFunc.setInitialFrequencies((MySolution)soluzione_iniziale_random1);
-        
         // Create Tabu Search object
         TabuSearch tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
@@ -141,6 +139,8 @@ public class Tabu {
             tabuSearch.startSolving();
             
             MySolution temp = (MySolution)tabuSearch.getCurrentSolution();
+            GlobalData.objFunc.incrementFrequency((MySolution)temp);
+            
             gui_model.setTour_current(temp.tour);
             gui_model.update_current_optimality(100*(temp.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
 

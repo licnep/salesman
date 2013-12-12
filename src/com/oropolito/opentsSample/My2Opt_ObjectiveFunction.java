@@ -18,13 +18,11 @@ public class My2Opt_ObjectiveFunction implements ObjectiveFunction
     	frequency_matrix[customer2][customer1]++;
     }
     
-    public void setInitialFrequencies(MySolution solution) {
+    public void incrementFrequency(MySolution solution) {
     	int[] tour = solution.tour;
     	for (int i=0;i<tour.length;i++) {
-    		System.out.println(tour[i]+" "+tour[(i+1)%(tour.length-1)]);
     		incrementFrequency(tour[i], tour[(i+1)%(tour.length-1)]);
     	}
-    	System.out.println("asdas");
     }
     
     public double[] evaluate( Solution solution, Move proposed_move )
