@@ -16,7 +16,7 @@ public class VertexInsertion_Move implements ComplexMove
     	this.t1 = tour[(c1-1+tour.length)%tour.length];
     	this.t2 = tour[(c1+1+tour.length)%tour.length];
     	this.t3 = tour[(new_pos-1+tour.length)%tour.length];
-    	this.t4 = tour[(new_pos)%tour.length];
+    	this.t4 = tour[new_pos];
     	this.new_pos = new_pos;
     	this.customerId = tour[c1];
     }   // end constructor
@@ -50,9 +50,12 @@ public class VertexInsertion_Move implements ComplexMove
 		 * Mossa e' tabu se prova a muovere vertice gia' mosso prima
 		 */
 		//memorizzo uno dei segmenti rimossi, questo non potra' essere reinserito dopo
-		int attr[] = new int[2];
-		attr[0] = t1;
-		attr[1] = customerId;																				
+		int attr[] = new int[5];
+		attr[0] = customerId;
+		attr[1] = t1;
+		attr[2] = t2;
+		attr[3] = t3;
+		attr[4] = t4;
 		return attr;
 	}
     
