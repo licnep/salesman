@@ -146,7 +146,8 @@ public class Tabu {
 //              tabuList2,
                 new BestEverAspirationCriteria(), // In OpenTS package
                 false );
-        
+        MyTSListener myListenerVertex = new MyTSListener();
+        tabuSearch.addTabuSearchListener(myListenerVertex);
         
         for (;GlobalData.iteration<iterations;GlobalData.iteration++) 
         {
