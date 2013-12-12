@@ -6,4 +6,5 @@ public class GlobalData {
 	
 	public static int notImprovingCounter = 0;
 	public static int ImprovingCounter = 0;
+	public static int iteration = 0;
 }

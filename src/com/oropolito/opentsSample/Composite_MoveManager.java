@@ -11,8 +11,11 @@ public class Composite_MoveManager implements MoveManager
     {   
     	ArrayList<Move> l = new ArrayList<Move>();
     	
-    	addVertexInsertionMoves(l,(MySolution)solution);
-    	add2OptMoves(l,(MySolution)solution);
+    	if (GlobalData.iteration < 900) {
+    		add2OptMoves(l,(MySolution)solution);
+    	} else {
+    		addVertexInsertionMoves(l,(MySolution)solution);
+    	}
     	
     	
         Move[] moves = l.toArray(new Move[l.size()]);
