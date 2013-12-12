@@ -130,10 +130,10 @@ public class Tabu {
             
             MySolution temp = (MySolution)tabuSearch.getCurrentSolution();
             gui_model.setTour_current(temp.tour);
-            gui_model.update_current_optimality((temp.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
+            gui_model.update_current_optimality((temp.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
 
             MySolution cur_best = (MySolution)tabuSearch.getBestSolution();
-            gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
+            gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
             //try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
         }
 
@@ -156,10 +156,10 @@ public class Tabu {
             
             MySolution temp = (MySolution)tabuSearch.getCurrentSolution();
             gui_model.setTour_current(temp.tour);
-            gui_model.update_current_optimality((temp.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
+            gui_model.update_current_optimality((temp.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
 
             MySolution cur_best = (MySolution)tabuSearch.getBestSolution();
-            gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])/ottimal[0]);
+            gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
             //try { Thread.sleep(30); } catch (InterruptedException e) { e.printStackTrace();}
         } 
         
@@ -172,7 +172,7 @@ public class Tabu {
         System.out.println( "Optimal Solution:");
         System.out.println(ottimale);
         double miaLunghezza = best.getObjectiveValue()[0];
-        System.out.println("Optimality:"+(miaLunghezza-ottimal[0])/ottimal[0]);
+        System.out.println("Optimality:"+(miaLunghezza-ottimal[0])*100/ottimal[0]);
         
     }   // end main
     
