@@ -1,16 +1,44 @@
 package com.oropolito.opentsSample;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.coinor.opents.*;
 
 
 public class My2Opt_ObjectiveFunction implements ObjectiveFunction
 {
     public double[][] matrix;
+    public int[][] vicini; //per ogni customer lista degli N piu' vicini
     
     
     public My2Opt_ObjectiveFunction( double[][] customers ) 
     {   matrix = createMatrix( customers );
+    	createVicini();
     }   // end constructor
 
+    public void createVicini() {
+    	vicini = new int[matrix.length][GlobalData.nVicini];
+    	for (int i=0;i<matrix.length;i++) {
+    		double[] ordinati = matrix[i].clone();
+    		Arrays.sort(ordinati); //ordinati contiene adesso le DISTANZE ordinate
+    		for(int j=1;j<=GlobalData.nVicini;j++) { //il primo va saltato perche' e' sempre se stesso
+    			for(int k=0;k<matrix.length;k++) {
+    				if(matrix[i][k]==ordinati[j]) {
+    					//solo se k non e' gia' stato inserito (puo' capitare se piu' distanze a parimerito
+    					boolean giaInserito=false;
+    					for (int m=0;m<j-1;m++) { //controllo che non sia gia' nell'array vicini
+    						if (vicini[i][m]==k) giaInserito=true;
+    					}
+    					if ( !giaInserito ) {
+    						vicini[i][j-1] = k;
+    						break;
+    					}
+    				}
+    			}
+    		}
+    		//qui ho l'elenco dei piu' vicini a i
+    	}
+    }
     
     public double[] evaluate( Solution solution, Move proposed_move )
     {
