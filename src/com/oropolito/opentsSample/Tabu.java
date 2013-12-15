@@ -95,7 +95,8 @@ public class Tabu {
         ObjectiveFunction objFunc = new Composite_ObjectiveFunction( customers );
         Solution initialSolution  = new MyGreedyStartSolution( customers );
         MoveManager   moveManager = new Composite_MoveManager();
-        TabuList         tabuList = new Composite_TabuList( 10 );
+        //TabuList         tabuList = new Composite_TabuList( 10 );
+        TabuList			tabuList = new LK_TabuList(7,4);
         //TabuList         tabuList = new VertexInsertion_TabuList( 7 );
         //TabuList tabuList = new My2Opt_TabuList(7,4);
         LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
@@ -115,7 +116,8 @@ public class Tabu {
                 new BestEverAspirationCriteria(), // In OpenTS package
                 false ); // maximizing = yes/no; false means minimizing
         
-        MyTSListener myListener = new MyTSListener();
+        //MyTSListener myListener = new MyTSListener();
+        LK_Listener myListener = new LK_Listener();
         tabuSearch.addTabuSearchListener(myListener);
 
         // Carico la soluzione ottimale
@@ -138,7 +140,7 @@ public class Tabu {
 
             MySolutionEdges cur_best = (MySolutionEdges)tabuSearch.getBestSolution();
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
-            try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
+            //try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
         }
 /*
         tabuSearch = new SingleThreadedTabuSearch(
@@ -168,7 +170,7 @@ public class Tabu {
         } 
         */
         // Show solution
-        MySolution best = (MySolution)tabuSearch.getBestSolution();
+        MySolutionEdges best = (MySolutionEdges)tabuSearch.getBestSolution();
         System.out.println( "Best Solution:\n" + best );
         gui_model.setTour_current(best.tour);
 

@@ -26,7 +26,6 @@ public class MySolutionEdges extends SolutionAdapter
     		dopo[tour[i]] = tour[(i+1)%tour.length];
     		prima[tour[(i+1)%tour.length]] = tour[i];
     	}
-    	System.out.println("sinc");
     }
     
     public void sincTourWithEdges() {

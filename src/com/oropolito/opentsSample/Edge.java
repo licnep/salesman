@@ -11,7 +11,7 @@ public class Edge {
 	}
 	
 	public int hashCode() {
-		return c1+c2;
+		return c1*c2;
 	}
 	
 	public boolean equals(Object o) {

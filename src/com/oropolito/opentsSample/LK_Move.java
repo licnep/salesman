@@ -31,7 +31,7 @@ public class LK_Move implements ComplexMove
     	GlobalData.gui_model.addColoredEdge(edgesY.get(0), Color.BLUE);
     	GlobalData.gui_model.addColoredEdge(edgesY.get(1), Color.BLUE);
     	
-    	try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace();}
+    	//try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace();}
         
     	//rimuovo tutti gli edge X
     	Iterator<Edge> i = edgesX.iterator();
@@ -52,12 +52,11 @@ public class LK_Move implements ComplexMove
 		 * Mossa e' tabu se prova ad aggiungere un edge che era stato rimosso,
 		 * o a rimuovere un edge che era stato aggiunto
 		 */
-		
+		//MAI USATA IN TEORIA
 		int attr[] = new int[4];
-		attr[0] = customer1;
-		attr[1] = customer2;
-		attr[2] = customer3;
-		attr[3] = customer4;
+		attr[0] = edgesX.get(0).hashCode();
+		attr[1] = edgesX.get(1).hashCode();
+		
 		return attr;
 		//return null;
 	}
