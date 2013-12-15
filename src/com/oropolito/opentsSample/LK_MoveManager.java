@@ -50,7 +50,7 @@ public class LK_MoveManager implements MoveManager
         			if(pushEdgeX(sol.getEdgeBefore(edgesY.get(0).c2))) {
         				//Y2 che ricollega a t1
         				if(pushEdgeY(new Edge(edgesX.get(1).c2 , edgesX.get(0).c1), sol)) {
-        					l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone(), sol));
+        					l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone()));
         					popEdgeY();
         				}
                     	popEdgeX();

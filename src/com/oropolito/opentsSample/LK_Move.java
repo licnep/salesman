@@ -12,12 +12,10 @@ public class LK_Move implements ComplexMove
 	public int customer1,customer2,customer3,customer4;
     
     
-    public LK_Move( ArrayList<Edge> edgesX, ArrayList<Edge> edgesY, Solution soln )
+    public LK_Move( ArrayList<Edge> edgesX, ArrayList<Edge> edgesY )
     {   
     	this.edgesX = edgesX;
     	this.edgesY = edgesY;
-    	int[] tour = ((MySolutionEdges)soln).tour;
-    	
     }   // end constructor
     
     

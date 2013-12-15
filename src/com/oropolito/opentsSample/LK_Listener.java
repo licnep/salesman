@@ -6,7 +6,7 @@ public class LK_Listener extends TabuSearchAdapter{
 	
 	private float k = GlobalData.numCustomers;
 	
-	public int MAX_TENURE =  Math.round(k*3);//*3;// /2;
+	public int MAX_TENURE =  Math.round(k/2);//*3;// /2;
 	public int MIN_TENURE = Math.max(14, Math.round(k/6) );
 
     public void newBestSolutionFound( TabuSearchEvent evt )

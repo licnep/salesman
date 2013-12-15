@@ -54,10 +54,14 @@ public class LK_MoveManagerPROPER implements MoveManager
             			Edge[] vicini2 = objFunc.edgeVicini[edgesX.get(1).c2];
             			for(int j=0;j<GlobalData.nVicini;j++) {
             				
+            				//mossa 2-opt
             				if(pushEdgeY(new Edge(edgesX.get(1).c2 , edgesX.get(0).c1), sol)) {
-    							if(generatesFeasibleTour(sol)) {
-    								l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone(), sol));
-    							}
+            					if(calculateGain(edgesX, edgesY)<G_star) {
+            						if(!tabu.isTabu(sol, new LK_Move(edgesX, edgesY))&&generatesFeasibleTour(sol)) {
+            							G_star = calculateGain(edgesX, edgesY);
+        								l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone()));
+        							}
+            					}
     							popEdgeY();
     						}
             				
@@ -66,8 +70,11 @@ public class LK_MoveManagerPROPER implements MoveManager
             					if(pushEdgeX(sol.getEdgeBefore(edgesY.get(1).c2))) {
             						//ricollego all'inizio:
             						if(pushEdgeY(new Edge(edgesX.get(2).c2 , edgesX.get(0).c1), sol)) {
-            							if(generatesFeasibleTour(sol)) {
-            								l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone(), sol));
+            							if(calculateGain(edgesX, edgesY)<G_star) {
+	            							if(!tabu.isTabu(sol, new LK_Move(edgesX, edgesY))&&generatesFeasibleTour(sol)) {
+	            								G_star = calculateGain(edgesX, edgesY);
+	            								l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone()));
+	            							}
             							}
             							popEdgeY();
             						}
