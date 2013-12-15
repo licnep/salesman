@@ -6,6 +6,7 @@ import info.monitorenter.gui.chart.traces.Trace2DSimple;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Observable;
 
 import com.oropolito.opentsSample.Edge;
@@ -42,6 +43,20 @@ public class GUI_model extends Observable {
 											GlobalData.customers[e.c2][0],
 											GlobalData.customers[e.c2][1],
 											color));
+		this.setChanged();
+		this.notifyObservers("setTour_current");
+	}
+	
+	public void addColoredEdge(ArrayList<Edge> edges, Color color) {
+		Iterator<Edge> i = edges.iterator();
+		while(i.hasNext()) {
+			Edge e = i.next();
+			coloredEdges.add(new EdgeColorato(GlobalData.customers[e.c1][0],
+					GlobalData.customers[e.c1][1],
+					GlobalData.customers[e.c2][0],
+					GlobalData.customers[e.c2][1],
+					color));
+		}
 		this.setChanged();
 		this.notifyObservers("setTour_current");
 	}

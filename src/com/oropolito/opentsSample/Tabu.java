@@ -100,7 +100,8 @@ public class Tabu {
         //TabuList         tabuList = new VertexInsertion_TabuList( 7 );
         //TabuList tabuList = new My2Opt_TabuList(7,4);
         LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
-        LK_MoveManager lkMoveManager = new LK_MoveManager(lkObjFunc);
+        //LK_MoveManager lkMoveManager = new LK_MoveManager(lkObjFunc);
+        LK_MoveManagerPROPER lkMoveManager = new LK_MoveManagerPROPER(lkObjFunc,(LK_TabuList)tabuList);
         
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
         Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);

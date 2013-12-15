@@ -11,6 +11,9 @@ import com.oropolito.opentsSample.GUI.GUI_model;
 public class LK_MoveManager implements MoveManager
 {
 	public LK_ObjectiveFunction objFunc;
+	ArrayList<Edge> edgesX;
+	ArrayList<Edge> edgesY;
+	
 	public LK_MoveManager(LK_ObjectiveFunction myObj) {
 		this.objFunc = myObj;
 	}
@@ -32,14 +35,29 @@ public class LK_MoveManager implements MoveManager
         double G_star = 0; //miglioramento migliore per adesso
         
         sol.sincEdgesWithTour(); //synchronize the edges with the tour
-        ArrayList<Edge> edgesX = new ArrayList<Edge>();
-        ArrayList<Edge> edgesY = new ArrayList<Edge>();
+        edgesX = new ArrayList<Edge>();
+        edgesY = new ArrayList<Edge>();
         
         Iterator<Edge> ie = sol.edges.iterator();
         while(ie.hasNext()) {
         	edgesX.add(ie.next()); //setto x1
         	Edge[] vicini = objFunc.edgeVicini[edgesX.get(0).c2];
         	for (int i=0;i<GlobalData.nVicini;i++) {
+        		if(pushEdgeY(vicini[i], sol)) {
+        			double g = calculateGain(edgesX, edgesY);
+        			
+                	//X2 e' obbligato una volta scelto Y1
+        			if(pushEdgeX(sol.getEdgeBefore(edgesY.get(0).c2))) {
+        				//Y2 che ricollega a t1
+        				if(pushEdgeY(new Edge(edgesX.get(1).c2 , edgesX.get(0).c1), sol)) {
+        					l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone(), sol));
+        					popEdgeY();
+        				}
+                    	popEdgeX();
+        			}
+        			popEdgeY();
+        		}
+        		/*
         		//testo tutti i vicini Y che non devono essere gia' nel tour
         		if(!sol.contains(vicini[i])) {
         			edgesY.add(vicini[i]);        			
@@ -55,71 +73,67 @@ public class LK_MoveManager implements MoveManager
         			edgesY.remove(0);
 	            	edgesX.remove(1);
         		}
+        		*/
         	}
         	
         	edgesX.clear(); //testo un altro x1
         }
         
-        /*
-        for(int i=0;i<len;i++) { //per tutti i possibili x1
-        	G_star=0;
-        	edges.add(tour[i]); //t1=i
-        	edges.add(tour[(i+1)%len]); //t2
-        	int[] vicini = objFunc.vicini[edges.get(1)]; //vicini a t2
-        	for(int j=0;j<GlobalData.nVicini;j++) { //scelgo t3 tra i piu' vicini a t2
-        		//TODO: condizione, gli y non devono essere nel tour attuale
-        		
-        		//edge(t2,vicini[j]) non deve essere in current tour
-        		boolean giaNelTour = false;
-        		for(int p=0;p<len;p++) {
-        			if(vicini[j]==tour[p]) {
-        				if(tour[(p+1)%len]==edges.get(1)||tour[(p-1+len)%len]==edges.get(1)) {
-        					giaNelTour=true;
-        				}
-        			}
-        		}
-        			
-        		if (!giaNelTour) {
-	        		edges.add(vicini[j]);
-	        		//non conosco la posizione nel tour dato un customer, e mi serve per sapere il t4 dell'edge da rimuovere
-	        		//quindi scorro tutto il tour ogni volta... (BAD)
-	        		//TODO: serve un modo che dato un customer mi dia rapidamente il prossimo nel tour
-	        		for (int p=0;p<tour.length;p++) if (tour[p]==vicini[j]) 
-	        			edges.add(tour[(p-1+len)%len] );
-	        		
-	        		//temp: li mette tutti non solo il migliore (= a 2 opt)
-	        		if (edges.get(2)!=edges.get(0)&&edges.get(2)!=edges.get(1) &&
-        				edges.get(3)!=edges.get(0)&&edges.get(3)!=edges.get(1))
-	        		l.add(new My2Opt_Move(edges.get(0), edges.get(3), sol));
-	        		/*
-	        		GlobalData.gui_model.resetColoredEdges();
-	            	GlobalData.gui_model.addColoredEdge(edges.get(0),edges.get(1), Color.RED);
-	            	GlobalData.gui_model.addColoredEdge(edges.get(1),edges.get(2), Color.BLUE);
-	            	GlobalData.gui_model.addColoredEdge(edges.get(2),edges.get(3), Color.RED);
-	            	GlobalData.gui_model.addColoredEdge(edges.get(3),edges.get(0), Color.BLUE);
-	            	//try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
-	            	
-	        		//testo per vedere quant'e' il guadagno
-	        		double tmpG = calculateGain(edges);
-	        		if (tmpG>G_star) {
-	        			G_star = tmpG;
-	        			bestEdges.clear();
-	        			for (int e: edges) bestEdges.add(e);
-	        		}
-	        		edges.remove(3);
-	        		edges.remove(2);
-        		}
-        	}
-        	edges.remove(1);
-        	edges.remove(0);
-        	if (bestEdges.size()>2) { //ha volte puo' non averne trovato nessuno migliore
-        		//l.add(new My2Opt_Move(bestEdges.get(0), bestEdges.get(3), solution));
-        	}
-        }*/
-        
         LK_Move[] moves = l.toArray(new LK_Move[l.size()]);
         return moves;
     }   // end getAllMoves
+    
+    /**
+     * 
+     * @param e
+     * @return true se e' permesso inserirlo, false se non e' permesso
+     */
+    private boolean pushEdgeX(Edge e) {
+    	if (!e.isProper()) return false; //<- per evitare che vengano usati edge improper es (1,1)
+    	
+    	//non deve appartenere agli edges in gioco:
+    	//TODO: usare struttura migliore per controllare appartenenza senza cicli
+    	Iterator i = edgesX.iterator();
+    	while(i.hasNext()) {
+    		if(i.next().equals(e)) return false;
+    	}
+    	i = edgesY.iterator();
+    	while(i.hasNext()) {
+    		if(i.next().equals(e)) return false;
+    	}
+    	
+    	edgesX.add(e);
+    	return true;
+    }
+    
+    private boolean pushEdgeY(Edge e,MySolutionEdges sol) {
+    	if (!e.isProper()) return false; //<- per evitare che vengano usati edge improper es (1,1)
+    	
+    	//non deve appartenere al tour attuale
+    	if(sol.contains(e)) return false;
+    	
+    	//non deve appartenere agli edges in gioco:
+    	//TODO: usare struttura migliore per controllare appartenenza senza cicli
+    	Iterator i = edgesX.iterator();
+    	while(i.hasNext()) {
+    		if(i.next().equals(e)) return false;
+    	}
+    	i = edgesY.iterator();
+    	while(i.hasNext()) {
+    		if(i.next().equals(e)) return false;
+    	}
+    	
+    	edgesY.add(e);
+    	return true;
+    }
+    
+    private void popEdgeX() {
+    	edgesX.remove(edgesX.size()-1);
+    }
+    
+    private void popEdgeY() {
+    	edgesY.remove(edgesY.size()-1);
+    }
     
     private double calculateGain(ArrayList<Edge> edgesX,ArrayList<Edge> edgesY) {
     	double g=0;

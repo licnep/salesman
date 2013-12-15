@@ -26,12 +26,10 @@ public class LK_Move implements ComplexMove
     	MySolutionEdges sol = (MySolutionEdges)soln;
     	
     	GlobalData.gui_model.resetColoredEdges();
-    	GlobalData.gui_model.addColoredEdge(edgesX.get(0), Color.RED);
-    	GlobalData.gui_model.addColoredEdge(edgesX.get(1), Color.RED);
-    	GlobalData.gui_model.addColoredEdge(edgesY.get(0), Color.BLUE);
-    	GlobalData.gui_model.addColoredEdge(edgesY.get(1), Color.BLUE);
+    	GlobalData.gui_model.addColoredEdge(edgesX, Color.RED);
+    	GlobalData.gui_model.addColoredEdge(edgesY, Color.BLUE);
     	
-    	//try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace();}
+    	//try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace();}
         
     	//rimuovo tutti gli edge X
     	Iterator<Edge> i = edgesX.iterator();

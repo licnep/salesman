@@ -30,6 +30,7 @@ public class MySolutionEdges extends SolutionAdapter
     
     public void sincTourWithEdges() {
     	//TODO: sarebbe buono non dover scorrere tutti gli edge, ma poter trovare subito quello che parte con un dato n
+    	tour = new int[tour.length];
     	tour[0] = 0;
     	LinkedHashSet<Edge> available = (LinkedHashSet<Edge>)edges.clone();
     	for(int i=1;i<tour.length;i++) {
@@ -48,6 +49,7 @@ public class MySolutionEdges extends SolutionAdapter
     			}
     		}
     	}
+    	System.out.println("sinc");
     }
     
     public void addEdge(Edge e) {

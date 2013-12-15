@@ -18,12 +18,14 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     }   // end constructor
 
     public void createVicini() {
-    	vicini = new int[matrix.length][GlobalData.nVicini];
-    	edgeVicini = new Edge[matrix.length][GlobalData.nVicini];
+    	int N = Math.min(GlobalData.nVicini, GlobalData.numCustomers-1); //mai + vicini di numCustomers-1
+    	GlobalData.nVicini = N;
+    	vicini = new int[matrix.length][N];
+    	edgeVicini = new Edge[matrix.length][N];
     	for (int i=0;i<matrix.length;i++) {
     		double[] ordinati = matrix[i].clone();
     		Arrays.sort(ordinati); //ordinati contiene adesso le DISTANZE ordinate
-    		for(int j=1;j<=GlobalData.nVicini;j++) { //il primo va saltato perche' e' sempre se stesso
+    		for(int j=1;j<=N;j++) { //il primo va saltato perche' e' sempre se stesso
     			for(int k=0;k<matrix.length;k++) {
     				if(matrix[i][k]==ordinati[j]) {
     					//solo se k non e' gia' stato inserito (puo' capitare se piu' distanze a parimerito
