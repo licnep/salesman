@@ -142,6 +142,7 @@ public class Tabu {
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
             //try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
         }
+        
 /*
         tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
