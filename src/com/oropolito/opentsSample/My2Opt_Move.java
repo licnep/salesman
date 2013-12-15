@@ -13,7 +13,7 @@ public class My2Opt_Move implements ComplexMove
     	this.t2 = (t1+1)%GlobalData.numCustomers;
     	this.t3 = t3;
     	this.t4 = (t3+1)%GlobalData.numCustomers;
-    	int[] tour = ((MySolution)soln).tour;
+    	int[] tour = ((MySolutionEdges)soln).tour;
         customer1 = tour[t1];
         customer2 = tour[t2];
         customer3 = tour[t3];

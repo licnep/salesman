@@ -9,6 +9,7 @@ public class My2Opt_ObjectiveFunction implements ObjectiveFunction
 {
     public double[][] matrix;
     public int[][] vicini; //per ogni customer lista degli N piu' vicini
+    public Edge[][] edgeVicini;
     
     
     public My2Opt_ObjectiveFunction( double[][] customers ) 
@@ -18,6 +19,7 @@ public class My2Opt_ObjectiveFunction implements ObjectiveFunction
 
     public void createVicini() {
     	vicini = new int[matrix.length][GlobalData.nVicini];
+    	edgeVicini = new Edge[matrix.length][GlobalData.nVicini];
     	for (int i=0;i<matrix.length;i++) {
     		double[] ordinati = matrix[i].clone();
     		Arrays.sort(ordinati); //ordinati contiene adesso le DISTANZE ordinate
@@ -31,6 +33,7 @@ public class My2Opt_ObjectiveFunction implements ObjectiveFunction
     					}
     					if ( !giaInserito ) {
     						vicini[i][j-1] = k;
+    						edgeVicini[i][j-1] = new Edge(i,k);
     						break;
     					}
     				}
@@ -42,7 +45,7 @@ public class My2Opt_ObjectiveFunction implements ObjectiveFunction
     
     public double[] evaluate( Solution solution, Move proposed_move )
     {
-        int[] tour = ((MySolution)solution).tour;
+        int[] tour = ((MySolutionEdges)solution).tour;
         int len = tour.length;
         
         // If move is null, calculate distance from scratch

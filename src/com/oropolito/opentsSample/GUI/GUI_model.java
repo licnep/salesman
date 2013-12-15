@@ -5,7 +5,11 @@ import info.monitorenter.gui.chart.traces.Trace2DLtd;
 import info.monitorenter.gui.chart.traces.Trace2DSimple;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Observable;
+
+import com.oropolito.opentsSample.Edge;
+import com.oropolito.opentsSample.GlobalData;
 
 public class GUI_model extends Observable {
 	private double[][] customers; //lista dei clienti, ogniuno 2 coordinate double X,Y
@@ -14,11 +18,39 @@ public class GUI_model extends Observable {
 	private int current_iteration = 0;
 	public ITrace2D trace_current,trace_best; 
 	
+	public ArrayList<EdgeColorato> coloredEdges = new ArrayList<EdgeColorato>();
+	
 	public GUI_model() {
 		//trace = new Trace2DLtd();
 		trace_current = new Trace2DSimple("Current solution");
 		trace_best = new Trace2DSimple("Best solution so far");
 		trace_best.setColor(Color.BLUE);
+	}
+	
+	public void addColoredEdge(int c1, int c2, Color color) {
+		coloredEdges.add(new EdgeColorato(GlobalData.customers[c1][0],
+											GlobalData.customers[c1][1],
+											GlobalData.customers[c2][0],
+											GlobalData.customers[c2][1],
+											color));
+		this.setChanged();
+		this.notifyObservers("setTour_current");
+	}
+	public void addColoredEdge(Edge e, Color color) {
+		coloredEdges.add(new EdgeColorato(GlobalData.customers[e.c1][0],
+											GlobalData.customers[e.c1][1],
+											GlobalData.customers[e.c2][0],
+											GlobalData.customers[e.c2][1],
+											color));
+		this.setChanged();
+		this.notifyObservers("setTour_current");
+	}
+	
+	
+	public void resetColoredEdges() {
+		coloredEdges.clear();
+		this.setChanged();
+		this.notifyObservers("setTour_current");
 	}
 	
 	public void update_current_optimality(double opt) {

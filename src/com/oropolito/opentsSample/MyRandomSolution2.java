@@ -8,7 +8,7 @@ import com.oropolito.opentsSample.GUI.GUI_model;
 
 //Parto da un nodo a caso.
 //prendo gli N nodi piu' vicini e seleziono uno di quelli a caso
-public class MyRandomSolution2 extends MySolution {
+public class MyRandomSolution2 extends MySolutionEdges {
 	public MyRandomSolution2(double[][] customers,GUI_model gui_model)
     {
 		Random rand_generator = new Random(GlobalData.random_seed);

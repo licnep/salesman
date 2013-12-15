@@ -1,0 +1,65 @@
+package com.oropolito.opentsSample;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.coinor.opents.*;
+
+public class LK_Move implements ComplexMove 
+{
+	public ArrayList<Edge> edgesX;
+	public ArrayList<Edge> edgesY;
+	public int customer1,customer2,customer3,customer4;
+    
+    
+    public LK_Move( ArrayList<Edge> edgesX, ArrayList<Edge> edgesY, Solution soln )
+    {   
+    	this.edgesX = edgesX;
+    	this.edgesY = edgesY;
+    	int[] tour = ((MySolutionEdges)soln).tour;
+    	
+    }   // end constructor
+    
+    
+    public void operateOn( Solution soln )
+    {
+    	MySolutionEdges sol = (MySolutionEdges)soln;
+    	
+    	GlobalData.gui_model.resetColoredEdges();
+    	GlobalData.gui_model.addColoredEdge(edgesX.get(0), Color.RED);
+    	GlobalData.gui_model.addColoredEdge(edgesX.get(1), Color.RED);
+    	GlobalData.gui_model.addColoredEdge(edgesY.get(0), Color.BLUE);
+    	GlobalData.gui_model.addColoredEdge(edgesY.get(1), Color.BLUE);
+    	
+    	try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace();}
+        
+    	//rimuovo tutti gli edge X
+    	Iterator<Edge> i = edgesX.iterator();
+    	while(i.hasNext()) sol.removeEdge(i.next());
+    	
+    	//aggiungo tutti gli edge Y
+    	i = edgesY.iterator();
+    	while(i.hasNext()) sol.addEdge(i.next());
+    	
+    	sol.sincTourWithEdges();
+    	
+    }   // end operateOn
+
+
+	@Override
+	public int[] attributes() {
+		/**
+		 * Mossa e' tabu se prova ad aggiungere un edge che era stato rimosso,
+		 * o a rimuovere un edge che era stato aggiunto
+		 */
+		
+		int attr[] = new int[4];
+		attr[0] = customer1;
+		attr[1] = customer2;
+		attr[2] = customer3;
+		attr[3] = customer4;
+		return attr;
+		//return null;
+	}
+    
+}   // end class MySwapMove

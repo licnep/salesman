@@ -3,6 +3,7 @@ package com.oropolito.opentsSample.GUI;
 import info.monitorenter.gui.chart.Chart2D;
 import info.monitorenter.gui.chart.IAxis.AxisTitle;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -10,6 +11,7 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Stroke;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Ellipse2D;
@@ -77,6 +79,14 @@ public class GUI_view implements Observer, MouseWheelListener {
 						g2.draw(new Line2D.Double(customers[a][0]*w/z+1, customers[a][1]*h/z+2, customers[b][0]*w/z+1, customers[b][1]*h/z+2));
 					}
 				}
+				
+				//disegno gli edge colorati
+				for (EdgeColorato e : m.coloredEdges) {
+					g2.setPaint(e.color);
+					g2.setStroke(new BasicStroke(4));
+					g2.draw(new Line2D.Double(e.x1*w/z+1, e.y1*h/z+2, e.x2*w/z+1, e.y2*h/z+2));
+				}
+				g2.setStroke(new BasicStroke(1));
 			}
 		};
 		c.addMouseWheelListener(this);

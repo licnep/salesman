@@ -31,6 +31,7 @@ public class Tabu {
     {
     	GUI_model gui_model = new GUI_model();
         GUI_view gui_view = new GUI_view(gui_model);
+        GlobalData.gui_model = gui_model;
     	
     	int numCustomers=0;
     	int[][] customersPoints;
@@ -80,6 +81,7 @@ public class Tabu {
 		}
 		gui_model.setCustomers(customers);
 		GlobalData.numCustomers = numCustomers;
+		GlobalData.customers = customers;
 		//cerco la X massima per dimensionare il grafico:
 		double maxX = 0;
 		for (int i=0;i<numCustomers;i++)
@@ -96,6 +98,8 @@ public class Tabu {
         TabuList         tabuList = new Composite_TabuList( 10 );
         //TabuList         tabuList = new VertexInsertion_TabuList( 7 );
         //TabuList tabuList = new My2Opt_TabuList(7,4);
+        LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
+        LK_MoveManager lkMoveManager = new LK_MoveManager(lkObjFunc);
         
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
         Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
@@ -104,8 +108,8 @@ public class Tabu {
         TabuSearch tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
         		soluzione_iniziale_random2,
-                moveManager,
-                objFunc,
+                lkMoveManager,
+                lkObjFunc,
               tabuList,
 //              tabuList2,
                 new BestEverAspirationCriteria(), // In OpenTS package
@@ -115,7 +119,7 @@ public class Tabu {
         tabuSearch.addTabuSearchListener(myListener);
 
         // Carico la soluzione ottimale
-        MySolution ottimale = new MySolution(customers);
+        MySolutionEdges ottimale = new MySolutionEdges(customers);
         ottimale.tour = readTour(opt_tour_filename);
         double[] ottimal = objFunc.evaluate(ottimale, null);
         ottimale.setObjectiveValue(ottimal);
@@ -128,15 +132,15 @@ public class Tabu {
         	tabuSearch.setIterationsToGo( 1 );
             tabuSearch.startSolving();
             
-            MySolution temp = (MySolution)tabuSearch.getCurrentSolution();
+            MySolutionEdges temp = (MySolutionEdges)tabuSearch.getCurrentSolution();
             gui_model.setTour_current(temp.tour);
             gui_model.update_current_optimality((temp.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
 
-            MySolution cur_best = (MySolution)tabuSearch.getBestSolution();
+            MySolutionEdges cur_best = (MySolutionEdges)tabuSearch.getBestSolution();
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
-            //try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
+            try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
         }
-
+/*
         tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
         		tabuSearch.getBestSolution(),
@@ -162,7 +166,7 @@ public class Tabu {
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
             //try { Thread.sleep(30); } catch (InterruptedException e) { e.printStackTrace();}
         } 
-        
+        */
         // Show solution
         MySolution best = (MySolution)tabuSearch.getBestSolution();
         System.out.println( "Best Solution:\n" + best );

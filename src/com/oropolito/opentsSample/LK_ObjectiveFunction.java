@@ -1,16 +1,47 @@
 package com.oropolito.opentsSample;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+
 import org.coinor.opents.*;
 
 
-public class VertexInsertion_ObjectiveFunction implements ObjectiveFunction
+public class LK_ObjectiveFunction implements ObjectiveFunction
 {
     public double[][] matrix;
+    public int[][] vicini; //per ogni customer lista degli N piu' vicini
+    public Edge[][] edgeVicini;
     
-    
-    public VertexInsertion_ObjectiveFunction( double[][] customers ) 
+    public LK_ObjectiveFunction( double[][] customers ) 
     {   matrix = createMatrix( customers );
+    	createVicini();
     }   // end constructor
 
+    public void createVicini() {
+    	vicini = new int[matrix.length][GlobalData.nVicini];
+    	edgeVicini = new Edge[matrix.length][GlobalData.nVicini];
+    	for (int i=0;i<matrix.length;i++) {
+    		double[] ordinati = matrix[i].clone();
+    		Arrays.sort(ordinati); //ordinati contiene adesso le DISTANZE ordinate
+    		for(int j=1;j<=GlobalData.nVicini;j++) { //il primo va saltato perche' e' sempre se stesso
+    			for(int k=0;k<matrix.length;k++) {
+    				if(matrix[i][k]==ordinati[j]) {
+    					//solo se k non e' gia' stato inserito (puo' capitare se piu' distanze a parimerito
+    					boolean giaInserito=false;
+    					for (int m=0;m<j-1;m++) { //controllo che non sia gia' nell'array vicini
+    						if (vicini[i][m]==k) giaInserito=true;
+    					}
+    					if ( !giaInserito ) {
+    						vicini[i][j-1] = k;
+    						edgeVicini[i][j-1] = new Edge(i,k);
+    						break;
+    					}
+    				}
+    			}
+    		}
+    		//qui ho l'elenco dei piu' vicini a i
+    	}
+    }
     
     public double[] evaluate( Solution solution, Move proposed_move )
     {
@@ -30,25 +61,21 @@ public class VertexInsertion_ObjectiveFunction implements ObjectiveFunction
         // Else calculate incrementally
         else
         {
-            VertexInsertion_Move mv = (VertexInsertion_Move)proposed_move;
+            LK_Move mv = (LK_Move)proposed_move;
             
             // Prior objective value
             double dist = solution.getObjectiveValue()[0];
-            
             //tolgo la lunghezza dei 2 segmenti rimossi
-            dist -= matrix[ tour[mv.c1] ][ tour[(mv.c1+1)%len] ];
-            dist -= matrix[ tour[mv.c1] ][ tour[(len+mv.c1-1)%len] ];
-            dist += matrix[ tour[(mv.c1+1)%len] ][ tour[(len+mv.c1-1)%len] ];
-            //aggiungo quella dei 2 segmenti aggiunti nella nuova posizione:
-            int newBef, newAft;
-            if (mv.new_pos<mv.c1) {
-            	newBef = (len+mv.new_pos-1)%len; newAft = mv.new_pos;
-            } else {
-            	newBef = mv.new_pos; newAft = (mv.new_pos+1)%len;
+            Iterator<Edge> i = mv.edgesX.iterator();
+            while(i.hasNext()) {
+            	Edge e = i.next();
+            	dist -= matrix[e.c1][e.c2] ;
             }
-            dist -= matrix[ tour[newBef] ][ tour[newAft] ];
-            dist += matrix[ tour[mv.c1] ][ tour[newBef] ];
-            dist += matrix[ tour[mv.c1] ][ tour[newAft] ];
+            i = mv.edgesY.iterator();
+            while(i.hasNext()) {
+            	Edge e = i.next();
+            	dist += matrix[e.c1][e.c2] ;
+            }
             return new double[]{ dist };
         }
     }   // end evaluate
