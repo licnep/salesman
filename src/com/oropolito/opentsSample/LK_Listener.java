@@ -7,7 +7,7 @@ public class LK_Listener extends TabuSearchAdapter{
 	private float k = GlobalData.numCustomers;
 	
 	public int MAX_TENURE =  Math.round(k/2);//*3;// /2;
-	public int MIN_TENURE = Math.max(14, Math.round(k/6) );
+	public int MIN_TENURE = Math.max(10, Math.round(k/6) );
 
     public void newBestSolutionFound( TabuSearchEvent evt )
     {   
@@ -34,7 +34,7 @@ public class LK_Listener extends TabuSearchAdapter{
     	mytl = (LK_TabuList)theTS.getTabuList();
 
     	//mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 2 ));
-    	mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 4 ));
+    	mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 5 ));
         System.out.println("Increase tenure to " + mytl.getTenure());
   }
 

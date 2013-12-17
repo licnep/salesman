@@ -24,11 +24,29 @@ public class LK_Move implements ComplexMove
     	MySolutionEdges sol = (MySolutionEdges)soln;
     	
     	GlobalData.gui_model.resetColoredEdges();
+    	
+    	if(edgesX.size()==4) {
+    		System.out.println("DOUBLEBridge");
+    		Edge xx0=edgesY.get(0);
+    		GlobalData.gui_model.addColoredEdge(xx0, Color.ORANGE);
+    		do {
+            	xx0 = sol.getEdgeBefore(xx0.c2);
+            	GlobalData.gui_model.addColoredEdge(xx0, Color.ORANGE);
+    		} while(edgesY.get(0).c1 != xx0.c2);
+    		xx0=edgesY.get(1);
+    		GlobalData.gui_model.addColoredEdge(xx0, Color.GRAY);
+    		do {
+            	xx0 = sol.getEdgeBefore(xx0.c2);
+            	GlobalData.gui_model.addColoredEdge(xx0, Color.GRAY);
+    		} while(edgesY.get(1).c1 != xx0.c2);
+    	}
+    	
     	GlobalData.gui_model.addColoredEdge(edgesX, Color.RED);
     	GlobalData.gui_model.addColoredEdge(edgesY, Color.BLUE);
     	
     	//try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace();}
         
+    	
     	//rimuovo tutti gli edge X
     	Iterator<Edge> i = edgesX.iterator();
     	while(i.hasNext()) sol.removeEdge(i.next());
