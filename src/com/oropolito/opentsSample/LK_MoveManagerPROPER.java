@@ -122,14 +122,16 @@ public class LK_MoveManagerPROPER implements MoveManager
     	
     	//non deve appartenere agli edges in gioco:
     	//TODO: usare struttura migliore per controllare appartenenza senza cicli
-    	Iterator i = edgesX.iterator();
+    	if (edgesX.contains(e)) return false;
+    	if (edgesY.contains(e)) return false;
+    	/*Iterator i = edgesX.iterator();
     	while(i.hasNext()) {
     		if(i.next().equals(e)) return false;
     	}
     	i = edgesY.iterator();
     	while(i.hasNext()) {
     		if(i.next().equals(e)) return false;
-    	}
+    	}*/
     	
     	edgesX.add(e);
     	return true;
@@ -143,14 +145,16 @@ public class LK_MoveManagerPROPER implements MoveManager
     	
     	//non deve appartenere agli edges in gioco:
     	//TODO: usare struttura migliore per controllare appartenenza senza cicli
-    	Iterator i = edgesX.iterator();
+    	if (edgesX.contains(e)) return false;
+    	if (edgesY.contains(e)) return false;
+    	/*Iterator i = edgesX.iterator();
     	while(i.hasNext()) {
     		if(i.next().equals(e)) return false;
     	}
     	i = edgesY.iterator();
     	while(i.hasNext()) {
     		if(i.next().equals(e)) return false;
-    	}
+    	}*/
     	
     	edgesY.add(e);
     	return true;
