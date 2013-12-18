@@ -18,8 +18,11 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     }   // end constructor
 
     public void createVicini() {
-    	int N = Math.min(GlobalData.nVicini, GlobalData.numCustomers-1); //mai + vicini di numCustomers-1
-    	GlobalData.nVicini = N;
+    	int N = Math.min(60, GlobalData.numCustomers-1); //mai + vicini di numCustomers-1
+    	GlobalData.nViciniMax = N;
+    	//GlobalData.nVicini = 10;
+    	
+    	
     	vicini = new int[matrix.length][N];
     	edgeVicini = new Edge[matrix.length][N];
     	for (int i=0;i<matrix.length;i++) {

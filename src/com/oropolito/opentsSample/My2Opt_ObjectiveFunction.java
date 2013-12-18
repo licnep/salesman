@@ -14,7 +14,7 @@ public class My2Opt_ObjectiveFunction implements ObjectiveFunction
     
     public My2Opt_ObjectiveFunction( double[][] customers ) 
     {   matrix = createMatrix( customers );
-    	createVicini();
+    	//createVicini();
     }   // end constructor
 
     public void createVicini() {
