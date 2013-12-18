@@ -145,13 +145,12 @@ public class Tabu {
             
             tabuSearch.setMoveManager(lkMoveManager);
             if(GlobalData.notImprovingCounter>10) {
-            	asd=false;
             	tabuSearch.stopSolving();
             	GlobalData.notImprovingCounter=0;
             	GlobalData.random_seed++;
+            	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
             	tabuSearch.setMoveManager(random4opt);
             	//tabuSearch.setMoveManager(lkMoveManager);
-            	//tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
             }
             
             //try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
