@@ -27,7 +27,9 @@ public class LK_Move implements ComplexMove
     	GlobalData.gui_model.addColoredEdge(edgesX, Color.RED);
     	GlobalData.gui_model.addColoredEdge(edgesY, Color.BLUE);
     	
-    	//try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace();}
+    	if(edgesX.size()==4) {
+    		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace();}
+    	}
         
     	//rimuovo tutti gli edge X
     	Iterator<Edge> i = edgesX.iterator();

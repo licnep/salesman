@@ -100,7 +100,8 @@ public class Tabu {
         //TabuList         tabuList = new VertexInsertion_TabuList( 7 );
         //TabuList tabuList = new My2Opt_TabuList(7,4);
         LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
-        //LK_MoveManager lkMoveManager = new LK_MoveManager(lkObjFunc);
+        //LK_MoveManager lkMoveManagerOld = new LK_MoveManager(lkObjFunc);
+        Random4Opt_MoveManager random4opt = new Random4Opt_MoveManager(lkObjFunc,(LK_TabuList)tabuList);
         LK_MoveManagerPROPER lkMoveManager = new LK_MoveManagerPROPER(lkObjFunc,(LK_TabuList)tabuList);
         
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
@@ -141,6 +142,18 @@ public class Tabu {
 
             MySolutionEdges cur_best = (MySolutionEdges)tabuSearch.getBestSolution();
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
+            
+            tabuSearch.setMoveManager(lkMoveManager);
+            if(GlobalData.notImprovingCounter>10) {
+            	asd=false;
+            	tabuSearch.stopSolving();
+            	GlobalData.notImprovingCounter=0;
+            	GlobalData.random_seed++;
+            	tabuSearch.setMoveManager(random4opt);
+            	//tabuSearch.setMoveManager(lkMoveManager);
+            	//tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
+            }
+            
             //try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
         }
         

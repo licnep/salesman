@@ -2,6 +2,7 @@ package com.oropolito.opentsSample;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import org.coinor.opents.*;
 
