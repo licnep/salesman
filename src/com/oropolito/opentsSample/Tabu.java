@@ -106,7 +106,7 @@ public class Tabu {
         
         //Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
         Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
-        //Solution soluzione_savings = new MySavingAlg(customers,gui_model,lkObjFunc);
+        Solution soluzione_savings = new MySavingAlg(customers,gui_model,lkObjFunc);
         
         // Create Tabu Search object
         TabuSearch tabuSearch = new SingleThreadedTabuSearch(
