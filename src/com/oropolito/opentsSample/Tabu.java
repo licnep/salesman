@@ -181,6 +181,8 @@ public class Tabu {
         System.out.println(ottimale);
         double miaLunghezza = best.getObjectiveValue()[0];
         System.out.println("Optimality:"+(miaLunghezza-ottimal[0])*100/ottimal[0]);
+
+        gui_view.closeWindow();
         
     }   // end main
     

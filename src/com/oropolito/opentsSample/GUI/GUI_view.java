@@ -32,13 +32,14 @@ public class GUI_view implements Observer, MouseWheelListener {
 	private GUI_model m;
 	private double zoom = 1300;
 	private JPanel c;
+	private JFrame f;
 
 	//costruttore
 	public GUI_view(GUI_model mm) {
 		this.m = mm;
 		m.addObserver(this);
 		
-		JFrame f = new JFrame();
+		f = new JFrame();
 	    f.setSize(1200, 800);
 	    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    
@@ -114,6 +115,10 @@ public class GUI_view implements Observer, MouseWheelListener {
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		this.zoom += e.getUnitsToScroll()*10;
 		c.repaint();
+	}
+	
+	public void closeWindow() {
+		f.dispose();
 	}
 
 }
