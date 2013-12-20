@@ -4,16 +4,16 @@ import org.coinor.opents.*;
 
 public class MyTSListener extends TabuSearchAdapter{
 
-	public int MAX_TENURE =  GlobalData.numCustomers*3;//*3;// /2;
-	public int MIN_TENURE = Math.max(7,GlobalData.numCustomers/13);
+	public int MAX_TENURE =  GlobalData.numCustomers;//*3;// /2;
+	public int MIN_TENURE = Math.max(14,GlobalData.numCustomers/13);
 
     public void newBestSolutionFound( TabuSearchEvent evt )
     {   
     	TabuSearch theTS = (TabuSearch)evt.getSource();
     	Solution   best  = theTS.getBestSolution();
-    	Composite_TabuList mytl;
+    	LK_TabuList mytl;
 
-    	mytl = (Composite_TabuList)theTS.getTabuList();
+    	mytl = (LK_TabuList)theTS.getTabuList();
     	mytl.setTenure( Math.max( MIN_TENURE, (int)( 0.75 * mytl.getTenure() ) ) );
     	//mytl.setTenure( 7 );
         System.out.println("Decrease tenure to " + mytl.getTenure());
@@ -28,8 +28,8 @@ public class MyTSListener extends TabuSearchAdapter{
     	GlobalData.notImprovingCounter++;
     	// Increase tenure
     	TabuSearch theTS = (TabuSearch)evt.getSource();
-    	Composite_TabuList mytl;
-    	mytl = (Composite_TabuList)theTS.getTabuList();
+    	LK_TabuList mytl;
+    	mytl = (LK_TabuList)theTS.getTabuList();
 
     	//mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 2 ));
     	mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 2 ));
@@ -46,8 +46,8 @@ public class MyTSListener extends TabuSearchAdapter{
     	
     	// Increase tenure
     	TabuSearch theTS = (TabuSearch)evt.getSource();
-    	Composite_TabuList mytl;
-    	mytl = (Composite_TabuList)theTS.getTabuList();
+    	LK_TabuList mytl;
+    	mytl = (LK_TabuList)theTS.getTabuList();
     	mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 1 ));
     	System.out.println("Increase tenure to " + mytl.getTenure());
 
@@ -58,10 +58,10 @@ public class MyTSListener extends TabuSearchAdapter{
     		GlobalData.notImprovingCounter = 0;
     	}
     	TabuSearch theTS = (TabuSearch)evt.getSource();
-    	Composite_TabuList mytl;
-    	mytl = (Composite_TabuList)theTS.getTabuList();
+    	LK_TabuList mytl;
+    	mytl = (LK_TabuList)theTS.getTabuList();
 
-    	mytl.setTenure( Math.max( MIN_TENURE, mytl.getTenure() - 4 ));
+    	mytl.setTenure( Math.max( MIN_TENURE, mytl.getTenure() - 5 ));
     	System.out.println("Decrease tenure to " + mytl.getTenure());
     }
 }
