@@ -6,8 +6,8 @@ public class LK_Listener extends TabuSearchAdapter{
 	
 	private float k = GlobalData.numCustomers;
 	
-	public int MAX_TENURE =  Math.round(k)*3;//*3;// /2;
-	public int MIN_TENURE = 12;//GlobalData.MIN_TENURE;//Math.max(7, Math.round(k/6) );
+	public int MAX_TENURE =  Math.round(k);//*3;// /2;
+	public int MIN_TENURE = 24;//GlobalData.MIN_TENURE;//Math.max(7, Math.round(k/6) );
 
     public void newBestSolutionFound( TabuSearchEvent evt )
     {   
@@ -16,7 +16,7 @@ public class LK_Listener extends TabuSearchAdapter{
     	LK_TabuList mytl;
 
     	mytl = (LK_TabuList)theTS.getTabuList();
-    	mytl.setTenure( Math.max( MIN_TENURE, (int)( 0.75 * mytl.getTenure() ) ) );
+    	//mytl.setTenure( Math.max( MIN_TENURE, (int)( 0.75 * mytl.getTenure() ) ) );
     	//mytl.setTenure( Math.max( MIN_TENURE, (int)( 0.50 * mytl.getTenure() ) ) );
     	//mytl.setTenure( 7 );
         System.out.println("Decrease tenure to " + mytl.getTenure());
@@ -34,8 +34,7 @@ public class LK_Listener extends TabuSearchAdapter{
     	LK_TabuList mytl;
     	mytl = (LK_TabuList)theTS.getTabuList();
 
-    	//mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 2 ));
-    	mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 4 ));
+    	//mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 1 ));
         System.out.println("Increase tenure to " + mytl.getTenure());
   }
 
@@ -51,7 +50,7 @@ public class LK_Listener extends TabuSearchAdapter{
     	TabuSearch theTS = (TabuSearch)evt.getSource();
     	LK_TabuList mytl;
     	mytl = (LK_TabuList)theTS.getTabuList();
-    	mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 2 ));
+    	//mytl.setTenure( Math.min( MAX_TENURE, mytl.getTenure() + 1 ));
     	System.out.println("Increase tenure to " + mytl.getTenure());
 
     }
@@ -62,12 +61,12 @@ public class LK_Listener extends TabuSearchAdapter{
     	LK_TabuList mytl;
     	mytl = (LK_TabuList)theTS.getTabuList();
     	GlobalData.notImprovingCounter = 0;
-    	if (GlobalData.ImprovingCounter>2) {//TODO: verificare
+    	if (GlobalData.ImprovingCounter>1) {
     		GlobalData.notImprovingCounter = 0;
-        	mytl.setTenure( Math.max( MIN_TENURE, mytl.getTenure() - 6 ));
+        	//mytl.setTenure( Math.max( MIN_TENURE, mytl.getTenure() - 8 ));
         	System.out.println("Decrease tenure to " + mytl.getTenure());
     	}
-    	mytl.setTenure( Math.max( MIN_TENURE, mytl.getTenure() - 2 ));
+    	//mytl.setTenure( Math.max( MIN_TENURE, mytl.getTenure() - 3 ));
     	System.out.println("Decrease tenure to " + mytl.getTenure());
     }
 }
