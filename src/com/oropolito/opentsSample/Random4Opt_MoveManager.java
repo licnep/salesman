@@ -42,7 +42,8 @@ public class Random4Opt_MoveManager implements MoveManager
     	int i=0;
     	y1=x1;
     	do {
-    		y1 = new Edge(x1.c2,rand_generator.nextInt(GlobalData.numCustomers));
+    		//y1 = new Edge(x1.c2,rand_generator.nextInt(GlobalData.numCustomers));
+    		y1 = new Edge(x1.c2,objFunc.vicini[x1.c2][rand_generator.nextInt(GlobalData.nVicini)]);
     		//prendo x2 (obbligato)
         	x2 = sol.getEdgeAfter(y1.c2);
         	//ricollego a x1
@@ -79,16 +80,17 @@ public class Random4Opt_MoveManager implements MoveManager
          } while(y1.c1 != x3.c2);//
     	
          //prendo una a caso:
-         LK_Move a_caso = l.get(rand_generator.nextInt(l.size()));
+         //LK_Move a_caso = l.get(rand_generator.nextInt(l.size()));
          
         /*GlobalData.gui_model.resetColoredEdges();
      	GlobalData.gui_model.addColoredEdge(edgesX, Color.RED);
      	GlobalData.gui_model.addColoredEdge(edgesY, Color.BLUE);
      	try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace();}
      	*/
-     	Move[] moves = new Move[1];
-     	moves[0] = a_caso; //new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone());
-    	return moves;
+     	//Move[] moves = new Move[1];
+     	//moves[0] = a_caso; //new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone());
+         LK_Move[] moves = l.toArray(new LK_Move[l.size()]);
+         return moves;
     }   // end getAllMoves
     
     /**

@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
@@ -39,7 +41,7 @@ public class Tabu {
     	GUI_model gui_model = new GUI_model();
         GUI_view gui_view = new GUI_view(gui_model);
         GlobalData.gui_model = gui_model;
-        HashSet<Integer> hashSoluzioni = new HashSet<Integer>();
+        LinkedList<Integer> hashSoluzioni = new LinkedList<Integer>();
     	
     	int numCustomers=0;
     	int[][] customersPoints;
@@ -90,6 +92,9 @@ public class Tabu {
 		gui_model.setCustomers(customers);
 		GlobalData.numCustomers = numCustomers;
 		GlobalData.customers = customers;
+		GlobalData.MIN_TENURE = 15 + (int)((numCustomers)/5);
+		GlobalData.MAX_TENURE = (int)numCustomers;
+		
 		//cerco la X massima per dimensionare il grafico:
 		double maxX = 0;
 		for (int i=0;i<numCustomers;i++)
@@ -97,14 +102,14 @@ public class Tabu {
 		gui_model.area_size = maxX;
 		
         // Initialize our objects
-        java.util.Random r = new java.util.Random( 12345 );
+        GlobalData.rand = new java.util.Random( GlobalData.random_seed );
         
         //ObjectiveFunction objFunc = new VertexInsertion_ObjectiveFunction( customers );
         ObjectiveFunction objFunc = new Composite_ObjectiveFunction( customers );
         Solution initialSolution  = new MyGreedyStartSolution( customers );
         MoveManager   moveManager = new Composite_MoveManager();
         //TabuList         tabuList = new Composite_TabuList( 10 );
-        LK_TabuList			tabuList = new LK_TabuList(27,4);
+        LK_TabuList			tabuList = new LK_TabuList(GlobalData.MIN_TENURE,4);
         //TabuList         tabuList = new VertexInsertion_TabuList( 7 );
         //TabuList tabuList = new My2Opt_TabuList(7,4);
         LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
@@ -140,7 +145,7 @@ public class Tabu {
         gui_model.setTour_optimal(ottimale.tour);
         
         GlobalData.iteration = 0;
-        GlobalData.nVicini = 30;
+        GlobalData.nVicini = 25;
         // Start solving
         for (;GlobalData.iteration<iterations;GlobalData.iteration++) 
         {
@@ -172,11 +177,14 @@ public class Tabu {
             Integer curHash = ((MySolutionEdges)tabuSearch.getCurrentSolution()).edges.hashCode();
             if (hashSoluzioni.contains(curHash)) {
             	System.out.println("SOLUZIONE GIA VISTA!!!!");
-        		//double_bridge_perturbation();
-            	tabuList.setTenure(tabuList.getTenure()+2);
+        		double_bridge_perturbation();
+            	//tabuList.setTenure(tabuList.getTenure()+3);
             } else {
-            	tabuList.setTenure(Math.max(27, tabuList.getTenure()-1));
+            	//tabuList.setTenure(Math.max(GlobalData.MIN_TENURE, tabuList.getTenure()-1));
             	hashSoluzioni.add(curHash);
+            	if (hashSoluzioni.size()>50) {
+            		hashSoluzioni.remove(0);
+            	}
             }
         }
         
@@ -239,7 +247,7 @@ public class Tabu {
 			while ((line = br.readLine()) != null) 
 			{
 				if (!inTour) {
-					if(line.equals("TOUR_SECTION")) inTour=true;
+					if(line.trim().equals("TOUR_SECTION")) inTour=true;
 				} else {
 					if(line.equals("-1")) {
 						inTour=false;

@@ -1,5 +1,7 @@
 package com.oropolito.opentsSample;
 
+import java.util.Random;
+
 import com.oropolito.opentsSample.GUI.GUI_model;
 
 public class GlobalData {
@@ -15,8 +17,9 @@ public class GlobalData {
 	public static GUI_model gui_model;
 	public static double[][] customers;
 	
+	public static Random rand;
 	
 	//==
-	public static int MAX_TENURE = 50;
-	public static int MIN_TENURE = 7;
+	public static int MAX_TENURE = 0;
+	public static int MIN_TENURE = 0;
 }

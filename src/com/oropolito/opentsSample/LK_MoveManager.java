@@ -42,41 +42,42 @@ public class LK_MoveManager implements MoveManager
         Iterator<Edge> ie = sol.edges.iterator();
         while(ie.hasNext()) {
         	edgesX.add(ie.next()); //setto x1
-        	Edge[] vicini = objFunc.edgeVicini[edgesX.get(0).c2];
-        	for (int i=0;i<GlobalData.nVicini;i++) {
-        		if(pushEdgeY(vicini[i], sol)) {
-        			double g = calculateGain(edgesX, edgesY);
-        			
-                	//X2 e' obbligato una volta scelto Y1
-        			if(pushEdgeX(sol.getEdgeBefore(edgesY.get(0).c2))) {
-        				//Y2 che ricollega a t1
-        				if(pushEdgeY(new Edge(edgesX.get(1).c2 , edgesX.get(0).c1), sol)) {
-        					l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone()));
-        					popEdgeY();
-        				}
-                    	popEdgeX();
-        			}
-        			popEdgeY();
-        		}
-        		/*
-        		//testo tutti i vicini Y che non devono essere gia' nel tour
-        		if(!sol.contains(vicini[i])) {
-        			edgesY.add(vicini[i]);        			
-        			double g = calculateGain(edgesX, edgesY);
-        			
-                	//X2 e' obbligato una volta scelto Y1
-        			edgesX.add( sol.getEdgeBefore(edgesY.get(0).c2) );
-        			edgesY.add( new Edge(edgesX.get(1).c2 , edgesX.get(0).c1) ); //Y2 che ricollega a t1
-                	//l.add(new My2Opt_Move(edgesX.get(0).c1, edgesX.get(1).c2, sol));
-        			l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone(), sol));
-                	
-        			edgesY.remove(1);
-        			edgesY.remove(0);
-	            	edgesX.remove(1);
-        		}
-        		*/
+        	if (GlobalData.rand.nextBoolean()) {
+	        	Edge[] vicini = objFunc.edgeVicini[edgesX.get(0).c2];
+	        	for (int i=0;i<GlobalData.nVicini;i++) {
+	        		if(pushEdgeY(vicini[i], sol)) {
+	        			double g = calculateGain(edgesX, edgesY);
+	        			
+	                	//X2 e' obbligato una volta scelto Y1
+	        			if(pushEdgeX(sol.getEdgeBefore(edgesY.get(0).c2))) {
+	        				//Y2 che ricollega a t1
+	        				if(pushEdgeY(new Edge(edgesX.get(1).c2 , edgesX.get(0).c1), sol)) {
+	        					l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone()));
+	        					popEdgeY();
+	        				}
+	                    	popEdgeX();
+	        			}
+	        			popEdgeY();
+	        		}
+	        		/*
+	        		//testo tutti i vicini Y che non devono essere gia' nel tour
+	        		if(!sol.contains(vicini[i])) {
+	        			edgesY.add(vicini[i]);        			
+	        			double g = calculateGain(edgesX, edgesY);
+	        			
+	                	//X2 e' obbligato una volta scelto Y1
+	        			edgesX.add( sol.getEdgeBefore(edgesY.get(0).c2) );
+	        			edgesY.add( new Edge(edgesX.get(1).c2 , edgesX.get(0).c1) ); //Y2 che ricollega a t1
+	                	//l.add(new My2Opt_Move(edgesX.get(0).c1, edgesX.get(1).c2, sol));
+	        			l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone(), sol));
+	                	
+	        			edgesY.remove(1);
+	        			edgesY.remove(0);
+		            	edgesX.remove(1);
+	        		}
+	        		*/
+	        	}
         	}
-        	
         	edgesX.clear(); //testo un altro x1
         }
         

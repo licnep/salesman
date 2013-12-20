@@ -1,4 +1,4 @@
-NAME : rat195.opt.tour
+NAME : rat195.tour
 COMMENT : Optimum tour for rat195.tsp (Length 2323)
 TYPE : TOUR
 DIMENSION : 195
