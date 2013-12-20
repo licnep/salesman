@@ -1,6 +1,7 @@
 package com.oropolito.opentsSample;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.coinor.opents.*;
@@ -72,6 +73,7 @@ public class LK_TabuList implements TabuList
     private int[][] tabuList;     // Data structure used to store list
     
     private ArrayList<Edge> TabuListRimossi;
+    
     
     private int     currentPos;   // Monotomically increasing counter
     private int     listLength;   // Always equals tabuList.length

@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
@@ -20,18 +22,24 @@ import org.coinor.opents.TabuSearch;
 
 import com.oropolito.opentsSample.GUI.GUI_model;
 import com.oropolito.opentsSample.GUI.GUI_view;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 public class Tabu {
+	
+	private TabuSearch tabuSearch;
+	private Random4Opt_MoveManager random4opt;
+	
 	private enum ParamFile {
 	    NONE, PARAMS, INSTANCES
 	}
 	
 
-    public static void main (int iterations, String tour_filename, String opt_tour_filename) 
+    public void main (int iterations, String tour_filename, String opt_tour_filename) 
     {
     	GUI_model gui_model = new GUI_model();
         GUI_view gui_view = new GUI_view(gui_model);
         GlobalData.gui_model = gui_model;
+        HashSet<Integer> hashSoluzioni = new HashSet<Integer>();
     	
     	int numCustomers=0;
     	int[][] customersPoints;
@@ -96,12 +104,12 @@ public class Tabu {
         Solution initialSolution  = new MyGreedyStartSolution( customers );
         MoveManager   moveManager = new Composite_MoveManager();
         //TabuList         tabuList = new Composite_TabuList( 10 );
-        TabuList			tabuList = new LK_TabuList(24,4);
+        LK_TabuList			tabuList = new LK_TabuList(27,4);
         //TabuList         tabuList = new VertexInsertion_TabuList( 7 );
         //TabuList tabuList = new My2Opt_TabuList(7,4);
         LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
         LK_MoveManager lkMoveManagerOld = new LK_MoveManager(lkObjFunc);
-        Random4Opt_MoveManager random4opt = new Random4Opt_MoveManager(lkObjFunc,(LK_TabuList)tabuList);
+        random4opt = new Random4Opt_MoveManager(lkObjFunc,(LK_TabuList)tabuList);
         LK_MoveManagerPROPER lkMoveManager = new LK_MoveManagerPROPER(lkObjFunc,(LK_TabuList)tabuList);
         
         //Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
@@ -109,11 +117,11 @@ public class Tabu {
         //Solution soluzione_savings = new MySavingAlg(customers,gui_model,lkObjFunc);
         
         // Create Tabu Search object
-        TabuSearch tabuSearch = new SingleThreadedTabuSearch(
+        tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
         		soluzione_iniziale_random2,
         		//soluzione_savings,
-                lkMoveManager,
+                lkMoveManagerOld,
                 lkObjFunc,
               tabuList,
 //              tabuList2,
@@ -134,7 +142,7 @@ public class Tabu {
         GlobalData.iteration = 0;
         GlobalData.nVicini = 30;
         // Start solving
-        for (;GlobalData.iteration<iterations-100;GlobalData.iteration++) 
+        for (;GlobalData.iteration<iterations;GlobalData.iteration++) 
         {
         	tabuSearch.setIterationsToGo( 1 );
             tabuSearch.startSolving();
@@ -160,6 +168,16 @@ public class Tabu {
             	GlobalData.nVicini = Math.min(GlobalData.nVicini+1, 60);
             }*/
             //try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
+            
+            Integer curHash = ((MySolutionEdges)tabuSearch.getCurrentSolution()).edges.hashCode();
+            if (hashSoluzioni.contains(curHash)) {
+            	System.out.println("SOLUZIONE GIA VISTA!!!!");
+        		//double_bridge_perturbation();
+            	tabuList.setTenure(tabuList.getTenure()+2);
+            } else {
+            	tabuList.setTenure(Math.max(27, tabuList.getTenure()-1));
+            	hashSoluzioni.add(curHash);
+            }
         }
         
 /*
@@ -203,7 +221,14 @@ public class Tabu {
         
     }   // end main
     
-    public static int[] readTour(String filename)
+    private void double_bridge_perturbation() {
+    	GlobalData.notImprovingCounter=0;
+    	GlobalData.random_seed++;
+    	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
+    	tabuSearch.setMoveManager(random4opt);
+	}
+
+	public static int[] readTour(String filename)
     {
     	List<Integer> lista = new ArrayList<Integer>();
     	File input = new File(filename);
