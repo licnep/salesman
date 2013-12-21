@@ -197,7 +197,7 @@ public class Tabu {
 			while ((line = br.readLine()) != null) 
 			{
 				if (!inTour) {
-					if(line.equals("TOUR_SECTION")) inTour=true;
+					if(line.trim().equals("TOUR_SECTION")) inTour=true;
 				} else {
 					if(line.equals("-1")) {
 						inTour=false;
