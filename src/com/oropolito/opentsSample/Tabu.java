@@ -121,11 +121,13 @@ public class Tabu {
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
         Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
         //Solution soluzione_savings = new MySavingAlg(customers,gui_model,lkObjFunc);
+        Solution soluzione_iniziale_farthest = new FarthestInsertion(customers,lkObjFunc);
         
         // Create Tabu Search object
         tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
-        		soluzione_iniziale_random2,
+        		soluzione_iniziale_farthest,
+        		//soluzione_iniziale_random2,
         		//soluzione_savings,
                 lkMoveManagerOld,
                 lkObjFunc,
@@ -162,7 +164,7 @@ public class Tabu {
 
             MySolutionEdges cur_best = (MySolutionEdges)tabuSearch.getBestSolution();
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
-            
+            /*
             if (GlobalData.iterazioni3Opt>0) {
             	GlobalData.nVicini = 25;
             	tabuSearch.setMoveManager(lkMoveManager);
@@ -170,7 +172,7 @@ public class Tabu {
             	GlobalData.nVicini = 50;
             	tabuSearch.setMoveManager(lkMoveManagerOld);
             }
-            GlobalData.iterazioni3Opt--;
+            GlobalData.iterazioni3Opt--;*/
             /*
             if(GlobalData.iteration==100||GlobalData.iteration==200) {
             	GlobalData.random_seed++;
@@ -178,7 +180,7 @@ public class Tabu {
             	tabuList.setTenure(GlobalData.MIN_TENURE);
             	tabuSearch.setMoveManager(random4opt);
             }*/
-            
+            /*
             if(GlobalData.notImprovingCounter>15&&iterationiLocal<0||GlobalData.iteration==200) {
             	GlobalData.notImprovingCounter=0;
             	iterationiLocal=100;
