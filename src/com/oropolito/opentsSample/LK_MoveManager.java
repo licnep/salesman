@@ -42,7 +42,7 @@ public class LK_MoveManager implements MoveManager
         Iterator<Edge> ie = sol.edges.iterator();
         while(ie.hasNext()) {
         	edgesX.add(ie.next()); //setto x1
-        	if (GlobalData.rand.nextBoolean()) {
+        	//if (GlobalData.rand.nextBoolean()) {
 	        	Edge[] vicini = objFunc.edgeVicini[edgesX.get(0).c2];
 	        	for (int i=0;i<GlobalData.nVicini;i++) {
 	        		if(pushEdgeY(vicini[i], sol)) {
@@ -77,7 +77,7 @@ public class LK_MoveManager implements MoveManager
 	        		}
 	        		*/
 	        	}
-        	}
+        	//}
         	edgesX.clear(); //testo un altro x1
         }
         

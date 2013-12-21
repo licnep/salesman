@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 //Totalmente casuale (fa schifo)
-public class MyRandomSolution extends MySolution {
+public class MyRandomSolution extends MySolutionEdges {
 	public MyRandomSolution(int n_customers) {
 		Random rand_generator = new Random(GlobalData.random_seed);
 		

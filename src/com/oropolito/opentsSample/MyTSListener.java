@@ -5,7 +5,7 @@ import org.coinor.opents.*;
 public class MyTSListener extends TabuSearchAdapter{
 
 	public int MAX_TENURE =  GlobalData.numCustomers;//*3;// /2;
-	public int MIN_TENURE = Math.max(14,GlobalData.numCustomers/13);
+	public int MIN_TENURE = Math.max(10,GlobalData.numCustomers/26);
 
     public void newBestSolutionFound( TabuSearchEvent evt )
     {   

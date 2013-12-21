@@ -10,6 +10,7 @@ import org.coinor.opents.*;
 public class MySolutionEdges extends SolutionAdapter 
 {
     public int[] tour;
+    public long hashCode = 0;
     
     public LinkedHashSet<Edge> edges;
     
@@ -49,6 +50,7 @@ public class MySolutionEdges extends SolutionAdapter
     			}
     		}
     	}
+    	this.setHashCode();
     	System.out.println("sinc");
     }
     
@@ -100,6 +102,7 @@ public class MySolutionEdges extends SolutionAdapter
     {   
         MySolutionEdges copy = (MySolutionEdges)super.clone();
         copy.tour = (int[])this.tour.clone();
+        copy.hashCode = this.hashCode;
         return copy;
     }   // end clone
     
@@ -119,5 +122,13 @@ public class MySolutionEdges extends SolutionAdapter
         
         return s.toString();
     }   // end toString
+    
+    private void setHashCode() {
+    	this.hashCode = 0;
+    	Iterator<Edge> i = edges.iterator();
+    	while(i.hasNext()) {
+    		this.hashCode += i.next().hashCode();
+    	}
+    }
     
 }   // end class MySolution

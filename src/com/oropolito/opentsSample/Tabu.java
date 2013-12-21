@@ -41,7 +41,7 @@ public class Tabu {
     	GUI_model gui_model = new GUI_model();
         GUI_view gui_view = new GUI_view(gui_model);
         GlobalData.gui_model = gui_model;
-        LinkedList<Integer> hashSoluzioni = new LinkedList<Integer>();
+        LinkedList<Long> hashSoluzioni = new LinkedList<Long>();
     	
     	int numCustomers=0;
     	int[][] customersPoints;
@@ -93,7 +93,7 @@ public class Tabu {
 		GlobalData.numCustomers = numCustomers;
 		GlobalData.customers = customers;
 		GlobalData.MIN_TENURE = 15 + (int)((numCustomers)/5);
-		GlobalData.MAX_TENURE = (int)numCustomers;
+		GlobalData.MAX_TENURE = (int)numCustomers/2;
 		
 		//cerco la X massima per dimensionare il grafico:
 		double maxX = 0;
@@ -110,6 +110,7 @@ public class Tabu {
         MoveManager   moveManager = new Composite_MoveManager();
         //TabuList         tabuList = new Composite_TabuList( 10 );
         LK_TabuList			tabuList = new LK_TabuList(GlobalData.MIN_TENURE,4);
+        LK_TabuList			tabuList2 = new LK_TabuList(GlobalData.MIN_TENURE,4);
         //TabuList         tabuList = new VertexInsertion_TabuList( 7 );
         //TabuList tabuList = new My2Opt_TabuList(7,4);
         LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
@@ -117,7 +118,7 @@ public class Tabu {
         random4opt = new Random4Opt_MoveManager(lkObjFunc,(LK_TabuList)tabuList);
         LK_MoveManagerPROPER lkMoveManager = new LK_MoveManagerPROPER(lkObjFunc,(LK_TabuList)tabuList);
         
-        //Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
+        Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
         Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
         //Solution soluzione_savings = new MySavingAlg(customers,gui_model,lkObjFunc);
         
@@ -146,6 +147,9 @@ public class Tabu {
         
         GlobalData.iteration = 0;
         GlobalData.nVicini = 50;
+        
+        int iterationiLocal = 100;
+        GlobalData.iterazioni3Opt = 0;
         // Start solving
         for (;GlobalData.iteration<iterations;GlobalData.iteration++) 
         {
@@ -159,12 +163,25 @@ public class Tabu {
             MySolutionEdges cur_best = (MySolutionEdges)tabuSearch.getBestSolution();
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
             
-            tabuSearch.setMoveManager(lkMoveManagerOld);
+            if (GlobalData.iterazioni3Opt>0) {
+            	GlobalData.nVicini = 25;
+            	tabuSearch.setMoveManager(lkMoveManager);
+            } else {
+            	GlobalData.nVicini = 50;
+            	tabuSearch.setMoveManager(lkMoveManagerOld);
+            }
+            GlobalData.iterazioni3Opt--;
+            /*
+            if(GlobalData.iteration==100||GlobalData.iteration==200) {
+            	GlobalData.random_seed++;
+            	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
+            	tabuList.setTenure(GlobalData.MIN_TENURE);
+            	tabuSearch.setMoveManager(random4opt);
+            }*/
             
-            //if(GlobalData.notImprovingCounter>15) {
-            if(GlobalData.iteration%100==0&&GlobalData.notImprovingCounter>15) {
-            	tabuSearch.stopSolving();
+            if(GlobalData.notImprovingCounter>15&&iterationiLocal<0||GlobalData.iteration==200) {
             	GlobalData.notImprovingCounter=0;
+            	iterationiLocal=100;
             	GlobalData.random_seed++;
             	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
             	tabuSearch.setMoveManager(random4opt);
@@ -174,7 +191,8 @@ public class Tabu {
             }*/
             //try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
             
-            Integer curHash = ((MySolutionEdges)tabuSearch.getCurrentSolution()).edges.hashCode();
+            long curHash = ((MySolutionEdges)tabuSearch.getCurrentSolution()).edges.hashCode();
+            curHash = ((MySolutionEdges)tabuSearch.getCurrentSolution()).hashCode;
             if (hashSoluzioni.contains(curHash)) {
             	System.out.println("SOLUZIONE GIA VISTA!!!!");
         		//double_bridge_perturbation();
@@ -186,23 +204,24 @@ public class Tabu {
             		hashSoluzioni.remove(0);
             	}
             }
+            iterationiLocal--;
         }
         
-        tabuList.setTenure(0);
+        tabuList.setTenure(GlobalData.MIN_TENURE);
+        GlobalData.nVicini = 25;
 
         tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
         		tabuSearch.getBestSolution(),
                 lkMoveManager,
                 lkObjFunc,
-              tabuList,
-//              tabuList2,
+                tabuList,
                 new BestEverAspirationCriteria(), // In OpenTS package
                 false );
         MyTSListener myListenerVertex = new MyTSListener();
         tabuSearch.addTabuSearchListener(myListenerVertex);
         
-        for (;GlobalData.iteration<iterations+400;GlobalData.iteration++) 
+        for (;GlobalData.iteration<iterations+200;GlobalData.iteration++) 
         {
         	tabuSearch.setIterationsToGo( 1 );
             tabuSearch.startSolving();

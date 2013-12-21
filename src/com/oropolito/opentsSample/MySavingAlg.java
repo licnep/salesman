@@ -110,4 +110,9 @@ public class MySavingAlg extends MySolutionEdges {
 		}
     
         }
+	
+	private boolean tornaAdHubNode(Edge e, int hubNode) {
+		
+		return true;
+	}
 }

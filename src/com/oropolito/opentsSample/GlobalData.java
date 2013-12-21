@@ -18,6 +18,7 @@ public class GlobalData {
 	public static double[][] customers;
 	
 	public static Random rand;
+	public static int iterazioni3Opt;
 	
 	//==
 	public static int MAX_TENURE = 0;

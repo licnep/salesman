@@ -19,7 +19,7 @@ public class Main
     {
     	
     	readParams(args);
-    	P_TSMaxIter = 500;
+    	P_TSMaxIter = 1000;
     	
     	Tabu myTabu = new Tabu();
     	
