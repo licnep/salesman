@@ -104,12 +104,14 @@ public class Tabu {
         LK_MoveManagerPROPER lkMoveManager = new LK_MoveManagerPROPER(lkObjFunc,(LK_TabuList)tabuList);
         
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
-        Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
+        //Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
+        Solution soluzione_iniziale_farthest = new FarthestInsertion(customers,lkObjFunc);
         
         // Create Tabu Search object
         TabuSearch tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
-        		soluzione_iniziale_random2,
+        		//soluzione_iniziale_random2,
+        		soluzione_iniziale_farthest,
                 lkMoveManager,
                 lkObjFunc,
               tabuList,

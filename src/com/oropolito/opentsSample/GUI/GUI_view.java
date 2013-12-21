@@ -84,7 +84,7 @@ public class GUI_view implements Observer, MouseWheelListener {
 				//disegno gli edge colorati
 				for (EdgeColorato e : m.coloredEdges) {
 					g2.setPaint(e.color);
-					g2.setStroke(new BasicStroke(4));
+					g2.setStroke(new BasicStroke(2));
 					g2.draw(new Line2D.Double(e.x1*w/z+1, e.y1*h/z+2, e.x2*w/z+1, e.y2*h/z+2));
 				}
 				g2.setStroke(new BasicStroke(1));
