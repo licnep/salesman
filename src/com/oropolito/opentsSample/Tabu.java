@@ -126,8 +126,8 @@ public class Tabu {
         // Create Tabu Search object
         tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
-        		soluzione_iniziale_farthest,
-        		//soluzione_iniziale_random2,
+        		//soluzione_iniziale_farthest,
+        		soluzione_iniziale_random2,
         		//soluzione_savings,
                 lkMoveManagerOld,
                 lkObjFunc,
@@ -146,6 +146,10 @@ public class Tabu {
         double[] ottimal = objFunc.evaluate(ottimale, null);
         ottimale.setObjectiveValue(ottimal);
         gui_model.setTour_optimal(ottimale.tour);
+        
+        //gui_model.resetColoredEdges();
+        //gui_model.setTour_current(ottimale.tour);
+        //try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace();}
         
         GlobalData.iteration = 0;
         GlobalData.nVicini = 50;
@@ -173,13 +177,15 @@ public class Tabu {
             	tabuSearch.setMoveManager(lkMoveManagerOld);
             }
             GlobalData.iterazioni3Opt--;*/
-            /*
-            if(GlobalData.iteration==100||GlobalData.iteration==200) {
-            	GlobalData.random_seed++;
-            	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
-            	tabuList.setTenure(GlobalData.MIN_TENURE);
-            	tabuSearch.setMoveManager(random4opt);
-            }*/
+            tabuSearch.setMoveManager(lkMoveManagerOld);
+            if(GlobalData.iteration==50||GlobalData.iteration==100||GlobalData.iteration==150||GlobalData.iteration==200) {
+            //if(GlobalData.iteration%50==49) {
+            	double_bridge_perturbation();
+            } else if(GlobalData.iteration==250){
+            	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution());
+            }
+            
+            //*/
             /*
             if(GlobalData.notImprovingCounter>15&&iterationiLocal<0||GlobalData.iteration==200) {
             	GlobalData.notImprovingCounter=0;
@@ -191,7 +197,7 @@ public class Tabu {
             /*if (GlobalData.iteration>100&&GlobalData.iteration<100) {
             	GlobalData.nVicini = Math.min(GlobalData.nVicini+1, 60);
             }*/
-            //try { Thread.sleep(20); } catch (InterruptedException e) { e.printStackTrace();}
+            //try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
             
             long curHash = ((MySolutionEdges)tabuSearch.getCurrentSolution()).edges.hashCode();
             curHash = ((MySolutionEdges)tabuSearch.getCurrentSolution()).hashCode;
@@ -202,7 +208,7 @@ public class Tabu {
             } else {
             	//tabuList.setTenure(Math.max(GlobalData.MIN_TENURE, tabuList.getTenure()-1));
             	hashSoluzioni.add(curHash);
-            	if (hashSoluzioni.size()>50) {
+            	if (hashSoluzioni.size()>500) {
             		hashSoluzioni.remove(0);
             	}
             }
