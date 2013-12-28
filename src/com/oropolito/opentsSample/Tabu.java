@@ -92,8 +92,8 @@ public class Tabu {
 		gui_model.setCustomers(customers);
 		GlobalData.numCustomers = numCustomers;
 		GlobalData.customers = customers;
-		GlobalData.MIN_TENURE = 15 + (int)((numCustomers)/5);
-		GlobalData.MAX_TENURE = (int)numCustomers/2;
+		GlobalData.MIN_TENURE = 8 + (int)((numCustomers)/5);
+		GlobalData.MAX_TENURE = (int)numCustomers*2;
 		
 		//cerco la X massima per dimensionare il grafico:
 		double maxX = 0;
@@ -137,7 +137,7 @@ public class Tabu {
                 false ); // maximizing = yes/no; false means minimizing
         
         //MyTSListener myListener = new MyTSListener();
-        LK_Listener myListener = new LK_Listener();
+        LK_Listener myListener = new LK_Listener(tabuList);
         tabuSearch.addTabuSearchListener(myListener);
 
         // Carico la soluzione ottimale
@@ -177,7 +177,12 @@ public class Tabu {
             	tabuSearch.setMoveManager(lkMoveManagerOld);
             }
             GlobalData.iterazioni3Opt--;*/
-            tabuSearch.setMoveManager(lkMoveManagerOld);
+            if(!GlobalData.perturbate) tabuSearch.setMoveManager(lkMoveManagerOld);
+            else {
+            	GlobalData.perturbate = false;
+            	double_bridge_perturbation();
+            }
+            
             if(GlobalData.iteration==50||GlobalData.iteration==100||GlobalData.iteration==150||GlobalData.iteration==200) {
             //if(GlobalData.iteration%50==49) {
             	double_bridge_perturbation();
@@ -262,6 +267,7 @@ public class Tabu {
     	GlobalData.random_seed++;
     	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
     	tabuSearch.setMoveManager(random4opt);
+    	//((LK_TabuList)tabuSearch.getTabuList()).setTenure(0);
 	}
 
 	public static int[] readTour(String filename)

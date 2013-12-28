@@ -22,6 +22,109 @@ public class Random4Opt_MoveManager implements MoveManager
 		this.tabu = tabu;
 	}
 	
+	
+	
+	
+	public Move[] getAllMovesNonRandom( Solution solution )
+    {   
+    	Edge x1,x2,x3,x4,y1,y2,y3,y4;
+    	MySolutionEdges sol = (MySolutionEdges)solution;
+    	sol.sincEdgesWithTour(); //synchronize the edges with the tour
+    	ArrayList<LK_Move> l = new ArrayList<LK_Move>();
+    	
+    	edgesX = new ArrayList<Edge>();
+    	edgesY = new ArrayList<Edge>();
+        
+    	ArrayList<Edge> available = new ArrayList<>(sol.edges);
+    	
+    	Random rand_generator = new Random(GlobalData.random_seed);
+    	
+    	double minG = Double.MAX_VALUE;
+    	LK_Move bestIllegal2OptMove = new LK_Move(edgesX, edgesY);
+    	Iterator<Edge> ie = sol.edges.iterator();
+        while(ie.hasNext()) {
+        	edgesX.add(ie.next()); //setto x1
+        	
+        	//scelgo y1
+        	Edge[] vicini = objFunc.edgeVicini[edgesX.get(0).c2];
+        	for (int i=0;i<GlobalData.nVicini;i++) {
+        		if(!sol.contains(vicini[i])) {
+        			edgesY.add(vicini[i]);
+        			
+        			if(edgesX.add(sol.getEdgeAfter(edgesY.get(0).c2))) {
+        				if (edgesX.get(1).c2 != edgesX.get(0).c1) {
+	        				//Y2 che ricollega a t1
+	        				edgesY.add(new Edge(edgesX.get(1).c2 , edgesX.get(0).c1));
+	        				double g = calculateGain(edgesX, edgesY);
+	        				if (g<minG) {
+	        					LK_Move m = new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone());
+	        					if (!tabu.isTabu(sol, m)) {
+	        						minG = g;
+	        						bestIllegal2OptMove = m;
+	        					}
+	        				}
+	    					GlobalData.gui_model.resetColoredEdges();
+	    					GlobalData.gui_model.addColoredEdge(edgesX, Color.RED);
+	    					GlobalData.gui_model.addColoredEdge(edgesY, Color.GREEN);
+	        				popEdgeY();
+	                    	popEdgeX();
+        				}
+        			}
+        			popEdgeY();
+        		}
+        	}
+        	edgesX.clear();
+        }
+        
+        //qui ho la migliore 2opt illegale non tabu
+        
+        edgesX = bestIllegal2OptMove.edgesX;
+        edgesY = bestIllegal2OptMove.edgesY;
+        
+        GlobalData.gui_model.resetColoredEdges();
+		GlobalData.gui_model.addColoredEdge(bestIllegal2OptMove.edgesX, Color.RED);
+		GlobalData.gui_model.addColoredEdge(bestIllegal2OptMove.edgesY, Color.GREEN);
+		//try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace();}
+    	
+    	//itero lungo uno a caso dei due cicli
+    	 x3 = bestIllegal2OptMove.edgesY.get(0);//  y1;
+         do {
+           x3 = sol.getEdgeBefore(x3.c2);
+           GlobalData.gui_model.addColoredEdge(x3, Color.YELLOW);
+           //try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace();}
+           
+           //testo altro edge nel secondo cerchio
+           x4=bestIllegal2OptMove.edgesY.get(1);//y2;
+           do {
+        	 x4 = sol.getEdgeBefore(x4.c2);
+             GlobalData.gui_model.addColoredEdge(x4, Color.GRAY);
+             y3 = new Edge(x3.c1, x4.c2);
+             y4 =new Edge(x3.c2, x4.c1);
+             edgesY.add(y3);
+             edgesY.add(y4);
+             edgesX.add(x3);
+             edgesX.add(x4);
+             //try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
+               if (y3.isProper()&&y4.isProper()) {
+                 l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone()));
+                 /*GlobalData.gui_model.resetColoredEdges();
+                 GlobalData.gui_model.addColoredEdge(edgesX, Color.RED);
+         		 GlobalData.gui_model.addColoredEdge(edgesY, Color.GREEN);*/
+         		 //try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
+               }
+               edgesY.remove(3);edgesY.remove(2);
+               edgesX.remove(3);edgesX.remove(2);
+           } while(bestIllegal2OptMove.edgesY.get(1).c1 != x4.c2);
+         } while(bestIllegal2OptMove.edgesY.get(0).c1 != x3.c2);//*/
+
+         LK_Move[] moves = l.toArray(new LK_Move[l.size()]);
+         return moves;
+    }   // end getAllMoves
+	
+	
+	
+	
+	
     public Move[] getAllMoves( Solution solution )
     {   
     	Edge x1,x2,x3,x4,y1,y2,y3,y4;

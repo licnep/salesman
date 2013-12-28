@@ -2,11 +2,13 @@ package com.oropolito.opentsSample;
 
 import java.util.Random;
 
+import org.coinor.opents.MoveManager;
+
 import com.oropolito.opentsSample.GUI.GUI_model;
 
 public class GlobalData {
 	public static int numCustomers=0;
-	public static long random_seed=130;
+	public static long random_seed=1000;
 	
 	public static int notImprovingCounter = 0;
 	public static int ImprovingCounter = 0;
@@ -19,6 +21,8 @@ public class GlobalData {
 	
 	public static Random rand;
 	public static int iterazioni3Opt;
+	
+	public static boolean perturbate = false;
 	
 	//==
 	public static int MAX_TENURE = 0;
