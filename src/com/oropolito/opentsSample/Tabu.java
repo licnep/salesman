@@ -114,6 +114,7 @@ public class Tabu {
         //TabuList         tabuList = new VertexInsertion_TabuList( 7 );
         //TabuList tabuList = new My2Opt_TabuList(7,4);
         LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
+        LK_ObjectiveFunction ObjFunc2 = new LK_ObjectiveFunction(customers);
         LK_MoveManager lkMoveManagerOld = new LK_MoveManager(lkObjFunc);
         random4opt = new Random4Opt_MoveManager(lkObjFunc,(LK_TabuList)tabuList);
         LK_MoveManagerPROPER lkMoveManager = new LK_MoveManagerPROPER(lkObjFunc,(LK_TabuList)tabuList);
@@ -168,42 +169,28 @@ public class Tabu {
 
             MySolutionEdges cur_best = (MySolutionEdges)tabuSearch.getBestSolution();
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
-            /*
-            if (GlobalData.iterazioni3Opt>0) {
-            	GlobalData.nVicini = 25;
-            	tabuSearch.setMoveManager(lkMoveManager);
-            } else {
-            	GlobalData.nVicini = 50;
-            	tabuSearch.setMoveManager(lkMoveManagerOld);
-            }
-            GlobalData.iterazioni3Opt--;*/
+            
             if(!GlobalData.perturbate) tabuSearch.setMoveManager(lkMoveManagerOld);
             else {
             	GlobalData.perturbate = false;
             	double_bridge_perturbation();
+            	lkObjFunc.localMinimumReached_UpdatePenalty((MySolutionEdges)tabuSearch.getCurrentSolution());
             }
-            
+            /*
             if(GlobalData.iteration==50||GlobalData.iteration==100||GlobalData.iteration==150||GlobalData.iteration==200) {
             //if(GlobalData.iteration%50==49) {
             	double_bridge_perturbation();
             } else if(GlobalData.iteration==250){
             	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution());
-            }
-            
-            //*/
-            /*
-            if(GlobalData.notImprovingCounter>15&&iterationiLocal<0||GlobalData.iteration==200) {
-            	GlobalData.notImprovingCounter=0;
-            	iterationiLocal=100;
-            	GlobalData.random_seed++;
-            	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
-            	tabuSearch.setMoveManager(random4opt);
-            }
-            /*if (GlobalData.iteration>100&&GlobalData.iteration<100) {
-            	GlobalData.nVicini = Math.min(GlobalData.nVicini+1, 60);
             }*/
-            //try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
             
+            
+            if(GlobalData.notImprovingCounter>3) {
+            	//non viene mai chiamato adesso con le perturbation nell'LK_listener
+            	lkObjFunc.localMinimumReached_UpdatePenalty((MySolutionEdges)tabuSearch.getBestSolution());
+            }
+            
+            /*
             long curHash = ((MySolutionEdges)tabuSearch.getCurrentSolution()).edges.hashCode();
             curHash = ((MySolutionEdges)tabuSearch.getCurrentSolution()).hashCode;
             if (hashSoluzioni.contains(curHash)) {
@@ -216,18 +203,21 @@ public class Tabu {
             	if (hashSoluzioni.size()>500) {
             		hashSoluzioni.remove(0);
             	}
-            }
+            }*/
             iterationiLocal--;
         }
         
         tabuList.setTenure(GlobalData.MIN_TENURE);
         GlobalData.nVicini = 25;
+        
+        MySolutionEdges best2Opt = new MySolutionEdges(customers);
+        best2Opt.tour = ((MySolutionEdges)tabuSearch.getBestSolution()).tour;
 
         tabuSearch = new SingleThreadedTabuSearch(
                 //initialSolution,
         		tabuSearch.getBestSolution(),
                 lkMoveManager,
-                lkObjFunc,
+                ObjFunc2,
                 tabuList,
                 new BestEverAspirationCriteria(), // In OpenTS package
                 false );

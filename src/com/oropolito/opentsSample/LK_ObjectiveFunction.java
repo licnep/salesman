@@ -1,6 +1,8 @@
 package com.oropolito.opentsSample;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.coinor.opents.*;
@@ -11,6 +13,9 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     public double[][] matrix;
     public int[][] vicini; //per ogni customer lista degli N piu' vicini
     public Edge[][] edgeVicini;
+    public double lambda = 1;
+    
+    public int[][] penalty; //penalita' per ogni edge possibile, inizializzata a 0
     
     public LK_ObjectiveFunction( double[][] customers ) 
     {   matrix = createMatrix( customers );
@@ -75,11 +80,13 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
             while(i.hasNext()) {
             	Edge e = i.next();
             	dist -= matrix[e.c1][e.c2] ;
+            	dist -= lambda*penalty[e.c1][e.c2];
             }
             i = mv.edgesY.iterator();
             while(i.hasNext()) {
             	Edge e = i.next();
             	dist += matrix[e.c1][e.c2] ;
+            	dist += lambda*penalty[e.c1][e.c2];
             }
             return new double[]{ dist };
         }
@@ -91,6 +98,7 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     {
         int len = customers.length;
         double[][] matrix = new double[len][len];
+        penalty = new int[len][len]; //inizializzata a 0
         
         for( int i = 0; i < len; i++ )
             for( int j = i+1; j < len; j++ )
@@ -99,6 +107,32 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
                     customers[j][0], customers[j][1] );
         return matrix;
     }   // end createMatrix
+    
+    public void localMinimumReached_UpdatePenalty(MySolutionEdges sol) {
+    	//suggetito 0.3*lunghezza media edge
+    	this.lambda = 0.1;//*sol.getObjectiveValue()[0]/GlobalData.numCustomers;
+    	Collection<Edge> edges = sol.edges;
+    	//dobbiamo aggiornare le penalita', viene aumentata solo per l'edge a costo massimo
+    	//dove il costo e' costo_edge/(1+penalita' edge)
+    	Iterator<Edge> i = edges.iterator();
+    	double maxCost = 0;
+    	Edge maxEdge = new Edge(0,0);
+    	while(i.hasNext()) {
+    		Edge e = i.next();
+    		double cost = matrix[e.c1][e.c2]/(1+penalty[e.c1][e.c2]);
+    		if (cost>maxCost) {
+    			maxEdge = e;
+    			maxCost = cost;
+    		}
+    	}
+    	//incremento la penalita' dell'edge a costo massimo
+    	penalty[maxEdge.c1][maxEdge.c2]++;
+    	penalty[maxEdge.c2][maxEdge.c1]++; //matrice sempre simmetrica
+    	
+    	GlobalData.gui_model.resetColoredEdges();
+    	GlobalData.gui_model.addColoredEdge(maxEdge, Color.MAGENTA);
+    	//try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace();}
+    }
     
     
     /** Calculate distance between two points. */
