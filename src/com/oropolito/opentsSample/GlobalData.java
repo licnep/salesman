@@ -8,7 +8,7 @@ import com.oropolito.opentsSample.GUI.GUI_model;
 
 public class GlobalData {
 	public static int numCustomers=0;
-	public static long random_seed=10;
+	public static long random_seed=1000;
 	
 	public static int notImprovingCounter = 0;
 	public static int ImprovingCounter = 0;
@@ -17,7 +17,7 @@ public class GlobalData {
 	public static int nViciniMax = 60;
 	
 	public static GUI_model gui_model;
-	public static boolean GUI = false;
+	public static boolean GUI = true;
 	public static double[][] customers;
 	
 	public static Random rand;

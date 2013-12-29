@@ -105,6 +105,7 @@ public class Tabu {
 		ObjectiveFunction objFunc = new Composite_ObjectiveFunction( customers );
 		LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
 		LK_MoveManager lkMoveManagerOld = new LK_MoveManager(lkObjFunc);
+		random4opt = new Random4Opt_MoveManager(lkObjFunc);
 		
 		double[] val = lkObjFunc.evaluate( soluzione_iniziale_nearest, null );
         soluzione_iniziale_nearest.setObjectiveValue( val );
@@ -135,6 +136,8 @@ public class Tabu {
             	bestVal = soluzione_iniziale_nearest.getObjectiveValue()[0];
             	if(GlobalData.GUI) gui_model.update_best_optimality((bestVal-ottimal[0])*100/ottimal[0]);
             }
+            if(GlobalData.iteration%10==0) 
+            	perturbateSolution(soluzione_iniziale_nearest, lkObjFunc);
         }
         
         // Show solution
@@ -165,7 +168,6 @@ public class Tabu {
         //LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
         LK_ObjectiveFunction ObjFunc2 = new LK_ObjectiveFunction(customers);
         //LK_MoveManager lkMoveManagerOld = new LK_MoveManager(lkObjFunc);
-        random4opt = new Random4Opt_MoveManager(lkObjFunc,(LK_TabuList)tabuList);
         LK_MoveManagerPROPER lkMoveManager = new LK_MoveManagerPROPER(lkObjFunc,(LK_TabuList)tabuList);
         
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
@@ -344,4 +346,21 @@ public class Tabu {
 		} while(delta<0);
 	}
 	
+	private void perturbateSolution(MySolutionEdges sol, LK_ObjectiveFunction obj) {
+		//generate a bunch of random 4 opt moves
+		GlobalData.random_seed++;
+    	Move[] mosse = random4opt.getAllMoves(sol);
+    	Move bestMove = new Move() {public void operateOn(Solution soln) {}};
+    	double min = Double.MAX_VALUE;
+    	for (int i=0;i<mosse.length;i++) {
+    		double v = obj.evaluate(sol, mosse[i])[0];
+    		if (v<min) {
+    			min=v;
+    			bestMove = mosse[i];
+    		}
+    	}
+    	bestMove.operateOn(sol);
+    	//try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace();}
+    	sol.setObjectiveValue(new double[]{min});
+	}
 }

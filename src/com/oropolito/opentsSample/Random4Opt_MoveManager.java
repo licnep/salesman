@@ -12,14 +12,12 @@ import com.oropolito.opentsSample.GUI.GUI_model;
 public class Random4Opt_MoveManager implements MoveManager
 {
 	public LK_ObjectiveFunction objFunc;
-	public LK_TabuList tabu;
 	
 	ArrayList<Edge> edgesX;
 	ArrayList<Edge> edgesY;
 	
-	public Random4Opt_MoveManager(LK_ObjectiveFunction myObj,LK_TabuList tabu) {
+	public Random4Opt_MoveManager(LK_ObjectiveFunction myObj) {
 		this.objFunc = myObj;
-		this.tabu = tabu;
 	}
 	
 	
@@ -58,10 +56,8 @@ public class Random4Opt_MoveManager implements MoveManager
 	        				double g = calculateGain(edgesX, edgesY);
 	        				if (g<minG) {
 	        					LK_Move m = new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone());
-	        					if (!tabu.isTabu(sol, m)) {
-	        						minG = g;
-	        						bestIllegal2OptMove = m;
-	        					}
+        						minG = g;
+        						bestIllegal2OptMove = m;
 	        				}
 	    					GlobalData.gui_model.resetColoredEdges();
 	    					GlobalData.gui_model.addColoredEdge(edgesX, Color.RED);
