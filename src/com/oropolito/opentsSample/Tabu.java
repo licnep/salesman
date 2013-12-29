@@ -140,6 +140,39 @@ public class Tabu {
             	perturbateSolution(soluzione_iniziale_nearest, lkObjFunc);
         }
         
+        
+        LK_TabuList			tabuList2 = new LK_TabuList(GlobalData.MIN_TENURE,4);
+        LK_ObjectiveFunction ObjFunc2 = new LK_ObjectiveFunction(customers);
+        LK_MoveManagerPROPER lkMoveManager = new LK_MoveManagerPROPER(lkObjFunc);
+        
+        tabuSearch = new SingleThreadedTabuSearch(
+                //initialSolution,
+        		bestSol,
+                lkMoveManager,
+                ObjFunc2,
+                tabuList2,
+                new BestEverAspirationCriteria(), // In OpenTS package
+                false );
+        MyTSListener myListenerVertex = new MyTSListener();
+        tabuSearch.addTabuSearchListener(myListenerVertex);
+        
+        for (;GlobalData.iteration<iterations+200;GlobalData.iteration++) 
+        {
+        	tabuSearch.setIterationsToGo( 1 );
+            tabuSearch.startSolving();
+            
+            MySolutionEdges temp = (MySolutionEdges)tabuSearch.getCurrentSolution();
+            gui_model.setTour_current(temp.tour);
+            gui_model.update_current_optimality((temp.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
+
+            MySolutionEdges cur_best = (MySolutionEdges)tabuSearch.getBestSolution();
+            gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
+            //try { Thread.sleep(30); } catch (InterruptedException e) { e.printStackTrace();}
+        } 
+
+        bestSol = (MySolutionEdges)tabuSearch.getBestSolution();
+        
+        
         // Show solution
         MySolutionEdges best = bestSol;
         System.out.println( "Best Solution:\n" + best );
@@ -160,15 +193,8 @@ public class Tabu {
         // Initialize our objects
         GlobalData.rand = new java.util.Random( GlobalData.random_seed );
         
-        MoveManager   moveManager = new Composite_MoveManager();
+
         LK_TabuList			tabuList = new LK_TabuList(GlobalData.MIN_TENURE,4);
-        LK_TabuList			tabuList2 = new LK_TabuList(GlobalData.MIN_TENURE,4);
-        //TabuList         tabuList = new VertexInsertion_TabuList( 7 );
-        //TabuList tabuList = new My2Opt_TabuList(7,4);
-        //LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
-        LK_ObjectiveFunction ObjFunc2 = new LK_ObjectiveFunction(customers);
-        //LK_MoveManager lkMoveManagerOld = new LK_MoveManager(lkObjFunc);
-        LK_MoveManagerPROPER lkMoveManager = new LK_MoveManagerPROPER(lkObjFunc,(LK_TabuList)tabuList);
         
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
         Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
@@ -192,9 +218,6 @@ public class Tabu {
         tabuSearch.addTabuSearchListener(myListener);
 
         
-        //gui_model.resetColoredEdges();
-        //gui_model.setTour_current(ottimale.tour);
-        //try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace();}
         
         GlobalData.iteration = 0;
         GlobalData.nVicini = 30;
@@ -228,30 +251,6 @@ public class Tabu {
         MySolutionEdges best2Opt = new MySolutionEdges(customers);
         best2Opt.tour = ((MySolutionEdges)tabuSearch.getBestSolution()).tour;
 
-        tabuSearch = new SingleThreadedTabuSearch(
-                //initialSolution,
-        		tabuSearch.getBestSolution(),
-                lkMoveManager,
-                ObjFunc2,
-                tabuList2,
-                new BestEverAspirationCriteria(), // In OpenTS package
-                false );
-        MyTSListener myListenerVertex = new MyTSListener();
-        tabuSearch.addTabuSearchListener(myListenerVertex);
-        
-        for (;GlobalData.iteration<iterations+200;GlobalData.iteration++) 
-        {
-        	tabuSearch.setIterationsToGo( 1 );
-            tabuSearch.startSolving();
-            
-            MySolutionEdges temp = (MySolutionEdges)tabuSearch.getCurrentSolution();
-            gui_model.setTour_current(temp.tour);
-            gui_model.update_current_optimality((temp.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
-
-            MySolutionEdges cur_best = (MySolutionEdges)tabuSearch.getBestSolution();
-            gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
-            //try { Thread.sleep(30); } catch (InterruptedException e) { e.printStackTrace();}
-        } 
         //*/
         // Show solution
         best = (MySolutionEdges)tabuSearch.getBestSolution();

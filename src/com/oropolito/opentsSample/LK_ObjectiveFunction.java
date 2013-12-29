@@ -116,27 +116,31 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     	//dove il costo e' costo_edge/(1+penalita' edge)
     	Iterator<Edge> i = edges.iterator();
     	double maxCost = 0;
-    	Edge maxEdge = new Edge(0,0);
+    	ArrayList<Edge> maxEdges = new ArrayList<Edge>(3);
     	while(i.hasNext()) {
     		Edge e = i.next();
     		double cost = matrix[e.c1][e.c2]/(1+penalty[e.c1][e.c2]);
     		if (cost>maxCost) {
-    			maxEdge = e;
+    			maxEdges.clear();
+    			maxEdges.add(e);
     			maxCost = cost;
+    		} else if (cost==maxCost) {
+    			maxEdges.add(e);
     		}
-    		//incremento la penalita' di tutti gli edge presenti nella soluzione
-        	//penalty[e.c1][e.c2]++;
-        	//penalty[e.c2][e.c1]++;
     	}
-    	//incremento la penalita' dell'edge a costo massimo
-    	penalty[maxEdge.c1][maxEdge.c2]++;
-    	penalty[maxEdge.c2][maxEdge.c1]++; //matrice sempre simmetrica*/
+    	//incremento la penalita' degli edge a costo massimo
+    	if(maxEdges.size()>1) System.out.println("MAGGIORE DI UNO!!!!!");
+    	for (int j=0;j<maxEdges.size();j++) {
+    		Edge maxEdge = maxEdges.get(j);
+    		penalty[maxEdge.c1][maxEdge.c2]++;
+        	penalty[maxEdge.c2][maxEdge.c1]++; //matrice sempre simmetrica*/
+    	}
     	
     	//System.out.println("PENALTY:" + penalty[maxEdge.c1][maxEdge.c2]);
     	
     	if(GlobalData.GUI) {
     		GlobalData.gui_model.resetColoredEdges();
-    		GlobalData.gui_model.addColoredEdge(maxEdge, Color.MAGENTA);
+    		GlobalData.gui_model.addColoredEdge(maxEdges, Color.MAGENTA);
     	}
     	//try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace();}
     }

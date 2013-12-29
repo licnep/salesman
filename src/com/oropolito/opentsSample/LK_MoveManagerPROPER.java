@@ -11,14 +11,12 @@ import com.oropolito.opentsSample.GUI.GUI_model;
 public class LK_MoveManagerPROPER implements MoveManager
 {
 	public LK_ObjectiveFunction objFunc;
-	public LK_TabuList tabu;
 	
 	ArrayList<Edge> edgesX;
 	ArrayList<Edge> edgesY;
 	
-	public LK_MoveManagerPROPER(LK_ObjectiveFunction myObj,LK_TabuList tabu) {
+	public LK_MoveManagerPROPER(LK_ObjectiveFunction myObj) {
 		this.objFunc = myObj;
-		this.tabu = tabu;
 	}
 	
     public Move[] getAllMoves( Solution solution )
@@ -57,7 +55,7 @@ public class LK_MoveManagerPROPER implements MoveManager
             				//mossa 2-opt
             				if(pushEdgeY(new Edge(edgesX.get(1).c2 , edgesX.get(0).c1), sol)) {
             					if(calculateGain(edgesX, edgesY)<G_star) {
-            						if(!tabu.isTabu(sol, new LK_Move(edgesX, edgesY))&&generatesFeasibleTour(sol)) {
+            						if(generatesFeasibleTour(sol)) {
             							G_star = calculateGain(edgesX, edgesY);
         								l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone()));
         							}
@@ -71,7 +69,7 @@ public class LK_MoveManagerPROPER implements MoveManager
             						//ricollego all'inizio:
             						if(pushEdgeY(new Edge(edgesX.get(2).c2 , edgesX.get(0).c1), sol)) {
             							if(calculateGain(edgesX, edgesY)<G_star) {
-	            							if(!tabu.isTabu(sol, new LK_Move(edgesX, edgesY))&&generatesFeasibleTour(sol)) {
+	            							if(generatesFeasibleTour(sol)) {
 	            								G_star = calculateGain(edgesX, edgesY);
 	            								l.add(new LK_Move((ArrayList<Edge>)edgesX.clone(), (ArrayList<Edge>)edgesY.clone()));
 	            							}
