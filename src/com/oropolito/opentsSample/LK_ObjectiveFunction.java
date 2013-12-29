@@ -110,7 +110,7 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     
     public void localMinimumReached_UpdatePenalty(MySolutionEdges sol) {
     	//suggetito 0.3*lunghezza media edge
-    	this.lambda = 0.1;//*sol.getObjectiveValue()[0]/GlobalData.numCustomers;
+    	this.lambda = 0.3*sol.getObjectiveValue()[0]/GlobalData.numCustomers;
     	Collection<Edge> edges = sol.edges;
     	//dobbiamo aggiornare le penalita', viene aumentata solo per l'edge a costo massimo
     	//dove il costo e' costo_edge/(1+penalita' edge)
@@ -124,13 +124,20 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     			maxEdge = e;
     			maxCost = cost;
     		}
+    		//incremento la penalita' di tutti gli edge presenti nella soluzione
+        	//penalty[e.c1][e.c2]++;
+        	//penalty[e.c2][e.c1]++;
     	}
     	//incremento la penalita' dell'edge a costo massimo
     	penalty[maxEdge.c1][maxEdge.c2]++;
-    	penalty[maxEdge.c2][maxEdge.c1]++; //matrice sempre simmetrica
+    	penalty[maxEdge.c2][maxEdge.c1]++; //matrice sempre simmetrica*/
     	
-    	GlobalData.gui_model.resetColoredEdges();
-    	GlobalData.gui_model.addColoredEdge(maxEdge, Color.MAGENTA);
+    	//System.out.println("PENALTY:" + penalty[maxEdge.c1][maxEdge.c2]);
+    	
+    	if(GlobalData.GUI) {
+    		GlobalData.gui_model.resetColoredEdges();
+    		GlobalData.gui_model.addColoredEdge(maxEdge, Color.MAGENTA);
+    	}
     	//try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace();}
     }
     

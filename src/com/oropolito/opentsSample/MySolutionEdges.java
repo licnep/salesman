@@ -51,7 +51,6 @@ public class MySolutionEdges extends SolutionAdapter
     		}
     	}
     	this.setHashCode();
-    	System.out.println("sinc");
     }
     
     public void addEdge(Edge e) {

@@ -23,9 +23,11 @@ public class LK_Move implements ComplexMove
     {
     	MySolutionEdges sol = (MySolutionEdges)soln;
     	
-    	GlobalData.gui_model.resetColoredEdges();
-    	GlobalData.gui_model.addColoredEdge(edgesX, Color.RED);
-    	GlobalData.gui_model.addColoredEdge(edgesY, Color.BLUE);
+    	if(GlobalData.GUI) {
+	    	GlobalData.gui_model.resetColoredEdges();
+	    	GlobalData.gui_model.addColoredEdge(edgesX, Color.RED);
+	    	GlobalData.gui_model.addColoredEdge(edgesY, Color.BLUE);
+    	}
     	
     	if(edgesX.size()==4) {
     		//try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
@@ -57,6 +59,27 @@ public class LK_Move implements ComplexMove
 		
 		return attr;
 		//return null;
+	}
+	
+	@Override
+	public String toString() {
+		   StringBuffer s = new StringBuffer();
+	        
+	        //s.append( "Solution value: " + getObjectiveValue()[0] );
+	        s.append( "X: [ " );
+	        Iterator<Edge> i = edgesX.iterator();
+	        while(i.hasNext()) {
+	        	Edge e = i.next();
+	        	s.append(e.c1+"-"+e.c2+" ");
+	        }
+	        s.append( "] Y: [ " );
+	        i = edgesY.iterator();
+	        while(i.hasNext()) {
+	        	Edge e = i.next();
+	        	s.append(e.c1+"-"+e.c2+" ");
+	        }
+	        s.append("]");
+	        return s.toString();
 	}
     
 }   // end class MySwapMove
