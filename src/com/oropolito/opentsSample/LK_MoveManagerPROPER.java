@@ -22,7 +22,7 @@ public class LK_MoveManagerPROPER implements MoveManager
     public Move[] getAllMoves( Solution solution )
     {   
     	MySolutionEdges sol = (MySolutionEdges)solution;
-    	double[][] customers = GlobalData.customers;
+    	double[][] customers = G.customers;
         int[] tour = sol.tour;
         int len = tour.length;
         
@@ -43,14 +43,14 @@ public class LK_MoveManagerPROPER implements MoveManager
         while(ie.hasNext()) {
         	edgesX.add(ie.next()); //setto x1
         	Edge[] vicini = objFunc.edgeVicini[edgesX.get(0).c2];
-        	for (int i=0;i<GlobalData.nVicini;i++) {
+        	for (int i=0;i<G.nVicini;i++) {
         		//testo tutti i vicini Y che non devono essere gia' nel tour
         		if(pushEdgeY(vicini[i], sol)) {
         			//X2 e' obbligato una volta scelto Y1
         			if(pushEdgeX(sol.getEdgeBefore(edgesY.get(0).c2))) {
         				//scelta Y2
             			Edge[] vicini2 = objFunc.edgeVicini[edgesX.get(1).c2];
-            			for(int j=0;j<GlobalData.nVicini;j++) {
+            			for(int j=0;j<G.nVicini;j++) {
             				
             				//mossa 2-opt
             				if(pushEdgeY(new Edge(edgesX.get(1).c2 , edgesX.get(0).c1), sol)) {
@@ -200,7 +200,7 @@ public class LK_MoveManagerPROPER implements MoveManager
 	    	}
     	} while (c!=0);
     	
-    	if (n==GlobalData.numCustomers) return true;
+    	if (n==G.numCustomers) return true;
     	else return false;
     }
     

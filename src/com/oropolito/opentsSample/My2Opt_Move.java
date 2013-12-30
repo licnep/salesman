@@ -10,9 +10,9 @@ public class My2Opt_Move implements ComplexMove
     public My2Opt_Move( int t1, int t3, Solution soln )
     {   
     	this.t1 = t1;
-    	this.t2 = (t1+1)%GlobalData.numCustomers;
+    	this.t2 = (t1+1)%G.numCustomers;
     	this.t3 = t3;
-    	this.t4 = (t3+1)%GlobalData.numCustomers;
+    	this.t4 = (t3+1)%G.numCustomers;
     	int[] tour = ((MySolutionEdges)soln).tour;
         customer1 = tour[t1];
         customer2 = tour[t2];

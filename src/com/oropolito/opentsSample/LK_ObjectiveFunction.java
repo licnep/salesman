@@ -23,8 +23,9 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     }   // end constructor
 
     public void createVicini() {
-    	int N = Math.min(60, GlobalData.numCustomers-1); //mai + vicini di numCustomers-1
-    	GlobalData.nViciniMax = N;
+    	//int N = Math.min(60, GlobalData.numCustomers-1); //mai + vicini di numCustomers-1
+    	int N = G.numCustomers-1;
+    	G.nViciniMax = N;
     	//GlobalData.nVicini = 10;
     	
     	
@@ -110,7 +111,7 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     
     public void localMinimumReached_UpdatePenalty(MySolutionEdges sol) {
     	//suggetito 0.3*lunghezza media edge
-    	this.lambda = 0.3*sol.getObjectiveValue()[0]/GlobalData.numCustomers;
+    	this.lambda = 0.3*sol.getObjectiveValue()[0]/G.numCustomers;
     	Collection<Edge> edges = sol.edges;
     	//dobbiamo aggiornare le penalita', viene aumentata solo per l'edge a costo massimo
     	//dove il costo e' costo_edge/(1+penalita' edge)
@@ -129,18 +130,20 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     		}
     	}
     	//incremento la penalita' degli edge a costo massimo
-    	if(maxEdges.size()>1) System.out.println("MAGGIORE DI UNO!!!!!");
+    	//if(maxEdges.size()>1) System.out.println("MAGGIORE DI UNO!!!!!");
     	for (int j=0;j<maxEdges.size();j++) {
     		Edge maxEdge = maxEdges.get(j);
+    		G.activeNeighbourhoods[maxEdge.c1] = true;
+    		G.activeNeighbourhoods[maxEdge.c2] = true;
     		penalty[maxEdge.c1][maxEdge.c2]++;
         	penalty[maxEdge.c2][maxEdge.c1]++; //matrice sempre simmetrica*/
     	}
     	
     	//System.out.println("PENALTY:" + penalty[maxEdge.c1][maxEdge.c2]);
     	
-    	if(GlobalData.GUI) {
-    		GlobalData.gui_model.resetColoredEdges();
-    		GlobalData.gui_model.addColoredEdge(maxEdges, Color.MAGENTA);
+    	if(G.GUI) {
+    		G.gui_model.resetColoredEdges();
+    		G.gui_model.addColoredEdge(maxEdges, Color.MAGENTA);
     	}
     	//try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace();}
     }

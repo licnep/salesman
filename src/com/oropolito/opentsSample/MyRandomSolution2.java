@@ -11,7 +11,7 @@ import com.oropolito.opentsSample.GUI.GUI_model;
 public class MyRandomSolution2 extends MySolutionEdges {
 	public MyRandomSolution2(double[][] customers,GUI_model gui_model)
     {
-		Random rand_generator = new Random(GlobalData.random_seed);
+		Random rand_generator = new Random(G.random_seed);
 		
         tour = new int[ customers.length ];
         ArrayList<Integer> avail = new ArrayList<>();

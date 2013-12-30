@@ -35,7 +35,7 @@ public class Random4Opt_MoveManager implements MoveManager
         
     	ArrayList<Edge> available = new ArrayList<>(sol.edges);
     	
-    	Random rand_generator = new Random(GlobalData.random_seed);
+    	Random rand_generator = new Random(G.random_seed);
     	
     	double minG = Double.MAX_VALUE;
     	LK_Move bestIllegal2OptMove = new LK_Move(edgesX, edgesY);
@@ -45,7 +45,7 @@ public class Random4Opt_MoveManager implements MoveManager
         	
         	//scelgo y1
         	Edge[] vicini = objFunc.edgeVicini[edgesX.get(0).c2];
-        	for (int i=0;i<GlobalData.nVicini;i++) {
+        	for (int i=0;i<G.nVicini;i++) {
         		if(!sol.contains(vicini[i])) {
         			edgesY.add(vicini[i]);
         			
@@ -59,9 +59,9 @@ public class Random4Opt_MoveManager implements MoveManager
         						minG = g;
         						bestIllegal2OptMove = m;
 	        				}
-	    					GlobalData.gui_model.resetColoredEdges();
-	    					GlobalData.gui_model.addColoredEdge(edgesX, Color.RED);
-	    					GlobalData.gui_model.addColoredEdge(edgesY, Color.GREEN);
+	    					G.gui_model.resetColoredEdges();
+	    					G.gui_model.addColoredEdge(edgesX, Color.RED);
+	    					G.gui_model.addColoredEdge(edgesY, Color.GREEN);
 	        				popEdgeY();
 	                    	popEdgeX();
         				}
@@ -77,23 +77,23 @@ public class Random4Opt_MoveManager implements MoveManager
         edgesX = bestIllegal2OptMove.edgesX;
         edgesY = bestIllegal2OptMove.edgesY;
         
-        GlobalData.gui_model.resetColoredEdges();
-		GlobalData.gui_model.addColoredEdge(bestIllegal2OptMove.edgesX, Color.RED);
-		GlobalData.gui_model.addColoredEdge(bestIllegal2OptMove.edgesY, Color.GREEN);
+        G.gui_model.resetColoredEdges();
+		G.gui_model.addColoredEdge(bestIllegal2OptMove.edgesX, Color.RED);
+		G.gui_model.addColoredEdge(bestIllegal2OptMove.edgesY, Color.GREEN);
 		//try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace();}
     	
     	//itero lungo uno a caso dei due cicli
     	 x3 = bestIllegal2OptMove.edgesY.get(0);//  y1;
          do {
            x3 = sol.getEdgeBefore(x3.c2);
-           GlobalData.gui_model.addColoredEdge(x3, Color.YELLOW);
+           G.gui_model.addColoredEdge(x3, Color.YELLOW);
            //try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace();}
            
            //testo altro edge nel secondo cerchio
            x4=bestIllegal2OptMove.edgesY.get(1);//y2;
            do {
         	 x4 = sol.getEdgeBefore(x4.c2);
-             GlobalData.gui_model.addColoredEdge(x4, Color.GRAY);
+             G.gui_model.addColoredEdge(x4, Color.GRAY);
              y3 = new Edge(x3.c1, x4.c2);
              y4 =new Edge(x3.c2, x4.c1);
              edgesY.add(y3);
@@ -133,7 +133,7 @@ public class Random4Opt_MoveManager implements MoveManager
         
     	ArrayList<Edge> available = new ArrayList<>(sol.edges);
     	
-    	Random rand_generator = new Random(GlobalData.random_seed);
+    	Random rand_generator = new Random(G.random_seed);
     	
     	//edge x1 preso a caso
     	x1 = available.remove(rand_generator.nextInt(available.size()));
@@ -142,7 +142,7 @@ public class Random4Opt_MoveManager implements MoveManager
     	y1=x1;
     	do {
     		//y1 = new Edge(x1.c2,rand_generator.nextInt(GlobalData.numCustomers));
-    		y1 = new Edge(x1.c2,objFunc.vicini[x1.c2][rand_generator.nextInt(GlobalData.nVicini)]);
+    		y1 = new Edge(x1.c2,objFunc.vicini[x1.c2][rand_generator.nextInt(G.nVicini)]);
     		//prendo x2 (obbligato)
         	x2 = sol.getEdgeAfter(y1.c2);
         	//ricollego a x1
@@ -155,7 +155,7 @@ public class Random4Opt_MoveManager implements MoveManager
     	
     	//itero lungo uno a caso dei due cicli
     	 x3 = y1;
-    	 GlobalData.gui_model.resetColoredEdges();
+    	 G.gui_model.resetColoredEdges();
          do {
            x3 = sol.getEdgeBefore(x3.c2);
            //GlobalData.gui_model.addColoredEdge(x3, Color.YELLOW);
@@ -285,7 +285,7 @@ public class Random4Opt_MoveManager implements MoveManager
 	    	}
     	} while (c!=0);
     	
-    	if (n==GlobalData.numCustomers) return true;
+    	if (n==G.numCustomers) return true;
     	else return false;
     }
     

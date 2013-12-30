@@ -6,7 +6,7 @@ import sun.org.mozilla.javascript.tools.shell.Global;
 
 public class LK_Listener extends TabuSearchAdapter{
 	
-	private float k = GlobalData.numCustomers;
+	private float k = G.numCustomers;
 	
 	private double tenure = 0;
 	private LK_TabuList ts;
@@ -30,7 +30,7 @@ public class LK_Listener extends TabuSearchAdapter{
     	this.setTenure(tenure*0.5);
     	//mytl.setTenure( Math.max( GlobalData.MIN_TENURE, (int)( 0.50 * mytl.getTenure() ) ) );
     	//mytl.setTenure( Math.min( GlobalData.MAX_TENURE, mytl.getTenure() + 3) );
-    	GlobalData.iterazioni3Opt = 20;
+    	G.iterazioni3Opt = 20;
     	//mytl.setTenure( 7 );
         //System.out.println("Decrease tenure to " + mytl.getTenure());
 
@@ -40,8 +40,8 @@ public class LK_Listener extends TabuSearchAdapter{
 
     public void unimprovingMoveMade( TabuSearchEvent evt )
     {   
-    	GlobalData.ImprovingCounter=0;
-    	GlobalData.notImprovingCounter++;
+    	G.ImprovingCounter=0;
+    	G.notImprovingCounter++;
     	// Increase tenure
     	TabuSearch theTS = (TabuSearch)evt.getSource();
     	LK_TabuList mytl;
@@ -51,8 +51,8 @@ public class LK_Listener extends TabuSearchAdapter{
     	this.setTenure(tenure+2);
     	//mytl.setTenure( Math.max( GlobalData.MIN_TENURE, mytl.getTenure() - 2 ));
         //System.out.println("Increase tenure to " + mytl.getTenure());
-    	if (GlobalData.notImprovingCounter>1) {
-    		GlobalData.perturbate = true;
+    	if (G.notImprovingCounter>1) {
+    		G.perturbate = true;
     	}
   }
 
@@ -61,8 +61,8 @@ public class LK_Listener extends TabuSearchAdapter{
     public void tabuSearchStarted( TabuSearchEvent evt ){}
     public void tabuSearchStopped( TabuSearchEvent evt ){}
     public void noChangeInValueMoveMade( TabuSearchEvent evt ){
-    	GlobalData.ImprovingCounter=0;
-    	GlobalData.notImprovingCounter++;
+    	G.ImprovingCounter=0;
+    	G.notImprovingCounter++;
     	
     	// Increase tenure
     	TabuSearch theTS = (TabuSearch)evt.getSource();
@@ -75,19 +75,19 @@ public class LK_Listener extends TabuSearchAdapter{
 
     }
     public void improvingMoveMade( TabuSearchEvent evt ){
-    	GlobalData.ImprovingCounter++;
+    	G.ImprovingCounter++;
     	
     	TabuSearch theTS = (TabuSearch)evt.getSource();
     	LK_TabuList mytl;
     	mytl = (LK_TabuList)theTS.getTabuList();
-    	GlobalData.notImprovingCounter = 0;
-    	if (GlobalData.ImprovingCounter>1) {
-    		GlobalData.notImprovingCounter = 0;
+    	G.notImprovingCounter = 0;
+    	if (G.ImprovingCounter>1) {
+    		G.notImprovingCounter = 0;
         	//mytl.setTenure( Math.max( MIN_TENURE, mytl.getTenure() - 8 ));
         	System.out.println("Decrease tenure to " + mytl.getTenure());
     	}
     	
-    	this.setTenure(Math.max( GlobalData.MIN_TENURE, tenure-8) );
+    	this.setTenure(Math.max( G.MIN_TENURE, tenure-8) );
     	//mytl.setTenure( Math.min( GlobalData.MAX_TENURE, mytl.getTenure() + 2 ));
     	System.out.println("Decrease tenure to " + mytl.getTenure());
     }

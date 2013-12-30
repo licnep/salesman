@@ -22,7 +22,7 @@ public class LK_MoveManager implements MoveManager
     public Move[] getAllMoves( Solution solution )
     {   
     	MySolutionEdges sol = (MySolutionEdges)solution;
-    	double[][] customers = GlobalData.customers;
+    	double[][] customers = G.customers;
         int[] tour = sol.tour;
         int len = tour.length;
         
@@ -44,7 +44,7 @@ public class LK_MoveManager implements MoveManager
         	edgesX.add(ie.next()); //setto x1
         	//if (GlobalData.rand.nextBoolean()) {
 	        	Edge[] vicini = objFunc.edgeVicini[edgesX.get(0).c2];
-	        	for (int i=0;i<GlobalData.nVicini;i++) {
+	        	for (int i=0;i<G.nVicini;i++) {
 	        		if(pushEdgeY(vicini[i], sol)) {
 	        			double g = calculateGain(edgesX, edgesY);
 	        			

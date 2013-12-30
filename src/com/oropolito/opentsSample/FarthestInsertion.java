@@ -33,7 +33,7 @@ public class FarthestInsertion extends MySolutionEdges {
 		t.add(0, maxj);
 		avail.remove((Object)maxi);
 		avail.remove((Object)maxj);
-		GlobalData.gui_model.addColoredEdge(maxi, maxj, Color.GREEN);
+		G.gui_model.addColoredEdge(maxi, maxj, Color.GREEN);
 		
 		//2. cerco il nodo piu' distante da quelli gia' nel tour
 		//(scandisco solo righe nodi tour, e cerco max)
@@ -69,9 +69,9 @@ public class FarthestInsertion extends MySolutionEdges {
 			}
 			t.add(insertpos,maxi);
 			avail.remove((Object)maxi);
-			GlobalData.gui_model.resetColoredEdges();
+			G.gui_model.resetColoredEdges();
 			for (int i = 0;i<t.size();i++) {
-				GlobalData.gui_model.addColoredEdge(t.get(i), t.get((i+1)%t.size()), Color.GREEN);
+				G.gui_model.addColoredEdge(t.get(i), t.get((i+1)%t.size()), Color.GREEN);
 			}
 			//try { Thread.sleep(10); } catch (InterruptedException e) { e.printStackTrace();}
     	}

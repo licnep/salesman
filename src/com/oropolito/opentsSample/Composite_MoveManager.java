@@ -11,7 +11,7 @@ public class Composite_MoveManager implements MoveManager
     {   
     	ArrayList<Move> l = new ArrayList<Move>();
     	
-    	if (GlobalData.iteration < 900) {
+    	if (G.iteration < 900) {
     		add2OptMoves(l,(MySolution)solution);
     	} else {
     		addVertexInsertionMoves(l,(MySolution)solution);

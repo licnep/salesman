@@ -18,7 +18,7 @@ import com.oropolito.opentsSample.GUI.GUI_model;
 public class MySavingAlg extends MySolutionEdges {
 	public MySavingAlg(double[][] customers,GUI_model gui_model, LK_ObjectiveFunction objFunc)
     {
-		Random rand_generator = new Random(GlobalData.random_seed);
+		Random rand_generator = new Random(G.random_seed);
 		int len = customers.length;
 		int HubNode = 0;
 		//creo vettore per sapere che arco eliminare--->if valore>2 then togli
@@ -94,8 +94,8 @@ public class MySavingAlg extends MySolutionEdges {
 	        }
 	        ArrayList<Edge> asd = new ArrayList<Edge>();
 	        asd.addAll(edges);
-	        GlobalData.gui_model.resetColoredEdges();
-	        GlobalData.gui_model.addColoredEdge(asd, Color.BLUE);
+	        G.gui_model.resetColoredEdges();
+	        G.gui_model.addColoredEdge(asd, Color.BLUE);
 	        //try {Thread.sleep(100);}  catch (Exception e) {e.printStackTrace();}
         }
         

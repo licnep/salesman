@@ -4,7 +4,7 @@ import org.coinor.opents.*;
 
 public class MyTabuList extends ComplexTabuList
 {
-    public int MAX_TENURE = GlobalData.numCustomers/2;
+    public int MAX_TENURE = G.numCustomers/2;
 
     public MyTabuList(int tabuTenure)
     {

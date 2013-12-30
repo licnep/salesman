@@ -73,8 +73,8 @@ public class MySolutionEdges extends SolutionAdapter
     
     public MySolutionEdges(){
     	edges = new LinkedHashSet<>();
-    	prima = new int[ GlobalData.numCustomers ];
-    	dopo = new int[ GlobalData.numCustomers ];
+    	prima = new int[ G.numCustomers ];
+    	dopo = new int[ G.numCustomers ];
     } // Appease clone()
     
     Edge getEdgeAfter(int c) {

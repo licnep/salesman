@@ -23,10 +23,10 @@ public class LK_Move implements ComplexMove
     {
     	MySolutionEdges sol = (MySolutionEdges)soln;
     	
-    	if(GlobalData.GUI) {
-	    	GlobalData.gui_model.resetColoredEdges();
-	    	GlobalData.gui_model.addColoredEdge(edgesX, Color.RED);
-	    	GlobalData.gui_model.addColoredEdge(edgesY, Color.BLUE);
+    	if(G.GUI) {
+	    	G.gui_model.resetColoredEdges();
+	    	G.gui_model.addColoredEdge(edgesX, Color.RED);
+	    	G.gui_model.addColoredEdge(edgesY, Color.BLUE);
     	}
     	
     	if(edgesX.size()==4) {
@@ -35,11 +35,21 @@ public class LK_Move implements ComplexMove
         
     	//rimuovo tutti gli edge X
     	Iterator<Edge> i = edgesX.iterator();
-    	while(i.hasNext()) sol.removeEdge(i.next());
+    	while(i.hasNext()) {
+    		Edge e = i.next();
+    		G.activeNeighbourhoods[e.c1]=true;
+    		G.activeNeighbourhoods[e.c2]=true;
+    		sol.removeEdge(e);
+    	}
     	
     	//aggiungo tutti gli edge Y
     	i = edgesY.iterator();
-    	while(i.hasNext()) sol.addEdge(i.next());
+    	while(i.hasNext()) {
+    		Edge e = i.next();
+    		G.activeNeighbourhoods[e.c1]=true;
+    		G.activeNeighbourhoods[e.c2]=true;
+    		sol.addEdge(e);
+    	}
     	
     	sol.sincTourWithEdges();
     	

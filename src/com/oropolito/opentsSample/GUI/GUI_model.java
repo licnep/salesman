@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.Observable;
 
 import com.oropolito.opentsSample.Edge;
-import com.oropolito.opentsSample.GlobalData;
+import com.oropolito.opentsSample.G;
 
 public class GUI_model extends Observable {
 	private double[][] customers; //lista dei clienti, ogniuno 2 coordinate double X,Y
@@ -29,19 +29,19 @@ public class GUI_model extends Observable {
 	}
 	
 	public void addColoredEdge(int c1, int c2, Color color) {
-		coloredEdges.add(new EdgeColorato(GlobalData.customers[c1][0],
-											GlobalData.customers[c1][1],
-											GlobalData.customers[c2][0],
-											GlobalData.customers[c2][1],
+		coloredEdges.add(new EdgeColorato(G.customers[c1][0],
+											G.customers[c1][1],
+											G.customers[c2][0],
+											G.customers[c2][1],
 											color));
 		this.setChanged();
 		this.notifyObservers("setTour_current");
 	}
 	public void addColoredEdge(Edge e, Color color) {
-		coloredEdges.add(new EdgeColorato(GlobalData.customers[e.c1][0],
-											GlobalData.customers[e.c1][1],
-											GlobalData.customers[e.c2][0],
-											GlobalData.customers[e.c2][1],
+		coloredEdges.add(new EdgeColorato(G.customers[e.c1][0],
+											G.customers[e.c1][1],
+											G.customers[e.c2][0],
+											G.customers[e.c2][1],
 											color));
 		this.setChanged();
 		this.notifyObservers("setTour_current");
@@ -51,10 +51,10 @@ public class GUI_model extends Observable {
 		Iterator<Edge> i = edges.iterator();
 		while(i.hasNext()) {
 			Edge e = i.next();
-			coloredEdges.add(new EdgeColorato(GlobalData.customers[e.c1][0],
-					GlobalData.customers[e.c1][1],
-					GlobalData.customers[e.c2][0],
-					GlobalData.customers[e.c2][1],
+			coloredEdges.add(new EdgeColorato(G.customers[e.c1][0],
+					G.customers[e.c1][1],
+					G.customers[e.c2][0],
+					G.customers[e.c2][1],
 					color));
 		}
 		this.setChanged();

@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class Tabu {
     {
     	gui_model = new GUI_model();
         GUI_view gui_view = new GUI_view(gui_model);
-        GlobalData.gui_model = gui_model;
+        G.gui_model = gui_model;
     	
     	int numCustomers=0;
        	//readParams(args);
@@ -88,10 +89,10 @@ public class Tabu {
 	        System.exit(-1);
 		}
 		gui_model.setCustomers(customers);
-		GlobalData.numCustomers = numCustomers;
-		GlobalData.customers = customers;
-		GlobalData.MIN_TENURE = 8 + (int)((numCustomers)/5);
-		GlobalData.MAX_TENURE = (int)numCustomers*2;
+		G.numCustomers = numCustomers;
+		G.customers = customers;
+		G.MIN_TENURE = 8 + (int)((numCustomers)/5);
+		G.MAX_TENURE = (int)numCustomers*2;
 		
 		//cerco la X massima per dimensionare il grafico:
 		double maxX = 0;
@@ -117,30 +118,32 @@ public class Tabu {
         ottimale.setObjectiveValue(ottimal);
         gui_model.setTour_optimal(ottimale.tour);
 		
+        //inizializzio bit subneighbourhood attivi tutti a uno
+        G.activeNeighbourhoods = new boolean[numCustomers];
+        Arrays.fill(G.activeNeighbourhoods, true);
         
         MySolutionEdges bestSol = (MySolutionEdges)soluzione_iniziale_nearest.clone();
         double bestVal = soluzione_iniziale_nearest.getObjectiveValue()[0]; 
-        for (GlobalData.iteration=0;GlobalData.iteration<iterations;GlobalData.iteration++) {
+        for (G.iteration=0;G.iteration<iterations;G.iteration++) {
         	//prendiamo tutte le mosse possibili dalla soluzione attuale
         	//scegliamo quella migliore, se e' migliorativa esegui e continua loop, altrimenti ritorna
         	localSearch2Opt(soluzione_iniziale_nearest, lkMoveManagerOld);
         	
-            if(GlobalData.GUI) gui_model.setTour_current(soluzione_iniziale_nearest.tour);
+            if(G.GUI) gui_model.setTour_current(soluzione_iniziale_nearest.tour);
 
             lkObjFunc.localMinimumReached_UpdatePenalty(soluzione_iniziale_nearest);
             val = lkObjFunc.evaluate( soluzione_iniziale_nearest, null );
             soluzione_iniziale_nearest.setObjectiveValue( val );
-            if(GlobalData.GUI) gui_model.update_current_optimality((soluzione_iniziale_nearest.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
+            if(G.GUI) gui_model.update_current_optimality((soluzione_iniziale_nearest.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
             if (soluzione_iniziale_nearest.getObjectiveValue()[0]<bestVal) {
             	bestSol = (MySolutionEdges)soluzione_iniziale_nearest.clone();
             	bestVal = soluzione_iniziale_nearest.getObjectiveValue()[0];
-            	if(GlobalData.GUI) gui_model.update_best_optimality((bestVal-ottimal[0])*100/ottimal[0]);
+            	if(G.GUI) gui_model.update_best_optimality((bestVal-ottimal[0])*100/ottimal[0]);
             }
-            if(GlobalData.iteration%10==0) 
-            	perturbateSolution(soluzione_iniziale_nearest, lkObjFunc);
+            //if(GlobalData.iteration%10==0) perturbateSolution(soluzione_iniziale_nearest, lkObjFunc);
         }
         
-        
+        /*
         LK_TabuList			tabuList2 = new LK_TabuList(GlobalData.MIN_TENURE,4);
         LK_ObjectiveFunction ObjFunc2 = new LK_ObjectiveFunction(customers);
         LK_MoveManagerPROPER lkMoveManager = new LK_MoveManagerPROPER(lkObjFunc);
@@ -171,7 +174,7 @@ public class Tabu {
         } 
 
         bestSol = (MySolutionEdges)tabuSearch.getBestSolution();
-        
+        //*/
         
         // Show solution
         MySolutionEdges best = bestSol;
@@ -191,10 +194,10 @@ public class Tabu {
 		if(asd) return;
 		
         // Initialize our objects
-        GlobalData.rand = new java.util.Random( GlobalData.random_seed );
+        G.rand = new java.util.Random( G.random_seed );
         
 
-        LK_TabuList			tabuList = new LK_TabuList(GlobalData.MIN_TENURE,4);
+        LK_TabuList			tabuList = new LK_TabuList(G.MIN_TENURE,4);
         
         Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
         Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
@@ -219,13 +222,13 @@ public class Tabu {
 
         
         
-        GlobalData.iteration = 0;
-        GlobalData.nVicini = 30;
+        G.iteration = 0;
+        G.nVicini = 30;
         
         int iterationiLocal = 100;
-        GlobalData.iterazioni3Opt = 0;
+        G.iterazioni3Opt = 0;
         // Start solving
-        for (;GlobalData.iteration<iterations;GlobalData.iteration++) 
+        for (;G.iteration<iterations;G.iteration++) 
         {
         	tabuSearch.setIterationsToGo( 1 );
             tabuSearch.startSolving();
@@ -237,7 +240,7 @@ public class Tabu {
             MySolutionEdges cur_best = (MySolutionEdges)tabuSearch.getBestSolution();
             gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
             
-            if(GlobalData.perturbate) {
+            if(G.perturbate) {
             	//double_bridge_perturbation();
             	lkObjFunc.localMinimumReached_UpdatePenalty((MySolutionEdges)tabuSearch.getCurrentSolution());
             }
@@ -245,13 +248,12 @@ public class Tabu {
             iterationiLocal--;
         }
         
-        tabuList.setTenure(GlobalData.MIN_TENURE);
-        GlobalData.nVicini = 25;
+        tabuList.setTenure(G.MIN_TENURE);
+        G.nVicini = 25;
         
         MySolutionEdges best2Opt = new MySolutionEdges(customers);
         best2Opt.tour = ((MySolutionEdges)tabuSearch.getBestSolution()).tour;
 
-        //*/
         // Show solution
         best = (MySolutionEdges)tabuSearch.getBestSolution();
         System.out.println( "Best Solution:\n" + best );
@@ -267,8 +269,8 @@ public class Tabu {
     }   // end main
     
     private void double_bridge_perturbation() {
-    	GlobalData.notImprovingCounter=0;
-    	GlobalData.random_seed++;
+    	G.notImprovingCounter=0;
+    	G.random_seed++;
     	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
     	tabuSearch.setMoveManager(random4opt);
     	//((LK_TabuList)tabuSearch.getTabuList()).setTenure(0);
@@ -318,36 +320,61 @@ public class Tabu {
 		Move bestMove = new Move() {
 			public void operateOn(Solution soln) {}
 		};
-		double delta;
+		double delta = 0;
 		do {
-			delta = 0;
-			//generate all possible 2opt moves from current solution			
-			Move[] moves = moveMgr.getAllMoves(sol);
-			//System.out.println(moves.length);
-			for (int i=0;i<moves.length;i++) {
-				double cur = moveMgr.objFunc.evaluate( sol, moves[i] )[0]-sol.getObjectiveValue()[0];
-				if (cur<delta) {
-					delta=cur;
-					bestMove = moves[i];
-				}
-			}
-			//System.out.println(bestMove);
+			bestMove = getBest2optMove(sol,moveMgr.objFunc);
+			delta = moveMgr.objFunc.evaluate( sol, bestMove )[0]-sol.getObjectiveValue()[0];
 			//evitare errori arrotondamento che fanno looppare (2 mosse che cambiano l'obj val di pochissimo vengono
 			if (Math.abs(delta)<0.000000001) delta=0;
 			if(delta<0) { //la mossa migliore e' migliorativa, la eseguo
-				//System.out.println(delta);
 				bestMove.operateOn(sol);
 				sol.setObjectiveValue(new double[]{sol.getObjectiveValue()[0]+delta});
-				if(GlobalData.GUI) gui_model.setTour_current(sol.tour);
-	            //gui_model.update_current_optimality((sol.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
-				//try { Thread.sleep(500); } catch (InterruptedException e) { e.printStackTrace();}
+				if(G.GUI) gui_model.setTour_current(sol.tour);
 			}
 		} while(delta<0);
 	}
 	
+	private Move getBest2optMove(MySolutionEdges sol,LK_ObjectiveFunction obj) {
+		sol.sincEdgesWithTour(); //synchronize the edges with the tour
+		Iterator<Edge> ie = sol.edges.iterator();
+		
+		LK_Move bestMove = new LK_Move(new ArrayList<Edge>(),new ArrayList<Edge>());
+		double bestDelta=0;
+        while(ie.hasNext()) {
+        	Edge x1 = ie.next();
+        	if(G.activeNeighbourhoods[x1.c1]||G.activeNeighbourhoods[x1.c2]) {
+        		Edge[] vicini = obj.edgeVicini[x1.c2];
+        		//"disattivo" il neighbourhood, in realta' se trovo almeno una mossa migliorativa lo riattivo 
+        		G.activeNeighbourhoods[x1.c1]=false;
+    			G.activeNeighbourhoods[x1.c2]=false;
+	        	for (int i=0;i<G.nVicini;i++) {
+	        		Edge y1 = vicini[i]; //TODO: controllare la push che check faceva
+	        		//X2 e' obbligato una volta scelto Y1
+	        		Edge x2 = sol.getEdgeBefore(y1.c2);
+	        		//Y2 che ricollega a t1
+	        		Edge y2 = new Edge(x2.c2 , x1.c1);
+	        		//valuto la mossa e' controllo se e' migliorativa:
+	        		LK_Move mossa = new LK_Move(new ArrayList<Edge>(Arrays.asList(x1,x2)), new ArrayList<Edge>(Arrays.asList(y1,y2)));
+	        		double cur = obj.evaluate( sol, mossa )[0]-sol.getObjectiveValue()[0];
+	        		if (cur<bestDelta) {
+	        			bestDelta = cur;
+	        			bestMove = mossa;
+	        		}
+	        		if (cur<0) {
+	        			G.activeNeighbourhoods[x1.c1]=true;
+	        			G.activeNeighbourhoods[x1.c2]=true;
+	        		}
+	        	}
+        	}
+        }
+        return bestMove;
+	}
+	
+	
+	
 	private void perturbateSolution(MySolutionEdges sol, LK_ObjectiveFunction obj) {
 		//generate a bunch of random 4 opt moves
-		GlobalData.random_seed++;
+		G.random_seed++;
     	Move[] mosse = random4opt.getAllMoves(sol);
     	Move bestMove = new Move() {public void operateOn(Solution soln) {}};
     	double min = Double.MAX_VALUE;

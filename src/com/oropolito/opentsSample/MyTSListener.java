@@ -4,7 +4,7 @@ import org.coinor.opents.*;
 
 public class MyTSListener extends TabuSearchAdapter{
 
-	public int MAX_TENURE =  GlobalData.numCustomers*13/150 + 73;//*3;// /2;
+	public int MAX_TENURE =  G.numCustomers*13/150 + 73;//*3;// /2;
 	public int MIN_TENURE = 15;
 
     public void newBestSolutionFound( TabuSearchEvent evt )
@@ -24,8 +24,8 @@ public class MyTSListener extends TabuSearchAdapter{
 
     public void unimprovingMoveMade( TabuSearchEvent evt )
     {   
-    	GlobalData.ImprovingCounter=0;
-    	GlobalData.notImprovingCounter++;
+    	G.ImprovingCounter=0;
+    	G.notImprovingCounter++;
     	// Increase tenure
     	TabuSearch theTS = (TabuSearch)evt.getSource();
     	LK_TabuList mytl;
@@ -41,8 +41,8 @@ public class MyTSListener extends TabuSearchAdapter{
     public void tabuSearchStarted( TabuSearchEvent evt ){}
     public void tabuSearchStopped( TabuSearchEvent evt ){}
     public void noChangeInValueMoveMade( TabuSearchEvent evt ){
-    	GlobalData.ImprovingCounter=0;
-    	GlobalData.notImprovingCounter++;
+    	G.ImprovingCounter=0;
+    	G.notImprovingCounter++;
     	
     	// Increase tenure
     	TabuSearch theTS = (TabuSearch)evt.getSource();
@@ -53,9 +53,9 @@ public class MyTSListener extends TabuSearchAdapter{
 
     }
     public void improvingMoveMade( TabuSearchEvent evt ){
-    	GlobalData.ImprovingCounter++;
-    	if (GlobalData.ImprovingCounter>3) {//TODO: verificare
-    		GlobalData.notImprovingCounter = 0;
+    	G.ImprovingCounter++;
+    	if (G.ImprovingCounter>3) {//TODO: verificare
+    		G.notImprovingCounter = 0;
     	}
     	TabuSearch theTS = (TabuSearch)evt.getSource();
     	LK_TabuList mytl;
