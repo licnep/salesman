@@ -101,10 +101,9 @@ public class Tabu {
 		gui_model.area_size = maxX;
 		
 		
-		
+		LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
 		MySolutionEdges soluzione_iniziale_nearest = new MyRandomSolution2(customers,gui_model);
 		ObjectiveFunction objFunc = new Composite_ObjectiveFunction( customers );
-		LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
 		LK_MoveManager lkMoveManagerOld = new LK_MoveManager(lkObjFunc);
 		random4opt = new Random4Opt_MoveManager(lkObjFunc);
 		
@@ -140,7 +139,7 @@ public class Tabu {
             	bestVal = soluzione_iniziale_nearest.getObjectiveValue()[0];
             	if(G.GUI) gui_model.update_best_optimality((bestVal-ottimal[0])*100/ottimal[0]);
             }
-            //if(GlobalData.iteration%10==0) perturbateSolution(soluzione_iniziale_nearest, lkObjFunc);
+            //if(G.iteration%50==0) perturbateSolution(soluzione_iniziale_nearest, lkObjFunc);
         }
         
         /*
@@ -325,6 +324,7 @@ public class Tabu {
 			bestMove = getBest2optMove(sol,moveMgr.objFunc);
 			delta = moveMgr.objFunc.evaluate( sol, bestMove )[0]-sol.getObjectiveValue()[0];
 			//evitare errori arrotondamento che fanno looppare (2 mosse che cambiano l'obj val di pochissimo vengono
+			//System.out.println(delta);
 			if (Math.abs(delta)<0.000000001) delta=0;
 			if(delta<0) { //la mossa migliore e' migliorativa, la eseguo
 				bestMove.operateOn(sol);
@@ -340,29 +340,49 @@ public class Tabu {
 		
 		LK_Move bestMove = new LK_Move(new ArrayList<Edge>(),new ArrayList<Edge>());
 		double bestDelta=0;
-        while(ie.hasNext()) {
+		
+		while(ie.hasNext()) {
         	Edge x1 = ie.next();
         	if(G.activeNeighbourhoods[x1.c1]||G.activeNeighbourhoods[x1.c2]) {
-        		Edge[] vicini = obj.edgeVicini[x1.c2];
         		//"disattivo" il neighbourhood, in realta' se trovo almeno una mossa migliorativa lo riattivo 
         		G.activeNeighbourhoods[x1.c1]=false;
     			G.activeNeighbourhoods[x1.c2]=false;
 	        	for (int i=0;i<G.nVicini;i++) {
-	        		Edge y1 = vicini[i]; //TODO: controllare la push che check faceva
+	        		Edge y1 = obj.edgeVicini[x1.c2][i];
 	        		//X2 e' obbligato una volta scelto Y1
 	        		Edge x2 = sol.getEdgeBefore(y1.c2);
 	        		//Y2 che ricollega a t1
 	        		Edge y2 = new Edge(x2.c2 , x1.c1);
-	        		//valuto la mossa e' controllo se e' migliorativa:
-	        		LK_Move mossa = new LK_Move(new ArrayList<Edge>(Arrays.asList(x1,x2)), new ArrayList<Edge>(Arrays.asList(y1,y2)));
-	        		double cur = obj.evaluate( sol, mossa )[0]-sol.getObjectiveValue()[0];
-	        		if (cur<bestDelta) {
-	        			bestDelta = cur;
-	        			bestMove = mossa;
+	        		if (y2.isProper()) {
+		        		//valuto la mossa e' controllo se e' migliorativa:
+		        		LK_Move mossa = new LK_Move(new ArrayList<Edge>(Arrays.asList(x1,x2)), new ArrayList<Edge>(Arrays.asList(y1,y2)));
+		        		double cur = obj.evaluate( sol, mossa )[0]-sol.getObjectiveValue()[0];
+		        		if (cur<bestDelta) {
+		        			bestDelta = cur;
+		        			bestMove = mossa;
+		        		}
+		        		if (cur<0) {
+		        			G.activeNeighbourhoods[x1.c1]=true;
+		        			G.activeNeighbourhoods[x1.c2]=true;
+		        		}
 	        		}
-	        		if (cur<0) {
-	        			G.activeNeighbourhoods[x1.c1]=true;
-	        			G.activeNeighbourhoods[x1.c2]=true;
+	        		//testiamo anche la vertex insertion: (invece di ricollegare a x1, dobbiamo rimuovere anche l'edge dopo x1, e fare collegamenti diversi
+	        		//x1,c2 e' il vertice che viene 'tolto e reinserito'
+	        		//insertion la testo solo coi 10 piu' vicini
+	        		if (i<0 && x2.c2!=x1.c2) {
+		        		y2 = new Edge(x2.c2,x1.c2);
+		        		Edge x3 = sol.getEdgeAfter(x1.c2);
+		        		Edge y3 = new Edge(x1.c1,x3.c2);
+		        		LK_Move mossa = new LK_Move(new ArrayList<Edge>(Arrays.asList(x1,x2,x3)), new ArrayList<Edge>(Arrays.asList(y1,y2,y3)));
+		        		double cur = obj.evaluate( sol, mossa )[0]-sol.getObjectiveValue()[0];
+		        		if (cur<bestDelta) {
+		        			bestDelta = cur;
+		        			bestMove = mossa;
+		        		}
+		        		if (cur<0) {
+		        			G.activeNeighbourhoods[x1.c1]=true;
+		        			G.activeNeighbourhoods[x1.c2]=true;
+		        		}
 	        		}
 	        	}
         	}
