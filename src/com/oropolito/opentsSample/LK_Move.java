@@ -29,7 +29,7 @@ public class LK_Move implements ComplexMove
 	    	G.gui_model.addColoredEdge(edgesY, Color.BLUE);
     	}
     	
-    	System.out.println(this);
+    	//System.out.println(this);
     	
     	if(edgesX.size()==3) {
     		//try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}

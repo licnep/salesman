@@ -341,18 +341,20 @@ public class Tabu {
 		LK_Move bestMove = new LK_Move(new ArrayList<Edge>(),new ArrayList<Edge>());
 		double bestDelta=0;
 		
+		Edge x1,x2,x3,y1,y2,y3;
+		
 		while(ie.hasNext()) {
-        	Edge x1 = ie.next();
+        	x1 = ie.next();
         	if(G.activeNeighbourhoods[x1.c1]||G.activeNeighbourhoods[x1.c2]) {
         		//"disattivo" il neighbourhood, in realta' se trovo almeno una mossa migliorativa lo riattivo 
         		G.activeNeighbourhoods[x1.c1]=false;
     			G.activeNeighbourhoods[x1.c2]=false;
 	        	for (int i=0;i<G.nVicini;i++) {
-	        		Edge y1 = obj.edgeVicini[x1.c2][i];
+	        		y1 = obj.edgeVicini[x1.c2][i];
 	        		//X2 e' obbligato una volta scelto Y1
-	        		Edge x2 = sol.getEdgeBefore(y1.c2);
+	        		x2 = sol.getEdgeBefore(y1.c2);
 	        		//Y2 che ricollega a t1
-	        		Edge y2 = new Edge(x2.c2 , x1.c1);
+	        		y2 = new Edge(x2.c2 , x1.c1);
 	        		if (y2.isProper()) {
 		        		//valuto la mossa e' controllo se e' migliorativa:
 		        		LK_Move mossa = new LK_Move(new ArrayList<Edge>(Arrays.asList(x1,x2)), new ArrayList<Edge>(Arrays.asList(y1,y2)));
@@ -369,10 +371,10 @@ public class Tabu {
 	        		//testiamo anche la vertex insertion: (invece di ricollegare a x1, dobbiamo rimuovere anche l'edge dopo x1, e fare collegamenti diversi
 	        		//x1,c2 e' il vertice che viene 'tolto e reinserito'
 	        		//insertion la testo solo coi 10 piu' vicini
-	        		if (i<0 && x2.c2!=x1.c2) {
+	        		if (i<10 && x2.c2!=x1.c2) {
 		        		y2 = new Edge(x2.c2,x1.c2);
-		        		Edge x3 = sol.getEdgeAfter(x1.c2);
-		        		Edge y3 = new Edge(x1.c1,x3.c2);
+		        		x3 = sol.getEdgeAfter(x1.c2);
+		        		y3 = new Edge(x1.c1,x3.c2);
 		        		LK_Move mossa = new LK_Move(new ArrayList<Edge>(Arrays.asList(x1,x2,x3)), new ArrayList<Edge>(Arrays.asList(y1,y2,y3)));
 		        		double cur = obj.evaluate( sol, mossa )[0]-sol.getObjectiveValue()[0];
 		        		if (cur<bestDelta) {
