@@ -50,11 +50,11 @@ public class MyRandomSolution2 extends MySolutionEdges {
         	
         	//scelgo uno dei piu' vicini a caso e lo aggiungo al percorso
         	n_casuale =  Math.floor(rand_generator.nextInt(N)); //n casuale fra 0 e N-1
-        	System.out.println(closest);
+        	//System.out.println(closest);
         	Elemento chosen = closest.remove( n_casuale.intValue() );
 			this.tour[i] = chosen.numero;
 			avail.remove((Object)chosen.numero);
-			System.out.println(avail);
+			//System.out.println(avail);
 			try {
 				gui_model.setTour_current(tour);
 				//Thread.sleep(10);

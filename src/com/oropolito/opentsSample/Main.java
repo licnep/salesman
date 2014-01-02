@@ -1,7 +1,10 @@
 package com.oropolito.opentsSample;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
@@ -12,29 +15,63 @@ public class Main
 	}
 	
 	//questi parametri vengono letti da readParams (param.txt)
-	private static String P_baseDir ="./Data/TSP/";
-	private static Integer P_TSMaxIter = 1000;
+	private static String P_baseDir;
+	private static String[] InputName = new String[6];
+	private static Integer P_TSMaxIter;
+	private static Integer NumIstances = 0;
 
     public static void main (String args[]) 
     {
     	
     	readParams(args);
-    	P_TSMaxIter = 110000;
     	
     	Tabu myTabu = new Tabu();
     	
-    	double startTime = System.currentTimeMillis();
-    	myTabu.main(P_TSMaxIter,P_baseDir+"pr1002.tsp",P_baseDir+"pr1002.opt.tour");
+    	double TotalTime = 0;
     	
-    	//myTabu.main(P_TSMaxIter,P_baseDir+"berlin52.tsp",P_baseDir+"berlin52.opt.tour");
-    	//myTabu.main(P_TSMaxIter,P_baseDir+"eil51.tsp",P_baseDir+"eil51.opt.tour");
-    	//myTabu.main(P_TSMaxIter,P_baseDir+"eil76.tsp",P_baseDir+"eil76.opt.tour");
-    	//myTabu.main(P_TSMaxIter,P_baseDir+"pr152.tsp",P_baseDir+"pr152.opt.tour");
-    	//myTabu.main(P_TSMaxIter,P_baseDir+"rat195.tsp",P_baseDir+"rat195.opt.tour");
-
-    	//myTabu.main(P_TSMaxIter,P_baseDir+"TSPLIB/a280.tsp",P_baseDir+"TSPLIB/a280.opt.tour");
-    	//myTabu.main(P_TSMaxIter,P_baseDir+"TSPLIB/ch130.tsp",P_baseDir+"TSPLIB/ch130.opt.tour");
-    	System.out.println("Tempo impiegato: "+ (System.currentTimeMillis()-startTime)/1000.0+ "s");
+    	double startTime = 0;
+    	
+    	double timespent = 0;
+    	
+    	for(int n=0; n<NumIstances; n++){
+    		
+    		startTime = System.currentTimeMillis();
+        	
+        	myTabu.main(P_TSMaxIter,P_baseDir,InputName[n]);
+        	
+        	timespent = (System.currentTimeMillis()-startTime)/1000.0;
+        	
+        	System.out.println("Tempo impiegato: "+ timespent+ "s");
+        	System.out.println("");
+        	System.out.println("");
+        	
+        	G.TimeSpent[G.NumIstanza] = timespent;
+        	G.NumIstanza++;
+        	TotalTime += timespent;
+    		
+    	}
+    	
+    	//OUTPUT RESULTS
+    	double MeanTime = 0;
+    	double MeanOpt = 0;
+    	for(int i=0; i<G.NumIstanza; i++){
+        	MeanOpt = G.OptPercentage[i] + MeanOpt;
+        	MeanTime = G.TimeSpent[i] + MeanTime;
+        }
+    	try {
+            File file = new File("./Data/Output/"+"Results.csv");
+            BufferedWriter output = new BufferedWriter(new FileWriter(file));
+            output.write("Instance,Best sol,Best known,Optimality(%),Time(s)\n");
+            for(int i=0; i<G.NumIstanza; i++){
+            	output.write(G.NomeIstanza[i]+","+G.BestValue[i]+","+G.BestKnown[i]+","+G.OptPercentage[i]+","+G.TimeSpent[i]+"\n");
+            }
+            output.write("Mean, , ,"+(MeanOpt/G.NumIstOpt)+","+(MeanTime/G.NumIstanza)+"\n");
+            output.write("Total, , , ,"+TotalTime+"\n");
+            output.close();
+          } catch ( IOException e ) {
+             e.printStackTrace();
+          }
+    	
     	return;
 	}
     
@@ -65,14 +102,11 @@ public class Main
     					{
     						case "PARAMS":
     							fileStatus = ParamFile.PARAMS;
-    							System.out.println("Reading the parameters");
     							break;
     						case "INSTANCES":
     							fileStatus = ParamFile.INSTANCES;
-    							System.out.println("Reading the instances");
     							break;
     						case "EOF":
-    							System.out.println("Close the file");
     							br.close();
     							return;
     						default:
@@ -83,7 +117,6 @@ public class Main
 					if (line.toUpperCase().contains("ENDPARAMS"))
 					{
 						fileStatus = ParamFile.NONE;
-						System.out.println("End of parameters");
 					}
 					else
 					{
@@ -99,19 +132,26 @@ public class Main
 								token = st.nextToken();
 								P_TSMaxIter = Integer.parseInt(token);
 								break;
+							case "GUI":
+								token = st.nextToken();
+								G.GUI = Boolean.parseBoolean(token);
+								break;
 						}
-						System.out.println(token);
 					}
 					break;
 				case INSTANCES:
 					if (line.toUpperCase().contains("ENDINSTANCES"))
-					{
-						System.out.println("End of instances");								
+					{								
 						fileStatus = ParamFile.NONE;
 					}
 					else
 					{
-						//Read the input files
+						//Read the input file
+						st = new StringTokenizer(line);	
+						token = st.nextToken();
+						InputName[NumIstances] = token;
+						InputName[NumIstances] = InputName[NumIstances].substring(0, InputName[NumIstances].length() - 4);
+						NumIstances++;
 					}
 					break;
 				}
@@ -125,4 +165,3 @@ public class Main
 	}
 
 }
-

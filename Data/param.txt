@@ -1,10 +1,14 @@
 PARAMS
 DataFileDir ./Data/TSP
 TSMaxIter 1000
-TSRepetitions 1
+GUI false
 ENDPARAMS
 INSTANCES
+eil51.tsp
 berlin52.tsp
-brazil58.tsp
+eil76.tsp
+pr152.tsp
+rat195.tsp
+pr1002.tsp
 ENDINSTANCES
 EOF

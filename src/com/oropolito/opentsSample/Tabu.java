@@ -1,8 +1,11 @@
 package com.oropolito.opentsSample;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,15 +43,22 @@ public class Tabu {
 	}
 	
 
-    public void main (int iterations, String tour_filename, String opt_tour_filename) 
+    public void main (int iterations, String base_dir, String filename)  
     {
     	gui_model = new GUI_model();
-        GUI_view gui_view = new GUI_view(gui_model);
+    	if(G.GUI) {
+    		GUI_view gui_view = new GUI_view(gui_model);
+    	}
         G.gui_model = gui_model;
     	
     	int numCustomers=0;
-       	//readParams(args);
+       	
         double[][] customers = new double[numCustomers][2];
+        
+        String tour_filename = new String(base_dir+filename+".tsp");
+    	String opt_tour_filename = new String(base_dir+filename+".opt.tour");
+    	File opt_tour = new File(opt_tour_filename);
+    	
 		try
 		{
 			File input = new File(tour_filename);
@@ -88,18 +98,19 @@ public class Tabu {
 			System.out.println("Error "+e.getMessage());
 	        System.exit(-1);
 		}
-		gui_model.setCustomers(customers);
+		if (G.GUI) gui_model.setCustomers(customers);
 		G.numCustomers = numCustomers;
 		G.customers = customers;
-		G.MIN_TENURE = 8 + (int)((numCustomers)/5);
-		G.MAX_TENURE = (int)numCustomers*2;
+		
+		if(numCustomers>850)iterations=iterations*2;
 		
 		//cerco la X massima per dimensionare il grafico:
-		double maxX = 0;
-		for (int i=0;i<numCustomers;i++)
-			if (customers[i][0]>maxX) maxX = customers[i][0];
-		gui_model.area_size = maxX;
-		
+		if(G.GUI) {
+			double maxX = 0;
+			for (int i=0;i<numCustomers;i++)
+				if (customers[i][0]>maxX) maxX = customers[i][0];
+			gui_model.area_size = maxX;
+		}
 		
 		LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
 		MySolutionEdges soluzione_iniziale_nearest = new MyRandomSolution2(customers,gui_model);
@@ -112,10 +123,12 @@ public class Tabu {
 		
 		// Carico la soluzione ottimale
         MySolutionEdges ottimale = new MySolutionEdges(customers);
-        ottimale.tour = readTour(opt_tour_filename);
-        ottimal = objFunc.evaluate(ottimale, null);
-        ottimale.setObjectiveValue(ottimal);
-        gui_model.setTour_optimal(ottimale.tour);
+        if(opt_tour.exists()){
+            ottimale.tour = readTour(opt_tour_filename);
+            ottimal = lkObjFunc.evaluate(ottimale, null);
+            ottimale.setObjectiveValue(ottimal);
+            if(G.GUI)gui_model.setTour_optimal(ottimale.tour);
+        }
 		
         //inizializzio bit subneighbourhood attivi tutti a uno
         G.activeNeighbourhoods = new boolean[numCustomers];
@@ -142,133 +155,49 @@ public class Tabu {
             //if(G.iteration%50==0) perturbateSolution(soluzione_iniziale_nearest, lkObjFunc);
         }
         
-        /*
-        LK_TabuList			tabuList2 = new LK_TabuList(GlobalData.MIN_TENURE,4);
-        LK_ObjectiveFunction ObjFunc2 = new LK_ObjectiveFunction(customers);
-        LK_MoveManagerPROPER lkMoveManager = new LK_MoveManagerPROPER(lkObjFunc);
-        
-        tabuSearch = new SingleThreadedTabuSearch(
-                //initialSolution,
-        		bestSol,
-                lkMoveManager,
-                ObjFunc2,
-                tabuList2,
-                new BestEverAspirationCriteria(), // In OpenTS package
-                false );
-        MyTSListener myListenerVertex = new MyTSListener();
-        tabuSearch.addTabuSearchListener(myListenerVertex);
-        
-        for (;GlobalData.iteration<iterations+200;GlobalData.iteration++) 
-        {
-        	tabuSearch.setIterationsToGo( 1 );
-            tabuSearch.startSolving();
-            
-            MySolutionEdges temp = (MySolutionEdges)tabuSearch.getCurrentSolution();
-            gui_model.setTour_current(temp.tour);
-            gui_model.update_current_optimality((temp.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
-
-            MySolutionEdges cur_best = (MySolutionEdges)tabuSearch.getBestSolution();
-            gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
-            //try { Thread.sleep(30); } catch (InterruptedException e) { e.printStackTrace();}
-        } 
-
-        bestSol = (MySolutionEdges)tabuSearch.getBestSolution();
-        //*/
-        
         // Show solution
         MySolutionEdges best = bestSol;
+        System.out.println("ISTANZA: "+filename);
         System.out.println( "Best Solution:\n" + best );
-        gui_model.setTour_current(best.tour);
+        if(G.GUI)gui_model.setTour_current(best.tour);
 
         // Mostro la soluzione ottimale
-        System.out.println( "Optimal Solution:");
-        System.out.println(ottimale);
         double miaLunghezza = best.getObjectiveValue()[0];
-        System.out.println("Optimality:"+(miaLunghezza-ottimal[0])*100/ottimal[0]);
-        System.out.println("Lunghezza ottimale:"+ottimal[0]);
-
-        
-        //=====================FINE
-		boolean asd = true;
-		if(asd) return;
-		
-        // Initialize our objects
-        G.rand = new java.util.Random( G.random_seed );
-        
-
-        LK_TabuList			tabuList = new LK_TabuList(G.MIN_TENURE,4);
-        
-        Solution soluzione_iniziale_random1 = new MyRandomSolution(numCustomers);
-        Solution soluzione_iniziale_random2 = new MyRandomSolution2(customers,gui_model);
-        //Solution soluzione_savings = new MySavingAlg(customers,gui_model,lkObjFunc);
-        
-        // Create Tabu Search object
-        tabuSearch = new SingleThreadedTabuSearch(
-                //initialSolution,
-        		//soluzione_iniziale_farthest,
-        		soluzione_iniziale_random2,
-        		//soluzione_savings,
-                lkMoveManagerOld,
-                lkObjFunc,
-              tabuList,
-//              tabuList2,
-                new BestEverAspirationCriteria(), // In OpenTS package
-                false ); // maximizing = yes/no; false means minimizing
-        
-        //MyTSListener myListener = new MyTSListener();
-        LK_Listener myListener = new LK_Listener(tabuList);
-        tabuSearch.addTabuSearchListener(myListener);
-
-        
-        
-        G.iteration = 0;
-        G.nVicini = 30;
-        
-        int iterationiLocal = 100;
-        G.iterazioni3Opt = 0;
-        // Start solving
-        for (;G.iteration<iterations;G.iteration++) 
-        {
-        	tabuSearch.setIterationsToGo( 1 );
-            tabuSearch.startSolving();
-            
-            MySolutionEdges temp = (MySolutionEdges)tabuSearch.getCurrentSolution();
-            gui_model.setTour_current(temp.tour);
-            gui_model.update_current_optimality((temp.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
-
-            MySolutionEdges cur_best = (MySolutionEdges)tabuSearch.getBestSolution();
-            gui_model.update_best_optimality((cur_best.getObjectiveValue()[0]-ottimal[0])*100/ottimal[0]);
-            
-            if(G.perturbate) {
-            	//double_bridge_perturbation();
-            	lkObjFunc.localMinimumReached_UpdatePenalty((MySolutionEdges)tabuSearch.getCurrentSolution());
-            }
-            
-            iterationiLocal--;
+        if(opt_tour.exists()){
+            System.out.println( "Optimal Solution:");
+            System.out.println(ottimale);
+            System.out.println("Optimality:"+(miaLunghezza-ottimal[0])*100/ottimal[0]);
+            System.out.println("Lunghezza ottimale:"+ottimal[0]);
         }
+        System.out.println("Lunghezza trovata:"+best.getObjectiveValue()[0]);
         
-        tabuList.setTenure(G.MIN_TENURE);
-        G.nVicini = 25;
+        if(opt_tour.exists())G.BestKnown[G.NumIstanza] = (int)ottimale.getObjectiveValue()[0];
+        G.BestValue[G.NumIstanza] = (int)best.getObjectiveValue()[0];
+        if(opt_tour.exists())G.OptPercentage[G.NumIstanza] =  (100*(miaLunghezza-ottimal[0])/ottimal[0]);
+        G.NomeIstanza[G.NumIstanza] = filename;
+        if(opt_tour.exists())G.NumIstOpt++;
         
-        MySolutionEdges best2Opt = new MySolutionEdges(customers);
-        best2Opt.tour = ((MySolutionEdges)tabuSearch.getBestSolution()).tour;
+        //OUTPUT FILE
+        try {
+            File file = new File("./Data/Output/"+filename+".tour");
+            BufferedWriter output = new BufferedWriter(new FileWriter(file));
+            output.write("NAME: "+filename+"\n");
+            output.write("TYPE: TOUR\n");
+            output.write("DIMENSION: "+G.numCustomers+"\n");
+            output.write("TOUR_SECTION\n");
+            for(int i=0; i<G.numCustomers;i++){
+            	output.write(best.tour[i]+"\n");
+            }
+            output.write("-1\nEOF");
+            output.close();
+          } catch ( IOException e ) {
+             e.printStackTrace();
+          }
 
-        // Show solution
-        best = (MySolutionEdges)tabuSearch.getBestSolution();
-        System.out.println( "Best Solution:\n" + best );
-        gui_model.setTour_current(best.tour);
-
-        // Mostro la soluzione ottimale
-        System.out.println( "Optimal Solution:");
-        System.out.println(ottimale);
-        miaLunghezza = best.getObjectiveValue()[0];
-        System.out.println("Optimality:"+(miaLunghezza-ottimal[0])*100/ottimal[0]);
-        System.out.println("Lunghezza ottimale:"+ottimal[0]);
-        
+        return;
     }   // end main
     
     private void double_bridge_perturbation() {
-    	G.notImprovingCounter=0;
     	G.random_seed++;
     	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
     	tabuSearch.setMoveManager(random4opt);
