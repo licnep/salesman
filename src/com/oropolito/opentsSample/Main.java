@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 
 public class Main
@@ -17,7 +20,7 @@ public class Main
 	//questi parametri vengono letti da readParams (param.txt)
 	private static String P_baseDir;
 	private static String[] InputName = new String[6];
-	private static Integer P_TSMaxIter;
+	private static Integer MaxIter;
 	private static Integer NumIstances = 0;
 
     public static void main (String args[]) 
@@ -33,40 +36,62 @@ public class Main
     	
     	double timespent = 0;
     	
+    	double meantimespent = 0;
+    	
+    	ArrayList<Istanza> istanze = new ArrayList<Istanza>(6);
+    	
     	for(int n=0; n<NumIstances; n++){
+    		Istanza currentInstance = new Istanza();
     		
     		startTime = System.currentTimeMillis();
-        	
-        	myTabu.main(P_TSMaxIter,P_baseDir,InputName[n]);
-        	
-        	timespent = (System.currentTimeMillis()-startTime)/1000.0;
-        	
-        	System.out.println("Tempo impiegato: "+ timespent+ "s");
+    		
+    		for(int m=0; m<G.Repetitions; m++){
+    			System.out.println(InputName[n]+" - RUN "+(m+1)+"...");
+            	myTabu.main(MaxIter,P_baseDir,InputName[n],currentInstance);
+            	System.out.println("");        
+            	G.random_seed+=100; //ogni volta con un seed diverso
+    		}
+    		istanze.add(currentInstance);
+    		
+    		timespent = (System.currentTimeMillis()-startTime)/1000.0;
+    		
+    		/*
+        	meantimespent = timespent/G.Repetitions;
+        	System.out.println("Tempo medio impiegato: "+ meantimespent+ "s");
         	System.out.println("");
         	System.out.println("");
         	
-        	G.TimeSpent[G.NumIstanza] = timespent;
+        	G.OptPercentage[G.NumIstanza] = G.OptPercentage[G.NumIstanza]/G.Repetitions;
+        	G.BestValue[G.NumIstanza] = G.BestValue[G.NumIstanza]/G.Repetitions;
+        	G.TimeSpent[G.NumIstanza] = meantimespent;*/
         	G.NumIstanza++;
-        	TotalTime += timespent;
+        	TotalTime += meantimespent;
     		
     	}
     	
     	//OUTPUT RESULTS
-    	double MeanTime = 0;
+    	/*double MeanTime = 0;
     	double MeanOpt = 0;
+    	G.NumIstOpt /= G.Repetitions;
     	for(int i=0; i<G.NumIstanza; i++){
         	MeanOpt = G.OptPercentage[i] + MeanOpt;
         	MeanTime = G.TimeSpent[i] + MeanTime;
-        }
+        }*/
     	try {
             File file = new File("./Data/Output/"+"Results.csv");
             BufferedWriter output = new BufferedWriter(new FileWriter(file));
-            output.write("Instance,Best sol,Best known,Optimality(%),Time(s)\n");
-            for(int i=0; i<G.NumIstanza; i++){
-            	output.write(G.NomeIstanza[i]+","+G.BestValue[i]+","+G.BestKnown[i]+","+G.OptPercentage[i]+","+G.TimeSpent[i]+"\n");
+            //output.write("Instance,Mean Best sol,Mean Best known,Mean Optimality(%),Mean Time(s)\n");
+            output.write("Instance,Best sol,Mean sol,Min sol,Max sol,Time Best,Time Mean,Best known,% From Optimum\n");
+            Iterator<Istanza> i = istanze.iterator();
+            while(i.hasNext()) {
+            	Istanza ist = i.next();
+            	output.write(ist.getNomeIstanza()+","+ist.getBestValue()+","+ist.getMeanValue()+","+ist.getMinValue()+","+ist.getMaxValue()+","+ist.getTimeBest()+","+ist.getTimeMean()+","+ist.bestKnown+","+ist.getPercentFromOptimum()+"\n");
             }
-            output.write("Mean, , ,"+(MeanOpt/G.NumIstOpt)+","+(MeanTime/G.NumIstanza)+"\n");
-            output.write("Total, , , ,"+TotalTime+"\n");
+            /*for(int i=0; i<G.NumIstanza; i++){
+            	output.write(G.NomeIstanza[i]+","+G.BestValue[i]+","+G.BestKnown[i]+","+G.OptPercentage[i]+","+G.TimeSpent[i]+"\n");
+            }*/
+            //output.write("Mean, , ,"+(MeanOpt/G.NumIstOpt)+","+(MeanTime/G.NumIstanza)+"\n");
+            //output.write("Total, , , ,"+TotalTime+"\n");
             output.close();
           } catch ( IOException e ) {
              e.printStackTrace();
@@ -79,7 +104,7 @@ public class Main
     public static void readParams(String args[])
 	{
 		ParamFile fileStatus = ParamFile.NONE;
-		String myFileParam = "./Data/param.txt";
+		String myFileParam = "./param.txt";
 		if (args.length > 0)
 		{
 			myFileParam = args[0];
@@ -128,13 +153,21 @@ public class Main
 								token = st.nextToken();
 								P_baseDir = token + "/";
 								break;
-							case "TSMAXITER":
+							case "MAXITER":
 								token = st.nextToken();
-								P_TSMaxIter = Integer.parseInt(token);
+								MaxIter = Integer.parseInt(token);
+								break;
+							case "REPETITIONS":
+								token = st.nextToken();
+								G.Repetitions = Integer.parseInt(token);
 								break;
 							case "GUI":
 								token = st.nextToken();
 								G.GUI = Boolean.parseBoolean(token);
+								break;
+							case "SEED":
+								token = st.nextToken();
+								G.random_seed = Long.parseLong(token);
 								break;
 						}
 					}
@@ -146,12 +179,14 @@ public class Main
 					}
 					else
 					{
-						//Read the input file
-						st = new StringTokenizer(line);	
-						token = st.nextToken();
-						InputName[NumIstances] = token;
-						InputName[NumIstances] = InputName[NumIstances].substring(0, InputName[NumIstances].length() - 4);
-						NumIstances++;
+						if(line.trim().compareTo("")!=0) {
+							//Read the input file
+							st = new StringTokenizer(line);	
+							token = st.nextToken();
+							InputName[NumIstances] = token;
+							InputName[NumIstances] = InputName[NumIstances].substring(0, InputName[NumIstances].length() - 4);
+							NumIstances++;
+						}
 					}
 					break;
 				}

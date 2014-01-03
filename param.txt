@@ -1,0 +1,18 @@
+PARAMS
+DataFileDir ./Data/TSP
+#MaxIter viene moltiplicato per il numero di customer dell'istanza
+MaxIter 90
+Repetitions 10
+#usare "GUI false" per testare la velocita', GUI true rallenta di molto
+GUI false
+Seed 123
+ENDPARAMS
+INSTANCES
+eil51.tsp
+berlin52.tsp
+eil76.tsp
+pr152.tsp
+rat195.tsp
+pr1002.tsp
+ENDINSTANCES
+EOF

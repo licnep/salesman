@@ -55,36 +55,42 @@ public class GUI_view implements Observer, MouseWheelListener {
 			    g2.fill(new Rectangle2D.Double(0,0,w,h));
 			    //g2.fill(new RoundRectangle2D.Double(10,10,w-20,h-20,10,10));
 				g2.setPaint(Color.blue);
-				//disegno i pallini dei customers
 				double customers[][] = m.getCustomers();
-				for (int i=0;i<G.numCustomers;i++) {
-					g2.fill(new Ellipse2D.Double(customers[i][0]*w/z-3, customers[i][1]*h/z-3, 6, 6));
-				}
-				//disegno il percorso ottimale
-				g2.setPaint(Color.green);
-				if (m.getTour_optimal()!=null) {
-					for (int i=0;i<G.numCustomers;i++) {
-						int a = m.getTour_optimal()[(i==0)? G.numCustomers-1 : i-1];
-						int b = m.getTour_optimal()[i];
-						g2.draw(new Line2D.Double(customers[a][0]*w/z, customers[a][1]*h/z, customers[b][0]*w/z, customers[b][1]*h/z));
+				if (customers!=null) {
+					//disegno i pallini dei customers
+					for (int i=0;i<customers.length;i++) {
+						g2.fill(new Ellipse2D.Double(customers[i][0]*w/z-3, customers[i][1]*h/z-3, 6, 6));
 					}
-				}
-				//disegno il percorso trovato
-				g2.setPaint(Color.black);
-				if (m.getTour_current()!=null) {
-					for (int i=0;i<G.numCustomers;i++) {
-						//int a = m.getTour_current()[i-1];
-						int a = m.getTour_current()[(i==0)? G.numCustomers-1 : i-1];
-						int b = m.getTour_current()[i];
-						g2.draw(new Line2D.Double(customers[a][0]*w/z+1, customers[a][1]*h/z+2, customers[b][0]*w/z+1, customers[b][1]*h/z+2));
+					//disegno il percorso ottimale
+					g2.setPaint(Color.green);
+					if (m.getTour_optimal()!=null) {
+						for (int i=0;i<customers.length;i++) {
+							int a = m.getTour_optimal()[(i==0)? customers.length-1 : i-1];
+							int b = m.getTour_optimal()[i];
+							g2.draw(new Line2D.Double(customers[a][0]*w/z, customers[a][1]*h/z, customers[b][0]*w/z, customers[b][1]*h/z));
+						}
 					}
-				}
-				
-				//disegno gli edge colorati
-				for (EdgeColorato e : m.coloredEdges) {
-					g2.setPaint(e.color);
-					g2.setStroke(new BasicStroke(4));
-					g2.draw(new Line2D.Double(e.x1*w/z+1, e.y1*h/z+2, e.x2*w/z+1, e.y2*h/z+2));
+					//disegno il percorso trovato
+					g2.setPaint(Color.black);
+					if (m.getTour_current()!=null) {
+						for (int i=0;i<customers.length;i++) {
+							//int a = m.getTour_current()[i-1];
+							int a = m.getTour_current()[(i==0)? customers.length-1 : i-1];
+							int b = m.getTour_current()[i];
+							g2.draw(new Line2D.Double(customers[a][0]*w/z+1, customers[a][1]*h/z+2, customers[b][0]*w/z+1, customers[b][1]*h/z+2));
+						}
+					}
+					
+					//disegno gli edge colorati
+					try {
+						for (EdgeColorato e : m.coloredEdges) {
+							g2.setPaint(e.color);
+							g2.setStroke(new BasicStroke(4));
+							g2.draw(new Line2D.Double(e.x1*w/z+1, e.y1*h/z+2, e.x2*w/z+1, e.y2*h/z+2));
+						}
+					} catch (Exception e) {
+						//System.out.println("CONCURRENT");
+					}
 				}
 				g2.setStroke(new BasicStroke(1));
 			}

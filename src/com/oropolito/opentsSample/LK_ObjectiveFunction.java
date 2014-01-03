@@ -18,16 +18,14 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     public int[][] penalty; //penalita' per ogni edge possibile, inizializzata a 0
     
     public LK_ObjectiveFunction( double[][] customers ) 
-    {   matrix = createMatrix( customers );
+    {   
+    	matrix = createMatrix( customers );
     	createVicini();
     }   // end constructor
 
     public void createVicini() {
-    	//int N = Math.min(60, GlobalData.numCustomers-1); //mai + vicini di numCustomers-1
-    	int N = G.numCustomers-1;
+    	int N = Math.min(40, G.numCustomers-1); //mai + vicini di numCustomers-1
     	G.nViciniMax = N;
-    	//GlobalData.nVicini = 10;
-    	
     	
     	vicini = new int[matrix.length][N];
     	edgeVicini = new Edge[matrix.length][N];

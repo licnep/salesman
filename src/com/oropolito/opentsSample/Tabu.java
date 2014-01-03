@@ -43,8 +43,10 @@ public class Tabu {
 	}
 	
 
-    public void main (int iterations, String base_dir, String filename)  
+    public void main (int iterations, String base_dir, String filename, Istanza currentInstance)  
     {
+    	long startTime = System.currentTimeMillis();
+    	
     	gui_model = new GUI_model();
     	if(G.GUI) {
     		GUI_view gui_view = new GUI_view(gui_model);
@@ -102,7 +104,7 @@ public class Tabu {
 		G.numCustomers = numCustomers;
 		G.customers = customers;
 		
-		if(numCustomers>850)iterations=iterations*2;
+		//if(numCustomers>850)iterations=iterations*2;
 		
 		//cerco la X massima per dimensionare il grafico:
 		if(G.GUI) {
@@ -114,8 +116,6 @@ public class Tabu {
 		
 		LK_ObjectiveFunction lkObjFunc = new LK_ObjectiveFunction(customers);
 		MySolutionEdges soluzione_iniziale_nearest = new MyRandomSolution2(customers,gui_model);
-		ObjectiveFunction objFunc = new Composite_ObjectiveFunction( customers );
-		LK_MoveManager lkMoveManagerOld = new LK_MoveManager(lkObjFunc);
 		random4opt = new Random4Opt_MoveManager(lkObjFunc);
 		
 		double[] val = lkObjFunc.evaluate( soluzione_iniziale_nearest, null );
@@ -136,10 +136,12 @@ public class Tabu {
         
         MySolutionEdges bestSol = (MySolutionEdges)soluzione_iniziale_nearest.clone();
         double bestVal = soluzione_iniziale_nearest.getObjectiveValue()[0]; 
+        long timeBest = 0;
+        iterations = iterations*G.numCustomers;
         for (G.iteration=0;G.iteration<iterations;G.iteration++) {
         	//prendiamo tutte le mosse possibili dalla soluzione attuale
         	//scegliamo quella migliore, se e' migliorativa esegui e continua loop, altrimenti ritorna
-        	localSearch2Opt(soluzione_iniziale_nearest, lkMoveManagerOld);
+        	localSearch2Opt(soluzione_iniziale_nearest, lkObjFunc);
         	
             if(G.GUI) gui_model.setTour_current(soluzione_iniziale_nearest.tour);
 
@@ -150,6 +152,7 @@ public class Tabu {
             if (soluzione_iniziale_nearest.getObjectiveValue()[0]<bestVal) {
             	bestSol = (MySolutionEdges)soluzione_iniziale_nearest.clone();
             	bestVal = soluzione_iniziale_nearest.getObjectiveValue()[0];
+            	timeBest = System.currentTimeMillis();
             	if(G.GUI) gui_model.update_best_optimality((bestVal-ottimal[0])*100/ottimal[0]);
             }
             //if(G.iteration%50==0) perturbateSolution(soluzione_iniziale_nearest, lkObjFunc);
@@ -171,11 +174,23 @@ public class Tabu {
         }
         System.out.println("Lunghezza trovata:"+best.getObjectiveValue()[0]);
         
+        /*
         if(opt_tour.exists())G.BestKnown[G.NumIstanza] = (int)ottimale.getObjectiveValue()[0];
         G.BestValue[G.NumIstanza] = (int)best.getObjectiveValue()[0];
+        G.BestTime[G.NumIstanza] = timeBest-startTime;
         if(opt_tour.exists())G.OptPercentage[G.NumIstanza] =  (100*(miaLunghezza-ottimal[0])/ottimal[0]);
-        G.NomeIstanza[G.NumIstanza] = filename;
+        G.NomeIstanza[G.NumIstanza] = filename;*/
+        
+        if(opt_tour.exists()) currentInstance.bestKnown = (int)ottimale.getObjectiveValue()[0];
+        int bestValue = (int)best.getObjectiveValue()[0];
+        double bestTime = (timeBest-startTime)/1000.0;
+        currentInstance.addSolution(new Soluzione(bestValue,bestTime));
+        currentInstance.nomeIstanza = filename;
+        
         if(opt_tour.exists())G.NumIstOpt++;
+        
+        System.out.println("Tempo per trovare la best: "+(timeBest-startTime)/1000.0+"s");
+        System.out.println("Tempo totale: "+(System.currentTimeMillis()-startTime)/1000.0+"s");
         
         //OUTPUT FILE
         try {
@@ -242,7 +257,7 @@ public class Tabu {
         return ret;
     }
 	
-	public void localSearch2Opt(MySolutionEdges sol,LK_MoveManager moveMgr) {
+	public void localSearch2Opt(MySolutionEdges sol,LK_ObjectiveFunction objFunc) {
 		//prendiamo tutte le mosse possibili dalla soluzione attuale
     	//scegliamo quella migliore, se e' migliorativa esegui e continua loop, altrimenti ritorna
 		Move bestMove = new Move() {
@@ -250,8 +265,8 @@ public class Tabu {
 		};
 		double delta = 0;
 		do {
-			bestMove = getBest2optMove(sol,moveMgr.objFunc);
-			delta = moveMgr.objFunc.evaluate( sol, bestMove )[0]-sol.getObjectiveValue()[0];
+			bestMove = getBest2optMove(sol,objFunc);
+			delta = objFunc.evaluate( sol, bestMove )[0]-sol.getObjectiveValue()[0];
 			//evitare errori arrotondamento che fanno looppare (2 mosse che cambiano l'obj val di pochissimo vengono
 			//System.out.println(delta);
 			if (Math.abs(delta)<0.000000001) delta=0;
