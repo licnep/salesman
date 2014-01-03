@@ -35,7 +35,7 @@ public class Random4Opt_MoveManager implements MoveManager
         
     	ArrayList<Edge> available = new ArrayList<>(sol.edges);
     	
-    	Random rand_generator = new Random(G.random_seed);
+    	//Random rand_generator = new Random(G.random_seed);
     	
     	double minG = Double.MAX_VALUE;
     	LK_Move bestIllegal2OptMove = new LK_Move(edgesX, edgesY);
@@ -133,16 +133,16 @@ public class Random4Opt_MoveManager implements MoveManager
         
     	ArrayList<Edge> available = new ArrayList<>(sol.edges);
     	
-    	Random rand_generator = new Random(G.random_seed);
+    	//Random rand_generator = new Random(G.random_seed);
     	
     	//edge x1 preso a caso
-    	x1 = available.remove(rand_generator.nextInt(available.size()));
+    	x1 = available.remove(G.rand.nextInt(available.size()));
     	//scelgo y1
     	int i=0;
     	y1=x1;
     	do {
     		//y1 = new Edge(x1.c2,rand_generator.nextInt(GlobalData.numCustomers));
-    		y1 = new Edge(x1.c2,objFunc.vicini[x1.c2][rand_generator.nextInt(G.nVicini)]);
+    		y1 = new Edge(x1.c2,objFunc.vicini[x1.c2][G.rand.nextInt(G.nVicini)]);
     		//prendo x2 (obbligato)
         	x2 = sol.getEdgeAfter(y1.c2);
         	//ricollego a x1

@@ -163,7 +163,7 @@ public class Tabu {
         
         // Show solution
         MySolutionEdges best = bestSol;
-        System.out.println("ISTANZA: "+filename);
+        System.out.println("INSTANCE: "+filename);
         System.out.println( "Best Solution:\n" + best );
         if(G.GUI)gui_model.setTour_current(best.tour);
 
@@ -175,7 +175,7 @@ public class Tabu {
             System.out.println("Optimality:"+(miaLunghezza-ottimal[0])*100/ottimal[0]);
             System.out.println("Lunghezza ottimale:"+ottimal[0]);
         }
-        System.out.println("Lunghezza trovata:"+best.getObjectiveValue()[0]);
+        System.out.println("Found length:"+best.getObjectiveValue()[0]);
         
         //salvo i risultati della run per poi stamparli nel csv:
         if(opt_tour.exists()) currentInstance.bestKnown = (int)ottimale.getObjectiveValue()[0];
@@ -186,31 +186,34 @@ public class Tabu {
         
         if(opt_tour.exists())G.NumIstOpt++;
         
-        System.out.println("Tempo per trovare la best: "+(timeBest-startTime)/1000.0+"s");
-        System.out.println("Tempo totale: "+(System.currentTimeMillis()-startTime)/1000.0+"s");
+        System.out.println("Time to find best solution: "+(timeBest-startTime)/1000.0+"s");
+        System.out.println("Total Time: "+(System.currentTimeMillis()-startTime)/1000.0+"s");
         
         //OUTPUT FILE
-        try {
-            File file = new File("./Data/Output/"+filename+".tour");
-            BufferedWriter output = new BufferedWriter(new FileWriter(file));
-            output.write("NAME: "+filename+"\n");
-            output.write("TYPE: TOUR\n");
-            output.write("DIMENSION: "+G.numCustomers+"\n");
-            output.write("TOUR_SECTION\n");
-            for(int i=0; i<G.numCustomers;i++){
-            	output.write(best.tour[i]+"\n");
-            }
-            output.write("-1\nEOF");
-            output.close();
-          } catch ( IOException e ) {
-             e.printStackTrace();
-          }
+        //se e' la migliore fin'ora stampa il tour file
+        if(bestValue==currentInstance.getBestValue()) {
+	        try {
+	            File file = new File("./Data/Output/"+filename+".tour");
+	            BufferedWriter output = new BufferedWriter(new FileWriter(file));
+	            output.write("NAME: "+filename+"\n");
+	            output.write("TYPE: TOUR\n");
+	            output.write("DIMENSION: "+G.numCustomers+"\n");
+	            output.write("TOUR_SECTION\n");
+	            for(int i=0; i<G.numCustomers;i++){
+	            	output.write(best.tour[i]+"\n");
+	            }
+	            output.write("-1\nEOF");
+	            output.close();
+	          } catch ( IOException e ) {
+	             e.printStackTrace();
+	          }
+        }
 
         return;
     }   // end main
     
     private void double_bridge_perturbation() {
-    	G.random_seed++;
+    	//G.random_seed++;
     	tabuSearch.setCurrentSolution((MySolutionEdges)tabuSearch.getBestSolution().clone());
     	tabuSearch.setMoveManager(random4opt);
     	//((LK_TabuList)tabuSearch.getTabuList()).setTenure(0);
@@ -344,7 +347,7 @@ public class Tabu {
 	
 	private void perturbateSolution(MySolutionEdges sol, LK_ObjectiveFunction obj) {
 		//generate a bunch of random 4 opt moves
-		G.random_seed++;
+		//G.random_seed++;
     	Move[] mosse = random4opt.getAllMoves(sol);
     	Move bestMove = new Move() {public void operateOn(Solution soln) {}};
     	double min = Double.MAX_VALUE;

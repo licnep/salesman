@@ -8,7 +8,8 @@ import com.oropolito.opentsSample.GUI.GUI_model;
 
 public class G {
 	public static int numCustomers=0;
-	public static long random_seed=10;
+	//public static long random_seed=10;
+	public static Random rand;
 	
 	public static int Repetitions = 1;
 	public static int iteration = 0;

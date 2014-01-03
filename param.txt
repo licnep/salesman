@@ -1,11 +1,11 @@
 PARAMS
-DataFileDir ./Data/TSP/TSPLIB
-#MaxIter viene moltiplicato per il numero di customer dell'istanza
-MaxIter 90
+DataFileDir ./Data/TSP
+#actual iterations = MaxIter*numCustomers
+MaxIter 400
 Repetitions 10
-#usare "GUI false" per testare la velocita', GUI true rallenta di molto
-GUI true
-Seed 10
+#usare "GUI false" per ottenere tempi migliori, GUI true rallenta di molto
+GUI false
+Seed 123456
 ENDPARAMS
 INSTANCES
 eil51.tsp

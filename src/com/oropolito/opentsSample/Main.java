@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 public class Main
@@ -38,7 +39,7 @@ public class Main
     			System.out.println(InputName[n]+" - RUN "+(m+1)+"...");
             	myTabu.main(MaxIter,P_baseDir,InputName[n],currentInstance);
             	System.out.println("");        
-            	G.random_seed+=100; //ogni volta con un seed diverso
+            	//G.random_seed+=100; //ogni volta con un seed diverso
     		}
     		istanze.add(currentInstance);
     	}
@@ -46,11 +47,11 @@ public class Main
     	try {
             File file = new File("./Data/Output/"+"Results.csv");
             BufferedWriter output = new BufferedWriter(new FileWriter(file));
-            output.write("Instance,Best sol,Mean sol,Min sol,Max sol,Time Best,Time Mean,Best known,% From Optimum\n");
+            output.write("Instance;Best sol;Mean sol;Min sol;Max sol;Time Best;Time Mean;Best known;% From Optimum\n");
             Iterator<Istanza> i = istanze.iterator();
             while(i.hasNext()) {
             	Istanza ist = i.next();
-            	output.write(ist.getNomeIstanza()+","+ist.getBestValue()+","+ist.getMeanValue()+","+ist.getMinValue()+","+ist.getMaxValue()+","+ist.getTimeBest()+","+ist.getTimeMean()+","+ist.bestKnown+","+ist.getPercentFromOptimum()+"\n");
+            	output.write(ist.getNomeIstanza()+";"+ist.getBestValue()+";"+ist.getMeanValue()+";"+ist.getMinValue()+";"+ist.getMaxValue()+";"+ist.getTimeBest()+";"+ist.getTimeMean()+";"+ist.bestKnown+";"+ist.getPercentFromOptimum()+"\n");
             }
             output.close();
             System.out.println("Output saved in ./Data/Output/Results.csv");
@@ -128,7 +129,8 @@ public class Main
 								break;
 							case "SEED":
 								token = st.nextToken();
-								G.random_seed = Long.parseLong(token);
+								//G.random_seed = Long.parseLong(token);
+								G.rand = new Random(Long.parseLong(token));
 								break;
 						}
 					}
