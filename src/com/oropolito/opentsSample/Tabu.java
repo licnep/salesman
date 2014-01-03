@@ -71,13 +71,14 @@ public class Tabu {
 			line = br.readLine();	
 			line = br.readLine();	
 			line = br.readLine();
-			StringTokenizer st = new StringTokenizer(line);	
-			token = st.nextToken();
-			token = st.nextToken();		
-			numCustomers = Integer.parseInt(token); 
+			StringTokenizer st = new StringTokenizer(line);
+			//token = st.nextToken();
+			//token = st.nextToken();
+			numCustomers = Integer.parseInt(line.split(":")[1].trim()); 
 	        customers = new double[numCustomers][2];
-			line = br.readLine();
-			line = br.readLine();
+	        while(!line.contains("NODE_COORD_SECTION")) {
+	        	line = br.readLine();
+	        }
 	        for( int i = 0; i < numCustomers; i++ )
 	        {
 				line = br.readLine();        	
@@ -156,6 +157,8 @@ public class Tabu {
             	if(G.GUI) gui_model.update_best_optimality((bestVal-ottimal[0])*100/ottimal[0]);
             }
             //if(G.iteration%50==0) perturbateSolution(soluzione_iniziale_nearest, lkObjFunc);
+            
+            if (System.currentTimeMillis()-startTime>1000*60*5) break; //5 minute limit
         }
         
         // Show solution
@@ -174,13 +177,7 @@ public class Tabu {
         }
         System.out.println("Lunghezza trovata:"+best.getObjectiveValue()[0]);
         
-        /*
-        if(opt_tour.exists())G.BestKnown[G.NumIstanza] = (int)ottimale.getObjectiveValue()[0];
-        G.BestValue[G.NumIstanza] = (int)best.getObjectiveValue()[0];
-        G.BestTime[G.NumIstanza] = timeBest-startTime;
-        if(opt_tour.exists())G.OptPercentage[G.NumIstanza] =  (100*(miaLunghezza-ottimal[0])/ottimal[0]);
-        G.NomeIstanza[G.NumIstanza] = filename;*/
-        
+        //salvo i risultati della run per poi stamparli nel csv:
         if(opt_tour.exists()) currentInstance.bestKnown = (int)ottimale.getObjectiveValue()[0];
         int bestValue = (int)best.getObjectiveValue()[0];
         double bestTime = (timeBest-startTime)/1000.0;
@@ -295,39 +292,46 @@ public class Tabu {
     			G.activeNeighbourhoods[x1.c2]=false;
 	        	for (int i=0;i<G.nVicini;i++) {
 	        		y1 = obj.edgeVicini[x1.c2][i];
-	        		//X2 e' obbligato una volta scelto Y1
-	        		x2 = sol.getEdgeBefore(y1.c2);
-	        		//Y2 che ricollega a t1
-	        		y2 = new Edge(x2.c2 , x1.c1);
-	        		if (y2.isProper()) {
-		        		//valuto la mossa e' controllo se e' migliorativa:
-		        		LK_Move mossa = new LK_Move(new ArrayList<Edge>(Arrays.asList(x1,x2)), new ArrayList<Edge>(Arrays.asList(y1,y2)));
-		        		double cur = obj.evaluate( sol, mossa )[0]-sol.getObjectiveValue()[0];
-		        		if (cur<bestDelta) {
-		        			bestDelta = cur;
-		        			bestMove = mossa;
+	        		if(y1.c2!=x1.c1) { //altrimenti usa come y1 lo stesso edge x1 all'indietro
+		        		//X2 e' obbligato una volta scelto Y1
+		        		x2 = sol.getEdgeBefore(y1.c2);
+		        		//Y2 che ricollega a t1
+		        		y2 = new Edge(x2.c2 , x1.c1);
+		        		if (y2.isProper()) {
+			        		//valuto la mossa e' controllo se e' migliorativa:
+			        		LK_Move mossa = new LK_Move(new ArrayList<Edge>(Arrays.asList(x1,x2)), new ArrayList<Edge>(Arrays.asList(y1,y2)));
+			        		double cur = obj.evaluate( sol, mossa )[0]-sol.getObjectiveValue()[0];
+			        		if (cur<bestDelta) {
+			        			bestDelta = cur;
+			        			bestMove = mossa;
+			        		}
+			        		if (cur<0) {
+			        			G.activeNeighbourhoods[x1.c1]=true;
+			        			G.activeNeighbourhoods[x1.c2]=true;
+			        		}
 		        		}
-		        		if (cur<0) {
-		        			G.activeNeighbourhoods[x1.c1]=true;
-		        			G.activeNeighbourhoods[x1.c2]=true;
-		        		}
-	        		}
-	        		//testiamo anche la vertex insertion: (invece di ricollegare a x1, dobbiamo rimuovere anche l'edge dopo x1, e fare collegamenti diversi
-	        		//x1,c2 e' il vertice che viene 'tolto e reinserito'
-	        		//insertion la testo solo coi 10 piu' vicini
-	        		if (i<10 && x2.c2!=x1.c2) {
-		        		y2 = new Edge(x2.c2,x1.c2);
-		        		x3 = sol.getEdgeAfter(x1.c2);
-		        		y3 = new Edge(x1.c1,x3.c2);
-		        		LK_Move mossa = new LK_Move(new ArrayList<Edge>(Arrays.asList(x1,x2,x3)), new ArrayList<Edge>(Arrays.asList(y1,y2,y3)));
-		        		double cur = obj.evaluate( sol, mossa )[0]-sol.getObjectiveValue()[0];
-		        		if (cur<bestDelta) {
-		        			bestDelta = cur;
-		        			bestMove = mossa;
-		        		}
-		        		if (cur<0) {
-		        			G.activeNeighbourhoods[x1.c1]=true;
-		        			G.activeNeighbourhoods[x1.c2]=true;
+		        		
+		        		//testiamo anche la vertex insertion: (invece di ricollegare a x1, dobbiamo rimuovere anche l'edge dopo x1, e fare collegamenti diversi
+		        		//x1,c2 e' il vertice che viene 'tolto e reinserito'
+		        		//insertion la testo solo coi 10 piu' vicini
+		        		if (i<10 && x2.c2!=x1.c2) {
+		        			if (x2.c2!=x1.c1) {//senno' y2 viene uguale a x1
+				        		y2 = new Edge(x2.c2,x1.c2);
+				        		x3 = sol.getEdgeAfter(x1.c2);
+				        		y3 = new Edge(x1.c1,x3.c2);
+				        		if(y3.isProper()) {
+					        		LK_Move mossa = new LK_Move(new ArrayList<Edge>(Arrays.asList(x1,x2,x3)), new ArrayList<Edge>(Arrays.asList(y1,y2,y3)));
+					        		double cur = obj.evaluate( sol, mossa )[0]-sol.getObjectiveValue()[0];
+					        		if (cur<bestDelta) {
+					        			bestDelta = cur;
+					        			bestMove = mossa;
+					        		}
+					        		if (cur<0) {
+					        			G.activeNeighbourhoods[x1.c1]=true;
+					        			G.activeNeighbourhoods[x1.c2]=true;
+					        		}
+				        		}
+		        			}
 		        		}
 	        		}
 	        	}

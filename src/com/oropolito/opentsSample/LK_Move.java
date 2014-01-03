@@ -29,11 +29,16 @@ public class LK_Move implements ComplexMove
 	    	G.gui_model.addColoredEdge(edgesY, Color.BLUE);
     	}
     	
-    	//System.out.println(this);
+    	//try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace();}
     	
+    	/*
     	if(edgesX.size()==3) {
     		//try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace();}
-    	}
+    		if (edgesX.contains(edgesY.get(0))||edgesX.contains(edgesY.get(1))||edgesX.contains(edgesY.get(2))) {
+        		System.out.println("IMPROPER!!:");
+        		System.out.println(this);
+        	}
+    	}*/
         
     	//rimuovo tutti gli edge X
     	Iterator<Edge> i = edgesX.iterator();

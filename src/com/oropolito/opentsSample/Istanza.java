@@ -12,23 +12,23 @@ public class Istanza {
 	ArrayList<Soluzione> solutions = new ArrayList<Soluzione>(G.Repetitions);
 	
 	public double getPercentFromOptimum() {
-		return (this.getBestValue()-this.bestKnown)/this.bestKnown;
+		return 100*(this.getBestValue()-this.bestKnown)/(double)this.bestKnown;
 	}
 	
-	public double getBestValue() {
-		return optimality(solutions.get(0).value);
+	public int getBestValue() {
+		return solutions.get(0).value;
 	}
 	
-	public double getMinValue() {
-		return optimality(solutions.get(0).value);
+	public int getMinValue() {
+		return solutions.get(0).value;
 	}
 	
-	public double getMaxValue() {
-		return optimality(solutions.get(solutions.size()-1).value);
+	public int getMaxValue() {
+		return solutions.get(solutions.size()-1).value;
 	}
 	
-	public double getMeanValue() {
-		return optimality(solutions.get((int)Math.floor(solutions.size()/2)).value);
+	public int getMeanValue() {
+		return solutions.get((int)Math.floor(solutions.size()/2)).value;
 	}
 	
 	public double getTimeBest() {

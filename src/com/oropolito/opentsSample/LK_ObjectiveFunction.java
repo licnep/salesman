@@ -26,6 +26,7 @@ public class LK_ObjectiveFunction implements ObjectiveFunction
     public void createVicini() {
     	int N = Math.min(40, G.numCustomers-1); //mai + vicini di numCustomers-1
     	G.nViciniMax = N;
+    	if (G.nVicini>G.nViciniMax) G.nVicini=G.nViciniMax;
     	
     	vicini = new int[matrix.length][N];
     	edgeVicini = new Edge[matrix.length][N];
